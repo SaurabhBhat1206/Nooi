@@ -1,0 +1,267 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardlist_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="8dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="@dimen/cardview_default_elevation">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#e0e0e0">
+
+
+            <TextView
+                android:id="@+id/event_creator_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:text="Organiser:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+
+            <TextView
+                android:id="@+id/event_creator_name1"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:maxLines="3"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+
+            <TextView
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/event_creator_name"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/event_creator_name1"
+                android:padding="8dp"
+                android:text="Phone:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/phone1"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/event_creator_name"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif"
+                android:layout_toLeftOf="@+id/call"
+                android:layout_toRightOf="@+id/phone"
+                android:layout_toEndOf="@+id/phone" />
+
+            <TextView
+                android:id="@+id/event_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/phone"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/phone1"
+                android:padding="8dp"
+                android:text="Event:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/event_heading1"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/phone"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/event_heading"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/date1"
+                android:padding="8dp"
+                android:text="Date:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/date1"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/event_heading"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/date"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/date1"
+                android:padding="8dp"
+                android:text="Time:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/time1"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/date"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/paymentoptions"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/time"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/time1"
+                android:padding="8dp"
+                android:text="Paid by:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/paymentoptions1"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/time"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/dress_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/paymentoptions"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/date1"
+                android:padding="8dp"
+                android:text="Dress code:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/dress_code1"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/paymentoptions"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/venue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/dress_code"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:text="Address:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif"
+                android:layout_alignRight="@+id/time"
+                android:layout_alignEnd="@+id/time" />
+
+            <TextView
+                android:id="@+id/venue1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/venue"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/venue1"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:text="Description:"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+
+            <TextView
+                android:id="@+id/description1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/description"
+                android:padding="8dp"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:typeface="serif" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

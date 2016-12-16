@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.events.hanle.events">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+     needed for older devices -
+     used to check app background / foreground status
+    -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!-- START Added for GCM -->
+    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
+
+
+    <!-- <uses-permission android:name="com.events.hanle.events.permission.permission.C2D_MESSAGE" /> -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.events.hanle.events.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
+    <permission
+        android:name="com.events.hanle.events.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <!-- <permission -->
+    <!-- android:name="com.events.hanle.events.permission.C2D_MESSAGE" -->
+    <!-- android:protectionLevel="signature" /> -->
+    <application
+        android:name=".app.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/nooismall"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/MyMaterialTheme"
+        tools:replace="android:icon">
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity.UserChangeOfDescision"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.UserTabView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.ListOfEvent1"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.UserAttendingStatus"
+            android:screenOrientation="portrait" />
+
+
+        <receiver android:name=".BroadCast.ScheduledPush">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
+        <receiver
+            android:name=".BroadCast.DeviceBootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- <receiver -->
+        <!-- android:name="com.google.android.gms.gcm.GcmReceiver" -->
+        <!-- android:exported="true" -->
+        <!-- android:permission="com.google.android.c2dm.permission.SEND"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE" /> -->
+
+
+        <!-- <category android:name="com.events.hanle.events.gcm" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
+
+        <!-- <service -->
+        <!-- android:name=".gcm.MyGcmPushReceiver" -->
+        <!-- android:exported="false"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+
+        <service
+            android:name=".gcm.GcmIntentService"
+            android:exported="false" />
+
+        <service
+            android:name=".BroadCast.SceduledPushNotification"
+            android:exported="false" />
+
+        <service android:name=".gcm.MyInstanceIDListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".gcm.MyFcmListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9731448046010532be8054c7fb9e940a1e6ec9ad" />
+        <!--<meta-data-->
+        <!--android:name="com.google.android.geo.API_KEY"-->
+        <!--android:value="AIzaSyBOyMHLZI1sWG3TdU1PGDa1WTcgVTlE1J4" />-->
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAm205HNgwy0cyVHxb9ULYQ9MwWlARjMrA" />
+
+        <activity android:name=".Activity.ListOfConcluded"></activity>
+        <activity android:name=".Activity.ListOfCancelledEvent"></activity>
+    </application>
+
+</manifest>

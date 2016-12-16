@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/cancelled"
+        android:title="@string/cancelled"
+        android:icon="@drawable/ic_cancel_black_24dp"/>
+    <item
+        android:id="@+id/concluded"
+        android:title="@string/concluded"
+        android:icon="@android:drawable/ic_delete"/>
+    <item
+        android:id="@+id/create_event"
+        android:title="@string/createevent" />
+    <item
+        android:id="@+id/feedback"
+        android:title="@string/feedback" />
+    <item
+        android:id="@+id/about_us"
+        android:title="@string/about_us" />
+
+
+</menu>

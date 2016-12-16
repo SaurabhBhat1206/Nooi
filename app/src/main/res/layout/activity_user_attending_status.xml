@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/login_form"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="#98cbe5"
+    android:fillViewport="false">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="50dp"
+            android:enabled="false"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:typeface="serif" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView4"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="75dp"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:id="@+id/rgroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/attending"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Attending"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/not_attending"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1.18"
+                    android:text="Not Attending"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/next"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="89dp"
+            android:background="@drawable/admin_button"
+            android:gravity="center"
+            android:shadowColor="@android:color/black"
+            android:text="next"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+</ScrollView>

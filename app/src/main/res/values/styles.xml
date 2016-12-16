@@ -1,0 +1,60 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+
+    </style>
+
+
+    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+
+    </style>
+
+    <style name="AppBaseTheme" parent="android:Theme.Light"></style>
+
+    <style name="DemoAppTheme" parent="AppBaseTheme"></style>
+
+    <style name="EditText">
+        <item name="android:gravity">left</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">fill</item>
+        <item name="android:textColor">@color/textbuttoncolor</item>
+        <item name="android:background">@color/buttonbgcolor</item>
+    </style>
+
+    <style name="Widget.MyApp.Toolbar.Solid" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/toolbar</item>
+        <item name="android:elevation" tools:ignore="NewApi">4dp</item>
+    </style>
+
+    <style name="ThemeOverlay.MyApp.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
+        <item name="android:textColorPrimary">@color/actionbar_title_text</item>
+    </style>
+
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">@color/actionbar_title_text</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Custom" parent="android:Theme.DeviceDefault.Dialog">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="DialogTitleText">Please Wait</item>
+        <item name="DialogSpotColor">@color/pdialog</item>
+    </style>
+
+</resources>

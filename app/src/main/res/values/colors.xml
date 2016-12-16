@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#b5b6be</color>
+    <color name="colorPrimaryDark">#4caaad</color>
+    <color name="colorAccent">#000000</color>
+
+    <color name="NiceButtonStartColor">#4AA02C</color>
+    <color name="NiceButtonEndColor">#348017</color>
+    <color name="NiceButtonDisabledStartColor">#565051</color>
+    <color name="NiceButtonDisabledEndColor">#736F6E</color>
+    <color name="NiceButtonBorderColor">#254117</color>
+
+    <color name="adminButtonStartColor">#98cbe5</color>
+    <color name="adminButtonEndColor">#2d7da6</color>
+    <color name="adminButtonDisabledStartColor">#565051</color>
+    <color name="adminButtonDisabledEndColor">#986309</color>
+    <color name="adminButtonBorderColor">#254117</color>
+    <color name="toolbar">#2d7da6</color>
+
+    <color name="list_divider">#dedede</color>
+    <color name="bg_bubble_self">#E1E1E1</color>
+
+    <color name="actionbar_title_text">#ffffff</color>
+
+    <color name="background">#4D394B</color>
+    <color name="scrollview_background">#4D394B</color>
+    <color name="buttonbgcolor">#648c42</color>
+    <color name="textbuttoncolor">#ffffff</color>
+    <color name="white">#fff</color>
+    <color name="applozic_lite_black_color">#b2b2b2</color>
+    <color name="alphabet_text_t">#d9d9d9</color>
+    <color name="pdialog">#98cbe5</color>
+
+
+</resources>
+

@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "82826241058",
+    "firebase_url": "https://events-1295.firebaseio.com",
+    "project_id": "events-1295",
+    "storage_bucket": "events-1295.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82826241058:android:e63e7707aae52e96",
+        "android_client_info": {
+          "package_name": "com.events.hanle.events"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "82826241058-5ih1km7a1sduivcigrnv8dpvpc0q0lmg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.events.hanle.events",
+            "certificate_hash": "835AE2E2EF0DEBB676F9137E42345863290ABA26"
+          }
+        },
+        {
+          "client_id": "82826241058-4dvi0nrkd6eu74665puvqtlclh4q8fof.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOyMHLZI1sWG3TdU1PGDa1WTcgVTlE1J4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

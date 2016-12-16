@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/not_attending"
+        android:title="@string/not_attending" />
+
+
+    <item
+        android:id="@+id/mute"
+        android:title="@string/mute" />
+
+    <item
+        android:id="@+id/list_invitee"
+        android:title="@string/attending"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_directions_walk_white_24dp"
+        android:orderInCategory="500"/>
+
+</menu>
