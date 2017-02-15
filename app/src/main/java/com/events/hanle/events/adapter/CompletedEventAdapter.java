@@ -60,17 +60,35 @@ public class CompletedEventAdapter extends RecyclerView.Adapter<CompletedEventAd
     @Override
     public void onBindViewHolder(CompletedEventAdapterviewholder holder, int position) {
         CompletedEvent listAttending = attendinglist.get(position);
+        int status = Integer.parseInt(listAttending.getUser_status());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + ":" + listAttending.getEvent_title(), Html.FROM_HTML_MODE_LEGACY));
+        if (status == 1) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + ":" + listAttending.getEvent_title(), Html.FROM_HTML_MODE_LEGACY));
+                holder.mcardView.setCardBackgroundColor(Color.parseColor("#98cbe5")); // will change the background color of the card view to sky blue
+
+            } else {
+                holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + " : " + listAttending.getInvitername()));
+                holder.attendng_list.setTextColor(Color.parseColor("#000000"));
+                holder.mcardView.setCardBackgroundColor(Color.parseColor("#98cbe5")); // will change the background color of the card view to sky blue
+
+            }
 
         } else {
-            holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + " : " + listAttending.getInvitername()));
-            holder.attendng_list.setTextColor(Color.parseColor("#000000"));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + ":" + listAttending.getEvent_title(), Html.FROM_HTML_MODE_LEGACY));
+                holder.mcardView.setCardBackgroundColor(Color.parseColor("#ffff99")); // will change the background color of the card view to red
+
+            } else {
+                holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + " : " + listAttending.getInvitername()));
+                holder.attendng_list.setTextColor(Color.parseColor("#000000"));
+                holder.mcardView.setCardBackgroundColor(Color.parseColor("#ffff99")); // will change the background color of the card view to red
+
+            }
+
 
         }
-
-        holder.mcardView.setCardBackgroundColor(Color.parseColor("#ffff99")); // will change the background color of the card view to red
 
     }
 
@@ -102,17 +120,20 @@ public class CompletedEventAdapter extends RecyclerView.Adapter<CompletedEventAd
             int position = getAdapterPosition();
             CompletedEvent listEvent = this.listevent.get(position);
 
-            listEvent = new CompletedEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail());
+            listEvent = new CompletedEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(),listEvent.getArtwork());
             MyApplication.getInstance().getPrefManager().storeEventIdCompletedEvent(listEvent);
             int user_Status = Integer.parseInt(listEvent.getUser_status());
 
-            if (user_Status == 3) {
+            if (user_Status == 1) {
+                Toast.makeText(this.ctx, "You did not respond to this Event!!", Toast.LENGTH_LONG).show();
+            } else if (user_Status == 3) {
                 Toast.makeText(this.ctx, "You said you are not attending this Event!!", Toast.LENGTH_LONG).show();
 
             } else {
                 Intent i = new Intent(mContext, UserTabView.class);
                 i.putExtra("event_title", listEvent.getEvent_title());
                 i.putExtra("share_detail", listEvent.getShare_detail());
+                i.putExtra("artwork", listEvent.getArtwork());
                 i.putExtra("classcheck", "completedevent");
 
                 this.ctx.startActivity(i);
@@ -123,5 +144,6 @@ public class CompletedEventAdapter extends RecyclerView.Adapter<CompletedEventAd
 
         }
     }
-}
 
+
+}

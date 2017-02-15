@@ -122,6 +122,7 @@ public class Login extends Fragment {
 
                 if (ConnectionDetector.isInternetAvailable(getActivity())) {
                     callOtp();
+                    btnEnter.setEnabled(false);
                 } else {
                     Toast.makeText(getActivity(), "No Internet!!!", Toast.LENGTH_SHORT).show();
                 }
@@ -199,6 +200,7 @@ public class Login extends Fragment {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             navigateToRegistration();
                         } else {
+                            btnEnter.setEnabled(true);
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         }
 
@@ -211,6 +213,7 @@ public class Login extends Fragment {
                     Log.e(TAG, "json parsing error: " + e.getMessage());
                     //Toast.makeText(getActivity(), "Json parse error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Toast.makeText(getActivity(), "Something went wrong please try after sometime", Toast.LENGTH_LONG).show();
+                    btnEnter.setEnabled(true);
 
                 }
             }
@@ -219,6 +222,8 @@ public class Login extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.hide();
+                btnEnter.setEnabled(true);
+
                 NetworkResponse networkResponse = error.networkResponse;
                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
                 //Toast.makeText(getActivity(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -266,6 +271,8 @@ public class Login extends Fragment {
         String mobile = inputmobile.getText().toString().trim();
 
         if (mobile.isEmpty()) {
+            btnEnter.setEnabled(true);
+
             inputLayoutMobile.setError(getString(R.string.err_msg_mobile));
             return false;
         } else {
@@ -281,6 +288,8 @@ public class Login extends Fragment {
 
         if (coucode.isEmpty()) {
             inputcountrycode.setError(getString(R.string.err_msg_country_code));
+            btnEnter.setEnabled(true);
+
             return false;
         } else {
             inputcountrycode.setErrorEnabled(false);

@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.CancelledEventView;
-import com.events.hanle.events.Model.ConcludedEventView;
 import com.events.hanle.events.Model.FeedItem;
 import com.events.hanle.events.R;
 import com.events.hanle.events.adapter.CancelledEventViewAdapter;

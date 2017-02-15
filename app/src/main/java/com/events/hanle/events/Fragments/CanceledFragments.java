@@ -116,6 +116,7 @@ public class CanceledFragments extends DialogFragment {
                                 cr.setInvitername(chatRoomsObj.getString("inviter_name"));
                                 cr.setEvent_status(chatRoomsObj.getString("event_status"));
                                 cr.setShare_detail(chatRoomsObj.getString("share_detail"));
+                                cr.setArtwork(chatRoomsObj.getString("artwork"));
                                 cr.setLastMessage("");
                                 cr.setUnreadCount(0);
                                 cr.setTimestamp(chatRoomsObj.getString("created_at"));

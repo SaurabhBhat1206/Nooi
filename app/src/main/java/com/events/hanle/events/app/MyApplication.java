@@ -3,7 +3,9 @@ package com.events.hanle.events.app;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.multidex.MultiDex;
+import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
 import com.android.volley.Cache;
@@ -13,6 +15,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.events.hanle.events.Activity.LoginActivity;
@@ -33,8 +36,9 @@ public class MyApplication extends Application {
     private RequestQueue mRequestQueue;
 
     private static MyApplication mInstance;
-
     private MyPreferenceManager pref;
+    private static Context mCtx;
+    private ImageLoader imageLoader;
 
     @Override
     public void onCreate() {
@@ -60,10 +64,43 @@ public class MyApplication extends Application {
 
     }
 
+    public MyApplication() {
+
+    }
+
+    private MyApplication(Context context) {
+        mCtx = context;
+        mRequestQueue = getRequestQueue();
+
+        imageLoader = new ImageLoader(mRequestQueue,
+                new ImageLoader.ImageCache() {
+                    private final LruCache<String, Bitmap>
+                            cache = new LruCache<String, Bitmap>(20);
+
+                    @Override
+                    public Bitmap getBitmap(String url) {
+                        return cache.get(url);
+                    }
+
+                    @Override
+                    public void putBitmap(String url, Bitmap bitmap) {
+                        cache.put(url, bitmap);
+                    }
+                });
+    }
+
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+    public static synchronized MyApplication getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new MyApplication(context);
+        }
+        return mInstance;
+    }
+
 
     public static synchronized MyApplication getInstance() {
         return mInstance;
@@ -79,6 +116,11 @@ public class MyApplication extends Application {
 
         return mRequestQueue;
     }
+
+    public ImageLoader getImageLoader() {
+        return imageLoader;
+    }
+
 
     public MyPreferenceManager getPrefManager() {
         if (pref == null) {

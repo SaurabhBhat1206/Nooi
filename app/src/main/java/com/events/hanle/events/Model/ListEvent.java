@@ -4,8 +4,10 @@ package com.events.hanle.events.Model;
  * Created by Hanle on 6/15/2016.
  */
 public class ListEvent {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail;
-    int unreadCount;
+    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, share_detail,artwork;
+    int unreadCount,unreadcount1;
+
+
 
 
     public ListEvent() {
@@ -20,7 +22,7 @@ public class ListEvent {
         this.unreadCount = unreadCount;
     }
 
-    public ListEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail) {
+    public ListEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail,String artwork) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -28,6 +30,7 @@ public class ListEvent {
         this.event_status = event_status;
         this.lastMessage = lastMessage;
         this.share_detail = share_detail;
+        this.artwork = artwork;
     }
 
     public String getShare_detail() {
@@ -103,5 +106,22 @@ public class ListEvent {
     public void setEvent_status(String event_status) {
         this.event_status = event_status;
     }
+
+    public int getUnreadcount1() {
+        return unreadcount1;
+    }
+
+    public void setUnreadcount1(int unreadcount1) {
+        this.unreadcount1 = unreadcount1;
+    }
+
+    public String getArtwork() {
+        return artwork;
+    }
+
+    public void setArtwork(String artwork) {
+        this.artwork = artwork;
+    }
+
 
 }

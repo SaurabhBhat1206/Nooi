@@ -5,7 +5,7 @@ package com.events.hanle.events.Model;
  */
 
 public class CompletedEvent {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail;
+    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail,artwork;
     int unreadCount;
 
 
@@ -21,7 +21,7 @@ public class CompletedEvent {
         this.unreadCount = unreadCount;
     }
 
-    public CompletedEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail) {
+    public CompletedEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -29,6 +29,7 @@ public class CompletedEvent {
         this.event_status = event_status;
         this.lastMessage = lastMessage;
         this.share_detail = share_detail;
+        this.artwork = artwork;
     }
 
     public String getId() {
@@ -109,5 +110,13 @@ public class CompletedEvent {
 
     public void setUser_status(String user_status) {
         this.user_status = user_status;
+    }
+
+    public String getArtwork() {
+        return artwork;
+    }
+
+    public void setArtwork(String artwork) {
+        this.artwork = artwork;
     }
 }

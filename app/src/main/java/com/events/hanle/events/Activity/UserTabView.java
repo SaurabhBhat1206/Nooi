@@ -23,8 +23,10 @@ import com.events.hanle.events.Fragments.MuteDialog;
 import com.events.hanle.events.Fragments.OneFragment;
 import com.events.hanle.events.Fragments.Three;
 import com.events.hanle.events.Fragments.TwoFragment;
+import com.events.hanle.events.Model.ListEvent;
 import com.events.hanle.events.R;
 import com.events.hanle.events.chat.ChatRoomActivity;
+import com.events.hanle.events.gcm.GcmIntentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,21 @@ public class UserTabView extends AppCompatActivity {
         assert tabLayout != null;
         tabLayout.setupWithViewPager(viewPager);
 
+        if (getIntent().getStringExtra("classcheck") != null) {
+            if (getIntent().getStringExtra("classcheck").equals("from_notifications")) {
+                viewPager.setCurrentItem(3);
+            } else if (getIntent().getStringExtra("classcheck").equals("from_partner")) {
+                viewPager.setCurrentItem(2);
+
+            } else if (getIntent().getStringExtra("classcheck").equals("from_organiser")) {
+                viewPager.setCurrentItem(2);
+
+            }
+        }
+
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,7 +99,11 @@ public class UserTabView extends AppCompatActivity {
                 return true;
 
             case R.id.not_attending:
-                startActivity(new Intent(getApplicationContext(), UserChangeOfDescision.class));
+                Intent i = new Intent(getApplicationContext(), UserChangeOfDescision.class);
+                i.putExtra("classcheck", getIntent().getStringExtra("classcheck"));
+                i.putExtra("chat_room_id", getIntent().getExtras().getString("chat_room_id"));
+                i.putExtra("eventId", getIntent().getExtras().getString("eventId"));
+                startActivity(i);
                 return true;
 
             case R.id.create_event:
@@ -101,18 +121,38 @@ public class UserTabView extends AppCompatActivity {
             case R.id.mute:
                 mute();
                 return true;
+            case R.id.invite_image:
+                String artwork = getIntent().getStringExtra("artwork");
+                if (artwork.equals("") || artwork.equals(null) || artwork.equals("null")) {
+                    Toast.makeText(UserTabView.this, "Organiser has not uploaded the image", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), EventArtwork.class);
+                    intent.putExtra("classcheck", getIntent().getStringExtra("classcheck"));
+                    intent.putExtra("chat_room_id", getIntent().getExtras().getString("chat_room_id"));
+                    intent.putExtra("eventId", getIntent().getExtras().getString("eventId"));
+                    startActivity(intent);
+                }
+
+
+                return true;
 
             case R.id.list_invitee:
                 String sharedetails = getIntent().getStringExtra("share_detail");
+
                 //Toast.makeText(UserTabView.this, sharedetails, Toast.LENGTH_SHORT).show();
                 int s = Integer.parseInt(sharedetails);
-                if (s == 1) {
-                    showDialog();
+                if (sharedetails != null) {
+                    if (s == 1) {
+                        showDialog();
 
+                    } else {
+                        Toast.makeText(UserTabView.this, "Organiser has not enabled this feature", Toast.LENGTH_SHORT).show();
+
+                    }
                 } else {
-                    Toast.makeText(UserTabView.this, "Organiser has not enabled this feature", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(this, "Something went wrong!!", Toast.LENGTH_SHORT).show();
                 }
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -165,7 +205,6 @@ public class UserTabView extends AppCompatActivity {
                 .show();
 
     }
-
 
 
     private void setupViewPager(ViewPager viewPager) {

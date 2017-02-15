@@ -1,5 +1,6 @@
 package com.events.hanle.events.Fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.R;
@@ -63,6 +65,8 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        UserTabView activity = (UserTabView) getActivity();
+
         String s = getActivity().getIntent().getStringExtra("classcheck");
         if (s != null) {
             if (s.equalsIgnoreCase("cancelledevent")) {
@@ -70,6 +74,12 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
 
             } else if (s.equalsIgnoreCase("completedevent")) {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
+            } else if (s.equalsIgnoreCase("from_notifications")) {
+                event_id = activity.getIntent().getStringExtra("chat_room_id");
+            } else if (s.equalsIgnoreCase("from_partner")) {
+                event_id = activity.getIntent().getStringExtra("eventId");
+            } else if (s.equalsIgnoreCase("from_organiser")) {
+                event_id = activity.getIntent().getStringExtra("eventId");
             }
         } else {
             event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
@@ -159,25 +169,51 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
 
 
                 JSONObject jsonObject = new JSONObject(json);
-               // user_status = jsonObject.getInt("user_status");
-                    LatLng latlng = new LatLng(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));
+                // user_status = jsonObject.getInt("user_status");
+                LatLng latlng = new LatLng(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));
 
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(latlng).zoom(13).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latlng).zoom(13).build();
 
-                    mMap.animateCamera(CameraUpdateFactory
-                            .newCameraPosition(cameraPosition));
+                mMap.animateCamera(CameraUpdateFactory
+                        .newCameraPosition(cameraPosition));
+                mMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                        .title("Event: " + jsonObject.getString("event_type"))
+                        .snippet("Time of the Event: " + jsonObject.getString("event_time"))
+                        .position(latlng))
+                        .showInfoWindow();
 
 
-                    // Create a marker for each city in the JSON data.
-                    Marker marker = mMap.addMarker(new MarkerOptions()
 
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-                            .title("Event:" + jsonObject.getString("event_type"))
-                            .snippet("Time of the Event:" + jsonObject.getString("event_time"))
-                            .position(latlng));
-                    marker.showInfoWindow();
+                // Create a marker for each city in the JSON data.
+//                Marker marker = mMap.addMarker(new MarkerOptions()
+//
+//                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+//                        .title("Event:" + jsonObject.getString("event_type"))
+//                        .snippet("Time of the Event: " + jsonObject.getString("event_time"))
+//                        .position(latlng));
 
+//                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+//
+//                    @Override
+//                    public View getInfoWindow(Marker arg0) {
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public View getInfoContents(Marker arg0) {
+//                        Log.e("InfoContent", "InfoContent");
+//                        View v = getActivity().getLayoutInflater().inflate(R.layout.mapdetails, null);
+//                        TextView title = (TextView) v.findViewById(R.id.eventtitle);
+//                        TextView eventdetials = (TextView) v.findViewById(R.id.eventdetials);
+//                        title.setText(arg0.getTitle());
+//                        eventdetials.setText(arg0.getSnippet());
+//
+//                        return v;
+//
+//                    }
+//                });
 
 
             } catch (JSONException e) {

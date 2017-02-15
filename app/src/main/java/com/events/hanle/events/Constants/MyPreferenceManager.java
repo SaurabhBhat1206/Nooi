@@ -62,9 +62,13 @@ public class MyPreferenceManager {
     private static final String SHARE_DETAIL = "SHAREDETAILS";
     private static final String SHARE_DETAIL1 = "SHAREDETAILS1";
     private static final String SHARE_DETAIL2 = "SHAREDETAILS2";
-    private static final String LATITUDE = "latitude";
-    private static final String LONGITUDE = "longitude";
-    private static final String UNREADCOUNT = "count";
+    private static final String ARTWORK = "artwork";
+    private static final String ARTWORK1 = "artwork1";
+    private static final String ARTWORK2 = "artwork2";
+    private static final String UNREADCOUNT = "unreadcount";
+    private static final String BACKGROUND_CHATROOMID = "background_chatroomID";
+
+
 
 
     // Constructor
@@ -101,13 +105,13 @@ public class MyPreferenceManager {
         Log.e(TAG, "temporary User is stored in shared preferences. " + user.getId() + "," + user.getCountrycode() + "," + user.getMobile());
     }
 
-
     public void storeEventId(ListEvent listEvent) {
         editor.putString(KEY_EVENT_ID, listEvent.getId());
         editor.putString(KEY_EVENT_TILTLE, listEvent.getEvent_title());
         editor.putString(KEY_EVENT_STATUS, listEvent.getEvent_status());
         editor.putString(KEY_INVITER_NAME, listEvent.getInvitername());
         editor.putString(SHARE_DETAIL, listEvent.getShare_detail());
+        editor.putString(ARTWORK, listEvent.getArtwork());
         editor.commit();
 
     }
@@ -118,6 +122,7 @@ public class MyPreferenceManager {
         editor.putString(KEY_EVENT_STATUS1, completedEvent.getEvent_status());
         editor.putString(KEY_INVITER_NAME1, completedEvent.getInvitername());
         editor.putString(SHARE_DETAIL1, completedEvent.getShare_detail());
+        editor.putString(ARTWORK1, completedEvent.getArtwork());
         editor.commit();
 
     }
@@ -128,6 +133,7 @@ public class MyPreferenceManager {
         editor.putString(KEY_EVENT_STATUS2, canceledEvent.getEvent_status());
         editor.putString(KEY_INVITER_NAME2, canceledEvent.getInvitername());
         editor.putString(SHARE_DETAIL2, canceledEvent.getShare_detail());
+        editor.putString(ARTWORK2, canceledEvent.getArtwork());
         editor.commit();
 
     }
@@ -207,15 +213,16 @@ public class MyPreferenceManager {
 
     public ListEvent getEventId() {
         if (pref.getString(KEY_EVENT_ID, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail,artwork;
             eventId = pref.getString(KEY_EVENT_ID, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE, null);
             event_Status = pref.getString(KEY_EVENT_STATUS, null);
             inviter_name = pref.getString(KEY_INVITER_NAME, null);
             user_status = pref.getString(KEY_USER_STATUS, null);
             sharedetail = pref.getString(SHARE_DETAIL, null);
+            artwork = pref.getString(ARTWORK, null);
 
-            ListEvent listEvent = new ListEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail);
+            ListEvent listEvent = new ListEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail,artwork);
             return listEvent;
 
         }
@@ -224,15 +231,16 @@ public class MyPreferenceManager {
 
     public CompletedEvent getCompletedEventId() {
         if (pref.getString(KEY_EVENT_ID1, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail,artwork;
             eventId = pref.getString(KEY_EVENT_ID1, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE1, null);
             event_Status = pref.getString(KEY_EVENT_STATUS1, null);
             inviter_name = pref.getString(KEY_INVITER_NAME1, null);
             user_status = pref.getString(KEY_USER_STATUS1, null);
             sharedetail = pref.getString(SHARE_DETAIL, null);
+            artwork = pref.getString(ARTWORK1, null);
 
-            CompletedEvent listEvent = new CompletedEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail);
+            CompletedEvent listEvent = new CompletedEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail,artwork);
             return listEvent;
 
         }
@@ -241,15 +249,16 @@ public class MyPreferenceManager {
 
     public CanceledEvent getCancelledEventID() {
         if (pref.getString(EVENT_INFO_ID2, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail,artwork;
             eventId = pref.getString(EVENT_INFO_ID2, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE2, null);
             event_Status = pref.getString(KEY_EVENT_STATUS2, null);
             inviter_name = pref.getString(KEY_INVITER_NAME2, null);
             user_status = pref.getString(KEY_USER_STATUS2, null);
             sharedetail = pref.getString(SHARE_DETAIL2, null);
+            artwork = pref.getString(ARTWORK2, null);
 
-            CanceledEvent listEvent = new CanceledEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail);
+            CanceledEvent listEvent = new CanceledEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail,artwork);
             return listEvent;
 
         }
@@ -271,9 +280,16 @@ public class MyPreferenceManager {
         editor.commit();
     }
 
+    public void clearnotification(){
+        editor.remove(KEY_NOTIFICATIONS);
+        editor.apply();
+    }
+
     public String getNotifications() {
         return pref.getString(KEY_NOTIFICATIONS, null);
     }
+
+
 
     public void clear() {
         editor.clear();

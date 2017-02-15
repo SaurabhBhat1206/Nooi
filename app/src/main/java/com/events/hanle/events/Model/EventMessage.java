@@ -5,10 +5,46 @@ package com.events.hanle.events.Model;
  */
 public class EventMessage {
     String id,user_id,title,description,event_status;
+    String event_id,push_message,timestamp;
+    String pushtype;
 
+    public String getPushtype() {
+        return pushtype;
+    }
 
+    public void setPushtype(String pushtype) {
+        this.pushtype = pushtype;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getEvent_id() {
+        return event_id;
+    }
+
+    public void setEvent_id(String event_id) {
+        this.event_id = event_id;
+    }
+
+    public String getPush_message() {
+        return push_message;
+    }
+
+    public void setPush_message(String push_message) {
+        this.push_message = push_message;
+    }
 
     public EventMessage() {
+    }
+
+    public EventMessage(String push_message){
+        this.push_message = push_message;
     }
 
     public EventMessage(String id, String user_id, String title, String description) {

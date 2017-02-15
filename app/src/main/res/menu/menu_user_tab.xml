@@ -16,6 +16,13 @@
         android:title="@string/attending"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_directions_walk_white_24dp"
-        android:orderInCategory="500"/>
+        android:orderInCategory="200"/>
+
+    <item
+        android:id="@+id/invite_image"
+        android:title="@string/artwork"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_image_white_48dp"
+        android:orderInCategory="100"/>
 
 </menu>

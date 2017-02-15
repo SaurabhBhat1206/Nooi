@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -53,6 +54,7 @@ public class CompletedFragments extends DialogFragment {
     private String TAG = CompletedFragments.class.getSimpleName();
     String event_id;
     String user_id, mobileno, countrycode;
+    TextView t;
 
 
     @Nullable
@@ -61,6 +63,8 @@ public class CompletedFragments extends DialogFragment {
         getDialog().setTitle("Concluded Events");
         View v = inflater.inflate(R.layout.attending_invitee, container, false);
         rv = (RecyclerView) v.findViewById(R.id.recyclerView_for_attending);
+        t = (TextView) v.findViewById(R.id.text_message);
+
         mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getMobile();
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
         adapter = new CompletedEventAdapter(getActivity(), completedevent, getDialog());
@@ -100,21 +104,28 @@ public class CompletedFragments extends DialogFragment {
                     // check for error flag
                     if (obj.getBoolean("error") == false) {
                         JSONArray chatRoomsArray = obj.getJSONArray("chat_rooms");
-                        for (int i = 0; i < chatRoomsArray.length(); i++) {
-                            JSONObject chatRoomsObj = (JSONObject) chatRoomsArray.get(i);
-                            CompletedEvent cr = new CompletedEvent();
-                            cr.setUser_status(chatRoomsObj.getString("user_attending_status"));
-                            cr.setId(chatRoomsObj.getString("event_id"));
-                            cr.setEvent_title(chatRoomsObj.getString("event_title"));
-                            cr.setInvitername(chatRoomsObj.getString("inviter_name"));
-                            cr.setEvent_status(chatRoomsObj.getString("event_status"));
-                            cr.setShare_detail(chatRoomsObj.getString("share_detail"));
-                            cr.setLastMessage("");
-                            cr.setUnreadCount(0);
-                            cr.setTimestamp(chatRoomsObj.getString("created_at"));
-                            completedevent.add(cr);
-                        }
+                        if (chatRoomsArray.length() > 0) {
+                            for (int i = 0; i < chatRoomsArray.length(); i++) {
+                                JSONObject chatRoomsObj = (JSONObject) chatRoomsArray.get(i);
+                                CompletedEvent cr = new CompletedEvent();
+                                cr.setUser_status(chatRoomsObj.getString("user_attending_status"));
+                                cr.setId(chatRoomsObj.getString("event_id"));
+                                cr.setEvent_title(chatRoomsObj.getString("event_title"));
+                                cr.setInvitername(chatRoomsObj.getString("inviter_name"));
+                                cr.setEvent_status(chatRoomsObj.getString("event_status"));
+                                cr.setShare_detail(chatRoomsObj.getString("share_detail"));
+                                cr.setArtwork(chatRoomsObj.getString("artwork"));
+                                cr.setLastMessage("");
+                                cr.setUnreadCount(0);
+                                cr.setTimestamp(chatRoomsObj.getString("created_at"));
+                                completedevent.add(cr);
+                            }
 
+                        } else {
+                            t.setVisibility(View.VISIBLE);
+                            t.setText("No Concluded events");
+                            rv.setVisibility(View.GONE);
+                        }
                     } else {
                         // error in fetching chat rooms
                         Toast.makeText(getActivity(), "" + obj.getJSONObject("error").getString("message"), Toast.LENGTH_LONG).show();

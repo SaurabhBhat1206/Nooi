@@ -31,6 +31,8 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.events.hanle.events.Activity.ListOfEvent1;
+import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Model.Message;
 import com.events.hanle.events.Model.User;
@@ -54,6 +56,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class ChatRoomActivity extends Fragment {
@@ -72,6 +76,7 @@ public class ChatRoomActivity extends Fragment {
     private int requestCount = 1;
     private RequestQueue requestQueue;
     String event_status, event_title, Username, invitername, s;
+    int es;
 
 
     @Nullable
@@ -83,6 +88,10 @@ public class ChatRoomActivity extends Fragment {
 
         tv = (TextView) v.findViewById(R.id.textView10);
         s = getActivity().getIntent().getStringExtra("classcheck");
+
+        UserTabView activity = (UserTabView) getActivity();
+        String data = activity.getIntent().getExtras().getString("eventname");
+        System.out.println("op from intent**********:" + data);
 
         if (s != null) {
             if (s.equalsIgnoreCase("cancelledevent")) {
@@ -97,6 +106,22 @@ public class ChatRoomActivity extends Fragment {
                 invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getInvitername();
                 chatRoomId = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
 
+            } else if (s.equalsIgnoreCase("from_notifications")) {
+                event_status = activity.getIntent().getExtras().getString("eventstatus");
+                event_title = activity.getIntent().getExtras().getString("event_title");
+                invitername = activity.getIntent().getStringExtra("invitername");
+                chatRoomId = activity.getIntent().getExtras().getString("chat_room_id");
+
+            } else if (s.equalsIgnoreCase("from_partner")) {
+                event_status = activity.getIntent().getExtras().getString("eventstatus");
+                event_title = activity.getIntent().getExtras().getString("event_title");
+                invitername = activity.getIntent().getStringExtra("invitername");
+                chatRoomId = activity.getIntent().getExtras().getString("eventId");
+            } else if (s.equalsIgnoreCase("from_organiser")) {
+                event_status = activity.getIntent().getExtras().getString("eventstatus");
+                event_title = activity.getIntent().getExtras().getString("event_title");
+                invitername = activity.getIntent().getStringExtra("invitername");
+                chatRoomId = activity.getIntent().getExtras().getString("eventId");
             }
         } else {
             event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_status();
@@ -106,7 +131,11 @@ public class ChatRoomActivity extends Fragment {
 
         }
 
-        int es = Integer.parseInt(event_status);
+        if (event_status != null) {
+            es = Integer.parseInt(event_status);
+        } else {
+            es = 2;
+        }
 
 
         if (chatRoomId == null) {
@@ -140,6 +169,14 @@ public class ChatRoomActivity extends Fragment {
                 if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                     // new push message is received
                     handlePushNotification(intent);
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION_FROM_PARTNER)) {
+                    // new push notification is received
+                    String desc = intent.getStringExtra("description");
+                    calldialogfrombroadcast(desc);
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION_FROM_ORGANISER)) {
+                    // new push notification is received
+                    String desc = intent.getStringExtra("description");
+                    calldialogfrombroadcastfororganiser(desc);
                 }
             }
         };
@@ -199,6 +236,12 @@ public class ChatRoomActivity extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Config.PUSH_NOTIFICATION));
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION_FROM_PARTNER));
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION_FROM_ORGANISER));
+
         NotificationUtils.clearNotifications();
     }
 
@@ -212,6 +255,22 @@ public class ChatRoomActivity extends Fragment {
      * Handling new push message, will add the message to
      * recycler view and scroll it to bottom
      */
+    private void calldialogfrombroadcast(String desc) {
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Message from partner")
+                .setContentText(desc)
+                .setCustomImage(R.drawable.images)
+                .show();
+    }
+
+    private void calldialogfrombroadcastfororganiser(String desc) {
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Message from partner")
+                .setContentText(desc)
+                .setCustomImage(R.drawable.images)
+                .show();
+    }
+
     private void handlePushNotification(Intent intent) {
         Message message = (Message) intent.getSerializableExtra("message");
         String chatRoomId = intent.getStringExtra("chat_room_id");

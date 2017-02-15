@@ -9,10 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +41,7 @@ import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Fragments.CanceledFragments;
 import com.events.hanle.events.Fragments.CompletedFragments;
+import com.events.hanle.events.Fragments.CreateEvent;
 import com.events.hanle.events.Model.ListEvent;
 import com.events.hanle.events.Model.ListEventCopy;
 import com.events.hanle.events.Model.Message;
@@ -80,8 +83,7 @@ public class ListOfEvent1 extends AppCompatActivity {
     private AlertDialog progressDialog;
     TextView tv;
     private ArrayList<ListEventCopy> copylistevent = new ArrayList<>();
-    SharedPreferences sharedpreferences;
-    public static final String MP = "COUNTPREF";
+    Double VersionCOde;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +103,7 @@ public class ListOfEvent1 extends AppCompatActivity {
         user_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUserId().getId();
         mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getMobile();
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
+
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -144,12 +147,21 @@ public class ListOfEvent1 extends AppCompatActivity {
                     // new push notification is received
                     handlePushNotification(intent);
 
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION_FROM_PARTNER)) {
+                    // new push notification is received
+                    String desc = intent.getStringExtra("description");
+                    calldialogfrombroadcastforpartner(desc);
+                    handlePushNotification(intent);
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION_FROM_ORGANISER)) {
+                    // new push notification is received
+                    String desc = intent.getStringExtra("description");
+                    calldialogfrombroadcastfororganiser(desc);
                 }
 
 
             }
         };
-        adapter = new ListEventAdapter(ListOfEvent1.this, listevent, copylistevent);
+        adapter = new ListEventAdapter(ListOfEvent1.this, listevent);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(ctx));
 
@@ -172,15 +184,18 @@ public class ListOfEvent1 extends AppCompatActivity {
         if (type == Config.PUSH_TYPE_CHATROOM) {
             Message message = (Message) intent.getSerializableExtra("message");
             String chatRoomId = intent.getStringExtra("chat_room_id");
-            Log.e("count", chatRoomId);
 
-            //Toast.makeText(ListOfEvent1.this, "chat_room_ID:"+chatRoomId, Toast.LENGTH_SHORT).show();
-
-            if (message != null && chatRoomId != null) {
+            if (chatRoomId != null) {
                 updateRow(chatRoomId, message);
-                updateRowwehninbackground(chatRoomId, message);
             }
-        } else if (type == Config.PUSH_TYPE_USER) {
+        } else if(type == Config.PUSH_TYPE_ORGANISER || type == Config.PUSH_TYPE_PARTNER){
+            String chatRoomId = intent.getStringExtra("eventId");
+            if(chatRoomId!=null){
+                updateRowwehninbackgroundforparneeorganiser(chatRoomId);
+
+            }
+
+        }else if (type == Config.PUSH_TYPE_USER) {
             // push belongs to user alone
             // just showing the message in a toast
             Message message = (Message) intent.getSerializableExtra("message");
@@ -199,11 +214,6 @@ public class ListOfEvent1 extends AppCompatActivity {
                 int index = listevent.indexOf(cr);
                 cr.setLastMessage(message.getMessage());
                 cr.setUnreadCount(cr.getUnreadCount() + 1);
-                sharedpreferences = getSharedPreferences(MP, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString("countttt", String.valueOf(cr.getUnreadCount() + 1));
-                editor.apply();
-                Log.e("count", String.valueOf(cr.getUnreadCount()));
                 listevent.remove(index);
                 cr.setUnreadCount(1);
                 listevent.add(index, cr);
@@ -213,16 +223,15 @@ public class ListOfEvent1 extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    private void updateRowwehninbackground(String chatRoomId, Message message) {
-        for (ListEventCopy lc : copylistevent) {
+    private void updateRowwehninbackgroundforparneeorganiser(String chatRoomId) {
+        for (ListEvent lc : listevent) {
             if (lc.getId().equals(chatRoomId)) {
-                int index = copylistevent.indexOf(lc);
-                lc.setLastMessage(message.getMessage());
-                lc.setUnreadCount(lc.getUnreadCount() + 1);
-                Log.e("countback", String.valueOf(lc.getUnreadCount()));
-                copylistevent.remove(index);
-                lc.setUnreadCount(1);
-                copylistevent.add(index, lc);
+                int index = listevent.indexOf(lc);
+                lc.setUnreadcount1(lc.getUnreadcount1() + 1);
+                listevent.remove(index);
+                lc.setUnreadcount1(1);
+                listevent.add(index, lc);
+
                 break;
             }
         }
@@ -262,22 +271,17 @@ public class ListOfEvent1 extends AppCompatActivity {
                             for (int i = 0; i < chatRoomsArray.length(); i++) {
                                 JSONObject chatRoomsObj = (JSONObject) chatRoomsArray.get(i);
                                 ListEvent cr = new ListEvent();
-                                ListEventCopy lc = new ListEventCopy();
-                                lc.setId(chatRoomsObj.getString("user_attending_status"));
                                 cr.setUser_status(chatRoomsObj.getString("user_attending_status"));
                                 cr.setId(chatRoomsObj.getString("event_id"));
                                 cr.setEvent_title(chatRoomsObj.getString("event_title"));
                                 cr.setInvitername(chatRoomsObj.getString("inviter_name"));
                                 cr.setEvent_status(chatRoomsObj.getString("event_status"));
                                 cr.setShare_detail(chatRoomsObj.getString("share_detail"));
+                                cr.setArtwork(chatRoomsObj.getString("artwork"));
                                 cr.setLastMessage("");
-                                lc.setLastMessage("");
                                 cr.setUnreadCount(0);
-                                lc.setUnreadCount(0);
                                 cr.setTimestamp(chatRoomsObj.getString("created_at"));
                                 listevent.add(cr);
-                                copylistevent.add(lc);
-                                System.out.print("copied list" + lc.getId() + "," + lc.getUnreadCount() + "," + lc.getLastMessage());
                                 tv.setText(getString(R.string.list));
 
                             }
@@ -301,7 +305,7 @@ public class ListOfEvent1 extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
                 // subscribing to all chat room topics
-                subscribeToAllTopics();
+                //subscribeToAllTopics();
             }
         }, new Response.ErrorListener() {
 
@@ -343,17 +347,6 @@ public class ListOfEvent1 extends AppCompatActivity {
         startService(intent);
     }
 
-    public void subscribeToAllTopics() {
-        for (ListEvent cr : listevent) {
-
-            Intent intent = new Intent(ListOfEvent1.this, GcmIntentService.class);
-            intent.putExtra(GcmIntentService.KEY, GcmIntentService.SUBSCRIBE);
-            //intent.putExtra(GcmIntentService.TOPIC, "topic_" + cr.getId());
-            intent.putExtra(GcmIntentService.TOPIC, "topic_" + "15092016");
-            startService(intent);
-        }
-    }
-
 
     @Override
     public void onResume() {
@@ -372,6 +365,12 @@ public class ListOfEvent1 extends AppCompatActivity {
         LocalBroadcastManager.getInstance(ListOfEvent1.this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Config.SCHEDULEDPUSH));
 
+        LocalBroadcastManager.getInstance(ListOfEvent1.this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION_FROM_PARTNER));
+
+        LocalBroadcastManager.getInstance(ListOfEvent1.this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION_FROM_ORGANISER));
+
 
         // clearing the notification tray
         NotificationUtils.clearNotifications();
@@ -380,16 +379,8 @@ public class ListOfEvent1 extends AppCompatActivity {
             if (ConnectionDetector.isInternetAvailable(ListOfEvent1.this)) {
                 listevent.clear();
                 adapter.notifyDataSetChanged();
-
                 registerGCM();
                 fetchChatRooms();
-                Message message = (Message) getIntent().getSerializableExtra("me");
-                String chatRoomId = getIntent().getStringExtra("chat_room_id");
-                Log.d("OP:", message + "," + chatRoomId);
-                if (message != null && chatRoomId != null) {
-
-                    updateRowwehninbackground(chatRoomId, message);
-                }
 
             } else {
                 Toast.makeText(ListOfEvent1.this, "No Internet!!", Toast.LENGTH_SHORT).show();
@@ -464,20 +455,132 @@ public class ListOfEvent1 extends AppCompatActivity {
 
     private void calldialogue() {
 
+
+        CreateEvent dialogFragment= new CreateEvent();
+        dialogFragment.show(getSupportFragmentManager(),"missiles");
+    }
+
+    private void calldialogfrombroadcastforpartner(String desc) {
         new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Hanle Solutions")
-                .setContentText("To create an Invite visit www.nooitheinviteapp.com")
+                .setTitleText("Message from partner")
+                .setContentText(desc)
+                .setCustomImage(R.drawable.images)
+                .show();
+    }
+
+    private void calldialogfrombroadcastfororganiser(String desc) {
+        new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Message from partner")
+                .setContentText(desc)
+                .setCustomImage(R.drawable.images)
+                .show();
+    }
+
+    private void update(String app_ver) {
+
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Version:" + app_ver)
+                .setContentText("A newer version of nooi is available")
+                .setConfirmText("Update")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        sDialog.setCanceledOnTouchOutside(true);
+                        startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://play.google.com/store/apps/details?id=com.events.hanle.events&hl=en")));
+
+                    }
+                })
+                .show();
+
+    }
+
+    private void noupdate(String app_ver) {
+
+        new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Version:" + app_ver)
+                .setContentText("You are using the latest version")
                 .setCustomImage(R.drawable.images)
                 .show();
 
     }
 
     private void aboutus() {
-        new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Hanle Solutions")
-                .setContentText("Version 1.08")
-                .setCustomImage(R.drawable.images)
-                .show();
+
+        String app_ver = null;
+        try {
+            app_ver = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        getVersioncode(app_ver);
+
+    }
+
+    private void getVersioncode(final String app_ver) {
+
+        StringRequest strReq = new StringRequest(Request.Method.GET,
+                EndPoints.VERSION_CHECK, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, "response: " + response);
+
+
+                try {
+                    JSONObject obj = new JSONObject(response);
+
+                    if (obj.getBoolean("error") == false) {
+                        String v = obj.getString("version_code");
+                        VersionCOde = Double.parseDouble(v);
+                        System.out.println("VERSIONCODEVOLLEY" + VersionCOde);
+                        if (app_ver != null) {
+                            if (VersionCOde > 0 && (VersionCOde > Double.parseDouble(app_ver))) {
+                                update(app_ver);
+                            } else {
+                                noupdate(app_ver);
+                            }
+                        }
+                    }
+
+
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.hide();
+                mSwipeRefreshLayout.setRefreshing(false);
+                NetworkResponse networkResponse = error.networkResponse;
+                Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
+                //Toast.makeText(ListOfEvent1.this, "Server did not respond!!", Toast.LENGTH_SHORT).show();
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(),
+                            getApplicationContext().getString(R.string.error_network_timeout),
+                            Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+                    Toast.makeText(getApplicationContext(),
+                            getApplicationContext().getString(R.string.error_network_server),
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ListOfEvent1.this, "Something went wrong!!", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                WebUrl.MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //Adding request to request queue
+        MyApplication.getInstance().addToRequestQueue(strReq);
 
     }
 
@@ -514,11 +617,19 @@ public class ListOfEvent1 extends AppCompatActivity {
                 return true;
 
             case R.id.cancelled:
-                callCanceled();
+                if (ConnectionDetector.isInternetAvailable(ListOfEvent1.this)) {
+                    callCanceled();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Internet!!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
             case R.id.concluded:
-                callcompleted();
+                if (ConnectionDetector.isInternetAvailable(ListOfEvent1.this)) {
+                    callcompleted();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Internet!!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
             case R.id.create_event:
@@ -530,7 +641,13 @@ public class ListOfEvent1 extends AppCompatActivity {
                 return true;
 
             case R.id.about_us:
-                aboutus();
+                if (ConnectionDetector.isInternetAvailable(ListOfEvent1.this)) {
+                    aboutus();
+
+                } else {
+                    Toast.makeText(ListOfEvent1.this, "No Internet!!!", Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
 
 

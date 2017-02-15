@@ -122,21 +122,8 @@ public class NotificationUtils {
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
-        if (Config.appendNotificationMessages) {
-            // store the notification in shared pref first
-            MyApplication.getInstance().getPrefManager().addNotification(message);
 
-            // get the notifications from shared preferences
-            String oldNotification = MyApplication.getInstance().getPrefManager().getNotifications();
-
-            List<String> messages = Arrays.asList(oldNotification.split("\\|"));
-
-            for (int i = messages.size() - 1; i >= 0; i--) {
-                inboxStyle.addLine(messages.get(i));
-            }
-        } else {
-            inboxStyle.addLine(message);
-        }
+        inboxStyle.addLine(message);
 
 
         Notification notification;
@@ -147,7 +134,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(inboxStyle)
                 .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.drawable.ic_notification_small)
+                .setSmallIcon(R.drawable.nooiiconnew)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message)
                 .build();
@@ -169,7 +156,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(bigPictureStyle)
                 .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.drawable.ic_notification_small)
+                .setSmallIcon(R.drawable.nooiiconnew)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message)
                 .build();
@@ -241,6 +228,7 @@ public class NotificationUtils {
     // Clears notification tray messages
     public static void clearNotifications() {
         NotificationManager notificationManager = (NotificationManager) MyApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
+        MyApplication.getInstance().getPrefManager().clearnotification();
         notificationManager.cancelAll();
     }
 

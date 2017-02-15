@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class CanceledEvent  {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail;
+    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail,artwork;
     int unreadCount;
 
     public CanceledEvent() {
@@ -25,7 +25,7 @@ public class CanceledEvent  {
         this.unreadCount = unreadCount;
     }
 
-    public CanceledEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail) {
+    public CanceledEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail,String artwork) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -33,6 +33,7 @@ public class CanceledEvent  {
         this.event_status = event_status;
         this.lastMessage = lastMessage;
         this.share_detail = share_detail;
+        this.artwork = artwork;
     }
 
     public String getId() {
@@ -113,5 +114,13 @@ public class CanceledEvent  {
 
     public void setUnreadCount(int unreadCount) {
         this.unreadCount = unreadCount;
+    }
+
+    public String getArtwork() {
+        return artwork;
+    }
+
+    public void setArtwork(String artwork) {
+        this.artwork = artwork;
     }
 }

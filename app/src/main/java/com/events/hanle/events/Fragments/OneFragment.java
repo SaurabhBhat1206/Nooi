@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,12 +23,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.DividerItemDecoration;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.FeedItem;
 import com.events.hanle.events.R;
 import com.events.hanle.events.adapter.MyRecyclerAdapter;
+import com.events.hanle.events.gcm.GcmIntentService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,20 +78,26 @@ public class OneFragment extends Fragment {
         mRecyclerView = (RecyclerView) mainview.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(ctx));
         mRecyclerView.setHasFixedSize(true);
+
+        UserTabView activity = (UserTabView) getActivity();
+
         String s = getActivity().getIntent().getStringExtra("classcheck");
         if (s != null) {
             if (s.equalsIgnoreCase("cancelledevent")) {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getId();
-
             } else if (s.equalsIgnoreCase("completedevent")) {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
+            } else if (s.equalsIgnoreCase("from_notifications")) {
+                event_id = activity.getIntent().getExtras().getString("chat_room_id");
+            } else if (s.equalsIgnoreCase("from_partner")) {
+                event_id = activity.getIntent().getStringExtra("eventId");
+            } else if (s.equalsIgnoreCase("from_organiser")) {
+                event_id = activity.getIntent().getStringExtra("eventId");
             }
         } else {
             event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
-
+            subscribeToAllTopics(event_id);
         }
-
-
         mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getMobile();
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
         //Toast.makeText(getActivity(), "country code"+countrycode, Toast.LENGTH_SHORT).show();
@@ -107,7 +116,6 @@ public class OneFragment extends Fragment {
 
 
         }
-
 
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) mainview.findViewById(R.id.swipeRefreshLayout);
@@ -144,6 +152,20 @@ public class OneFragment extends Fragment {
             }, 10);
             return;
         }
+
+    }
+
+
+    public void subscribeToAllTopics(String eventID) {
+
+
+        Intent intent = new Intent(getActivity(), GcmIntentService.class);
+        intent.putExtra(GcmIntentService.KEY, GcmIntentService.SUBSCRIBE);
+        //intent.putExtra(GcmIntentService.TOPIC, "topic_" + eventID);
+        //intent.putExtra(GcmIntentService.TOPIC, "topic_" + "15092016");
+        intent.putExtra(GcmIntentService.TOPIC, "topic_" + "test_android_ios");
+        getActivity().startService(intent);
+        //Toast.makeText(getActivity(), "topic_" + "android_ios", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -194,6 +216,7 @@ public class OneFragment extends Fragment {
             return result; //"Failed to fetch data!";
         }
 
+
         @Override
         protected void onPostExecute(Integer result) {
             // Download complete. Let us update UI
@@ -206,7 +229,6 @@ public class OneFragment extends Fragment {
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
-
 
             } else {
                 progressDialog.hide();
@@ -228,23 +250,26 @@ public class OneFragment extends Fragment {
 //                RunSeparteThread(status);
 //
 //            } else {
-                feedsList = new ArrayList<>();
-                FeedItem item = new FeedItem();
-                item.setEvent_creator_name(response.optString("event_creater_username"));
-                item.setOrgnaserphone(response.optString("event_creator_phone"));
-                item.setEventdesc(response.optString("description"));
-                item.setAddress(response.optString("event_address"));
-                item.setDate(response.optString("event_date"));
-                item.setTime(response.optString("event_time"));
-                item.setEventname(response.optString("event_type"));
-                item.setPayment(response.optString("payment"));
-                item.setDresscode(response.optString("dresscode"));
-                item.setTimezone(response.optString("timezone"));
-                item.setWeekday(response.optString("weekday"));
-                feedsList.add(item);
-                FeedItem feedItem = new FeedItem(response.getString("event_status"));
-                com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storeEventInfoID(feedItem);
 
+            feedsList = new ArrayList<>();
+            FeedItem item = new FeedItem();
+            item.setEvent_creator_name(response.optString("event_creater_username"));
+            item.setOrgnaserphone(response.optString("event_creator_phone"));
+            item.setEventdesc(response.optString("description"));
+            item.setAddress(response.optString("event_address"));
+            item.setDate(response.optString("event_date"));
+            item.setTime(response.optString("event_time"));
+            item.setEventname(response.optString("event_type"));
+            item.setPayment(response.optString("payment"));
+            item.setDresscode(response.optString("dresscode"));
+            item.setTimezone(response.optString("timezone"));
+            item.setWeekday(response.optString("weekday"));
+            if (response.has("establishment") || response.optString("establishment") != null) {
+                item.setEstablishmantname(response.optString("establishment"));
+            }
+            feedsList.add(item);
+            FeedItem feedItem = new FeedItem(response.getString("event_status"));
+            com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storeEventInfoID(feedItem);
 
 
         } catch (JSONException e) {

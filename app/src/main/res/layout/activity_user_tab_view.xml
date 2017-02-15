@@ -37,6 +37,17 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--app:layout_anchor="@id/viewpager"-->
+        <!--app:layout_anchorGravity="bottom|right|end"-->
+        <!--android:layout_width="56dp"-->
+        <!--android:layout_height="56dp"-->
+        <!--android:src="@drawable/ic_photo_camera_white_24dp"-->
+        <!--app:backgroundTint="@color/colorPrimaryDark"-->
+        <!--app:borderWidth="16dp"-->
+        <!--app:fabSize="normal" />-->
+
 </android.support.design.widget.CoordinatorLayout>
 
 

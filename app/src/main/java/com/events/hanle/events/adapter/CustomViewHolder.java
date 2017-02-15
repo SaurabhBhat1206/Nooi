@@ -10,7 +10,7 @@ import com.events.hanle.events.R;
 public class CustomViewHolder extends RecyclerView.ViewHolder {
 
 
-    protected TextView event_heading,tim,date,venue,description,event_cretor,payment,dresscode,dresscodelabel,paymentlabel,phone;
+    protected TextView event_heading,tim,date,venue,description,event_cretor,payment,dresscode,dresscodelabel,paymentlabel,phone,establishmentname;
 
 
     public CustomViewHolder(View view) {
@@ -26,5 +26,6 @@ public class CustomViewHolder extends RecyclerView.ViewHolder {
         this.dresscodelabel = (TextView) itemView.findViewById(R.id.dress_code);
         this.paymentlabel = (TextView) itemView.findViewById(R.id.paymentoptions);
         this.phone = (TextView) itemView.findViewById(R.id.phone1);
+        this.establishmentname = (TextView) itemView.findViewById(R.id.establishment_name);
     }
 }

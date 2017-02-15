@@ -7,7 +7,8 @@ public class WebUrl {
 
     //production url
     //public final static String BASE_URL = "http://hanlesolutions.com/nooi/event_mobile_webservices/phpscript";
-    public final static String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/14-09-2016-live/event_mobile_webservices/phpscript";
+    public final static String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/mobiletest/event_mobile_webservices/phpscript";
+    //public final static String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/14-09-2016-live/event_mobile_webservices/phpscript";
 
     public final static String USER_LOGIN_URL = BASE_URL + "/otp/login_smscountry.php";
     public final static String CHECK_OTP = BASE_URL + "/otp/confirm.php";
@@ -18,6 +19,7 @@ public class WebUrl {
     public final static String USER_NOTATTENDING = BASE_URL + "/user_attending_status_no.php";
     public final static String LIST_CONFIRMATION = BASE_URL + "/list_event_attending_not_attending.php?eventid=";
     public final static String LIST_ATTENDING_CONTACT = BASE_URL + "/list_attending.php?eventid=";
+    public final static String ORGANISER_ARTWORK = BASE_URL+"/organiser_art_work.php?id=";
 
     public static final int MY_SOCKET_TIMEOUT_MS = 30000;
 

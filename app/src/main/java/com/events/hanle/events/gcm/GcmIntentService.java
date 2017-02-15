@@ -37,7 +37,6 @@ import com.events.hanle.events.app.MyApplication;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import org.joda.time.DateTimeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -96,28 +95,13 @@ public class GcmIntentService extends IntentService {
 
     }
 
-//    private void show() {
-//
-//        DBController dbController = new DBController(getApplicationContext());
-//
-//        //Toast.makeText(context, "Schedled push from broadcast", Toast.LENGTH_SHORT).show();
-//        ArrayList<HashMap<String, String>> animalList = dbController.getallEvents();
-//
-//
-//        System.out.println("op from sqllit:"+ animalList);
-//    }
 
-
-    /**
-     * Registering with GCM and obtaining the gcm registration id
-     */
     private void registerGCM() {
+
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
-//            InstanceID instanceID = InstanceID.getInstance(this);
-//            String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
-//                    GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
             String token = FirebaseInstanceId.getInstance().getToken();
 
@@ -296,6 +280,7 @@ public class GcmIntentService extends IntentService {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("gcm_registration_id", token);
+                params.put("device_type", "1");
 
                 Log.e(TAG, "params: " + params.toString());
                 return params;

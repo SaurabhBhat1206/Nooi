@@ -19,6 +19,8 @@ public class FeedItem implements Serializable {
     private String timezone;
     private String orgnaserphone;
     private String weekday;
+    private String establishmantname;
+
 
 
     public FeedItem() {
@@ -142,6 +144,13 @@ public class FeedItem implements Serializable {
 
     public void setWeekday(String weekday) {
         this.weekday = weekday;
+    }
+    public String getEstablishmantname() {
+        return establishmantname;
+    }
+
+    public void setEstablishmantname(String establishmantname) {
+        this.establishmantname = establishmantname;
     }
 
 }

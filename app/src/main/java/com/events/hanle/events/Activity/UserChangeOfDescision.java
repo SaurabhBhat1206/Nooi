@@ -51,9 +51,25 @@ public class UserChangeOfDescision extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         findViewsById();
-        eventinfoID = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+        String s = getIntent().getStringExtra("classcheck");
+        if (s != null) {
+            if (s.equalsIgnoreCase("cancelledevent")) {
+                eventinfoID = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getId();
+            } else if (s.equalsIgnoreCase("completedevent")) {
+                eventinfoID = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
+            } else if (s.equalsIgnoreCase("from_notifications")) {
+                eventinfoID = getIntent().getStringExtra("chat_room_id");
+            } else if (s.equalsIgnoreCase("from_partner")) {
+                eventinfoID = getIntent().getStringExtra("eventId");
+            } else if (s.equalsIgnoreCase("from_organiser")) {
+                eventinfoID = getIntent().getStringExtra("eventId");
+            }
+        } else {
+            eventinfoID = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+        }
+
         user_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getId();
-        Toast.makeText(UserChangeOfDescision.this, user_id, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(UserChangeOfDescision.this, user_id, Toast.LENGTH_SHORT).show();
 
 
         next.setOnClickListener(new View.OnClickListener() {

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.events.hanle.events">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <!--
      needed for older devices -
@@ -20,7 +21,6 @@
     <uses-permission android:name="com.events.hanle.events.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <permission
         android:name="com.events.hanle.events.permission.MAPS_RECEIVE"
@@ -59,14 +59,11 @@
             android:name=".Activity.UserAttendingStatus"
             android:screenOrientation="portrait" />
 
-
         <receiver android:name=".BroadCast.ScheduledPush">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-
         <receiver
             android:name=".BroadCast.DeviceBootReceiver"
             android:enabled="false">
@@ -99,11 +96,9 @@
         <service
             android:name=".gcm.GcmIntentService"
             android:exported="false" />
-
         <service
             android:name=".BroadCast.SceduledPushNotification"
             android:exported="false" />
-
         <service android:name=".gcm.MyInstanceIDListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -122,15 +117,22 @@
             android:name="io.fabric.ApiKey"
             android:value="9731448046010532be8054c7fb9e940a1e6ec9ad" />
         <!--<meta-data-->
-        <!--android:name="com.google.android.geo.API_KEY"-->
-        <!--android:value="AIzaSyBOyMHLZI1sWG3TdU1PGDa1WTcgVTlE1J4" />-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyBOyMHLZI1sWG3TdU1PGDa1WTcgVTlE1J4" />-->
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAm205HNgwy0cyVHxb9ULYQ9MwWlARjMrA" />
+         <meta-data
+         android:name="com.google.android.geo.API_KEY"
+         android:value="AIzaSyAm205HNgwy0cyVHxb9ULYQ9MwWlARjMrA" />
 
-        <activity android:name=".Activity.ListOfConcluded"></activity>
-        <activity android:name=".Activity.ListOfCancelledEvent"></activity>
+        <activity
+            android:name=".Activity.ListOfConcluded"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.ListOfCancelledEvent"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.EventArtwork"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

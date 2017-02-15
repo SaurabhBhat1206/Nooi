@@ -56,6 +56,7 @@ public class AttendingDialogFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.attending_invitee, container, false);
         rv = (RecyclerView) v.findViewById(R.id.recyclerView_for_attending);
 
+        UserTabView activity = (UserTabView) getActivity();
 
         String s = getActivity().getIntent().getStringExtra("classcheck");
         if (s != null) {
@@ -64,6 +65,12 @@ public class AttendingDialogFragment extends DialogFragment {
 
             } else if (s.equalsIgnoreCase("completedevent")) {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
+            } else if (s.equalsIgnoreCase("from_notifications")) {
+                event_id = activity.getIntent().getStringExtra("chat_room_id");
+            } else if (s.equalsIgnoreCase("from_partner")) {
+                event_id = activity.getIntent().getStringExtra("eventId");
+            } else if (s.equalsIgnoreCase("from_organiser")) {
+                event_id = activity.getIntent().getStringExtra("eventId");
             }
         } else {
             event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();

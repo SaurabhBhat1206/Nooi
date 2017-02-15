@@ -28,9 +28,10 @@
     <string name="about_us">About</string>
     <string name="logout">Logout</string>
     <string name="attending">Attending</string>
+    <string name="artwork">Artwork</string>
     <string name="error_network_timeout">Time Out Error</string>
     <string name="error_network_server">Server error</string>
-    <string name="list">List of Active Events</string>
+    <string name="list">Active Events</string>
     <string name="action_settings">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
 
@@ -38,8 +39,7 @@
     <string name="version">1.01</string>
     <string name="cancelled">Cancelled / NA Events</string>
     <string name="concluded">Concluded Events</string>
-
-
+    <string name="nooilink"><a href="http://www.nooitheinviteapp.com">www.nooitheinviteapp.com</a></string>
     <string name="hello_blank_fragment">
      <![CDATA[
         1. Terms of Service The software application “nooi” is a copyrighted work belonging to M/s Hanle Solutions Private Limitedand Associates (“Hanle, “nooi”, “us”, or “we”).  “nooi” provides a smartphonesoftware application and related services (collectively, the “nooi”).
