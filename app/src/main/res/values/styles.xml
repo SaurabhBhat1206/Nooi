@@ -57,4 +57,7 @@
         <item name="DialogSpotColor">@color/pdialog</item>
     </style>
 
+    <color name="simpletooltip_background">@color/tool_background</color>
+    <color name="simpletooltip_text">@color/tool_background_text_color</color>
+
 </resources>

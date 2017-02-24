@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <!--
      needed for older devices -
      used to check app background / foreground status
@@ -116,13 +117,13 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9731448046010532be8054c7fb9e940a1e6ec9ad" />
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="AIzaSyBOyMHLZI1sWG3TdU1PGDa1WTcgVTlE1J4" />-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="AIzaSyBOyMHLZI1sWG3TdU1PGDa1WTcgVTlE1J4" /> -->
 
-         <meta-data
-         android:name="com.google.android.geo.API_KEY"
-         android:value="AIzaSyAm205HNgwy0cyVHxb9ULYQ9MwWlARjMrA" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAm205HNgwy0cyVHxb9ULYQ9MwWlARjMrA" />
 
         <activity
             android:name=".Activity.ListOfConcluded"
@@ -133,6 +134,9 @@
         <activity
             android:name=".Activity.EventArtwork"
             android:screenOrientation="portrait" />
+        <activity android:name=".Activity.OrganiserLogin" />
+        <activity android:name=".Activity.ListOfOrganiserActions" />
+        <activity android:name=".Activity.OrganiserContactForm"></activity>
     </application>
 
 </manifest>

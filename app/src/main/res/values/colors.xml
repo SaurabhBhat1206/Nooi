@@ -3,6 +3,8 @@
     <color name="colorPrimary">#b5b6be</color>
     <color name="colorPrimaryDark">#4caaad</color>
     <color name="colorAccent">#000000</color>
+    <color name="tool_background">#03A1E9</color>
+    <color name="tool_background_text_color">#ffffff</color>
 
     <color name="NiceButtonStartColor">#4AA02C</color>
     <color name="NiceButtonEndColor">#348017</color>

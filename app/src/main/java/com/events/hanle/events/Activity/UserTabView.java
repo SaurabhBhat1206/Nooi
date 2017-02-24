@@ -19,8 +19,10 @@ import android.widget.Toast;
 
 
 import com.events.hanle.events.Fragments.AttendingDialogFragment;
+import com.events.hanle.events.Fragments.CreateEvent;
 import com.events.hanle.events.Fragments.MuteDialog;
 import com.events.hanle.events.Fragments.OneFragment;
+import com.events.hanle.events.Fragments.OrganiserLoginDialog;
 import com.events.hanle.events.Fragments.Three;
 import com.events.hanle.events.Fragments.TwoFragment;
 import com.events.hanle.events.Model.ListEvent;
@@ -110,6 +112,12 @@ public class UserTabView extends AppCompatActivity {
                 calldialogue();
                 return true;
 
+            case R.id.organiser_login:
+                //startActivity(new Intent(getApplicationContext(),OrganiserLogin.class));
+                OrganiserLoginDialog dialogFragment= new OrganiserLoginDialog();
+                dialogFragment.show(getSupportFragmentManager(),"missiles");
+                return true;
+
             case R.id.feedback:
                 sendFeedbackalert();
                 return true;
@@ -123,7 +131,9 @@ public class UserTabView extends AppCompatActivity {
                 return true;
             case R.id.invite_image:
                 String artwork = getIntent().getStringExtra("artwork");
-                if (artwork.equals("") || artwork.equals(null) || artwork.equals("null")) {
+
+                System.out.println("artwork"+artwork);
+                if (artwork.equals("")) {
                     Toast.makeText(UserTabView.this, "Organiser has not uploaded the image", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), EventArtwork.class);

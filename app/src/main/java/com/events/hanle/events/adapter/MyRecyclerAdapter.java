@@ -75,7 +75,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<CustomViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:"+feedItem.getOrgnaserphone()));
+                    callIntent.setData(Uri.parse("tel:"+"+"+feedItem.getOrgnaserphone()));
                     mContext.startActivity(callIntent);
                 }
             });
@@ -94,7 +94,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<CustomViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:"+feedItem.getOrgnaserphone()));
+                    callIntent.setData(Uri.parse("tel:"+"+"+feedItem.getOrgnaserphone()));
                     mContext.startActivity(callIntent);
                 }
             });
