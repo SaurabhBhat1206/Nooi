@@ -60,4 +60,8 @@
     <color name="simpletooltip_background">@color/tool_background</color>
     <color name="simpletooltip_text">@color/tool_background_text_color</color>
 
+    <style name="checkbox">
+        <item name="colorAccent">@color/tool_background</item>
+    </style>
+
 </resources>

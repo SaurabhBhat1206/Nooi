@@ -119,6 +119,27 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
                 }
                 break;
+
+            case Config.PUSH_TYPE_LARGE_EVENT:
+                if (message.getNotification() != null) {
+                    Log.e(TAG, "Notification Body from organiser: " + message.getNotification().getBody());
+                    handleNotificationforLargeEvent(message.getNotification().getBody());
+                }
+
+                // Check if message contains a data payload.
+                if (message.getData().size() > 0) {
+                    Log.e(TAG, "Data Payload from organiser: " + message.getData().toString());
+
+                    try {
+                        JSONObject json = new JSONObject(message.getData().toString());
+                        handleDataMessageforlargeEvent(json);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Exception from organiser: " + e.getMessage());
+                    }
+                }
+
+
+                break;
         }
 
 
@@ -143,6 +164,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             String timestamp = data.getString("timestamp");
             String description = data.getString("description");
             String artwork = data.getString("artwork");
+            String type = data.getString("type");
+            String chatW = data.getString("chatW");
             JSONObject payload = data.getJSONObject("payload");
 
             Log.e(TAG, "title: " + title);
@@ -165,7 +188,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 notificationUtils.playNotificationSound();
             } else {
                 // app is in background, show the notification in notification tray
-                Intent resultIntent = new Intent(getApplicationContext(), UserTabView.class);
+                Intent resultIntent = new Intent(getApplicationContext(), ListOfEvent1.class);
                 resultIntent.putExtra("message", message);
                 resultIntent.putExtra("eventId", eventID);
                 resultIntent.putExtra("eventstatus", event_status);
@@ -174,6 +197,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 resultIntent.putExtra("share_detail", share_detial);
                 resultIntent.putExtra("artwork", artwork);
                 resultIntent.putExtra("invitername", invitername);
+                resultIntent.putExtra("eventtype", type);
+                resultIntent.putExtra("chatw", chatW);
                 editor.putString("partnereventID" + eventID, eventID);
                 editor.commit();
                 // check for image attachment
@@ -210,6 +235,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             String timestamp = data.getString("timestamp");
             String description = data.getString("description");
             String artwork = data.getString("artwork");
+            String type = data.getString("type");
+            String chatW = data.getString("chatW");
             JSONObject payload = data.getJSONObject("payload");
 
             Log.e(TAG, "title: " + title);
@@ -233,7 +260,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 notificationUtils.playNotificationSound();
             } else {
                 // app is in background, show the notification in notification tray
-                Intent resultIntent = new Intent(getApplicationContext(), UserTabView.class);
+                Intent resultIntent = new Intent(getApplicationContext(), ListOfEvent1.class);
                 resultIntent.putExtra("message", message);
                 resultIntent.putExtra("eventId", eventID);
                 resultIntent.putExtra("eventstatus", event_status);
@@ -242,6 +269,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 resultIntent.putExtra("share_detail", share_detial);
                 resultIntent.putExtra("artwork", artwork);
                 resultIntent.putExtra("invitername", invitername);
+                resultIntent.putExtra("eventtype", type);
+                resultIntent.putExtra("chatw", chatW);
                 editor.putString("organisereventID" + eventID, eventID);
                 editor.commit();
                 // check for image attachment
@@ -259,7 +288,92 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         }
     }
 
+    private void handleDataMessageforlargeEvent(JSONObject json) {
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        Log.e(TAG, "push json: " + json.toString());
+
+        try {
+            JSONObject data = json.getJSONObject("data");
+
+            String title = data.getString("title");
+            String message = data.getString("description");
+            String event_status = data.getString("eventstatus");
+            String share_detial = data.getString("sharedetail");
+            String invitername = data.getString("invitername");
+            String eventID = data.getString("eventId");
+            boolean isBackground = data.getBoolean("is_background");
+            String imageUrl = data.getString("image");
+            String timestamp = data.getString("timestamp");
+            String description = data.getString("description");
+            String artwork = data.getString("artwork");
+            String type = data.getString("type");
+            String chatW = data.getString("chatW");
+
+            Log.e(TAG, "title: " + title);
+            Log.e(TAG, "message: " + message);
+            Log.e(TAG, "isBackground: " + isBackground);
+            Log.e(TAG, "imageUrl: " + imageUrl);
+            Log.e(TAG, "timestamp: " + timestamp);
+
+
+            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+                // app is in foreground, broadcast the push message
+                Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION_FROM_ORGANISER);
+                pushNotification.putExtra("type", Config.PUSH_TYPE_ORGANISER);
+                pushNotification.putExtra("description", description);
+                pushNotification.putExtra("eventId", eventID);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+                // play notification sound
+                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                notificationUtils.playNotificationSound();
+            } else {
+                // app is in background, show the notification in notification tray
+                Intent resultIntent = new Intent(getApplicationContext(), ListOfEvent1.class);
+                resultIntent.putExtra("message", message);
+                resultIntent.putExtra("eventId", eventID);
+                resultIntent.putExtra("eventstatus", event_status);
+                resultIntent.putExtra("classcheck", "from_organiser");
+                resultIntent.putExtra("event_title", message);
+                resultIntent.putExtra("share_detail", share_detial);
+                resultIntent.putExtra("artwork", artwork);
+                resultIntent.putExtra("invitername", invitername);
+                resultIntent.putExtra("eventtype", type);
+                resultIntent.putExtra("chatw", chatW);
+
+                // check for image attachment
+                if (TextUtils.isEmpty(imageUrl)) {
+                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                } else {
+                    // image is present, show notification with image
+                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json Exception: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
+    }
+
+
     private void handleNotificationforOrganiser(String message) {
+        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+            // app is in foreground, broadcast the push message
+            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
+            pushNotification.putExtra("message", message);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+            // play notification sound
+            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+            notificationUtils.playNotificationSound();
+        } else {
+            // If the app is in background, firebase itself handles the notification
+        }
+    }
+
+    private void handleNotificationforLargeEvent(String message) {
         if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
             // app is in foreground, broadcast the push message
             Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
@@ -304,6 +418,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 String event_status = mObj.getString("event_status");
                 String share_detial = mObj.getString("share_detail");
                 String artwork = mObj.getString("artwork");
+                String type = mObj.getString("type");
+                String chatW = mObj.getString("chatW");
                 String invitername = mObj.getString("invitername");
                 Message message = new Message();
                 message.setMessage(mObj.getString("message"));
@@ -339,6 +455,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     pushNotification.putExtra("event_title", message.getName());
                     pushNotification.putExtra("share_detail", share_detial);
                     pushNotification.putExtra("artwork", artwork);
+                    pushNotification.putExtra("eventtype", type);
+                    pushNotification.putExtra("chatw", chatW);
 
                     LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
@@ -349,7 +467,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 } else {
 
                     // app is in background. show the message in notification try
-                    Intent resultIntent = new Intent(getApplicationContext(), UserTabView.class);
+                    Intent resultIntent = new Intent(getApplicationContext(), ListOfEvent1.class);
                     resultIntent.putExtra("type", Config.PUSH_TYPE_CHATROOM);
                     resultIntent.putExtra("chat_room_id", chatRoomId);
                     resultIntent.putExtra("eventstatus", event_status);
@@ -359,6 +477,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     resultIntent.putExtra("invitername", invitername);
                     resultIntent.putExtra("share_detail", share_detial);
                     resultIntent.putExtra("artwork", artwork);
+                    resultIntent.putExtra("eventtype", type);
+                    resultIntent.putExtra("chatw", chatW);
 
                     editor.putString("chateventID" + chatRoomId, chatRoomId);
                     editor.commit();
@@ -368,7 +488,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
             } catch (JSONException e) {
                 Log.e(TAG, "json parsing error: " + e.getMessage());
-               // Toast.makeText(getApplicationContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(getApplicationContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
 
         } else {

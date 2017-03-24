@@ -1,12 +1,17 @@
 package com.events.hanle.events.Activity;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,7 +51,7 @@ import java.util.Locale;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class EventArtwork extends AppCompatActivity   {
+public class EventArtwork extends AppCompatActivity {
     String eventinfoID;
     private NetworkImageView artwork;
     private ImageLoader imageLoader;
@@ -57,11 +62,14 @@ public class EventArtwork extends AppCompatActivity   {
     static final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_PICTURES), appDirectoryName);
     PhotoViewAttacher mAttacher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_artwork);
         artwork = (NetworkImageView) findViewById(R.id.artwork);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
@@ -91,13 +99,48 @@ public class EventArtwork extends AppCompatActivity   {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadImage();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.System.canWrite(getApplicationContext())) {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
+                    } else {
+                        // continue with your code
+                        downloadImage();
+
+                    }
+                } else {
+                    // continue with your code
+                    downloadImage();
+
+                }
             }
         });
         mAttacher = new PhotoViewAttacher(artwork);
         //getAllImages();
         getStringUrl();
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 2909: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Permission", "Granted");
+                    //Toast.makeText(getApplicationContext(), "Permission Granted!!", Toast.LENGTH_LONG).show();
+                    downloadImage();
+
+                } else {
+                    Log.e("Permission", "Denied");
+                    Toast.makeText(getApplicationContext(), "Permission Denied!!", Toast.LENGTH_LONG).show();
+
+                }
+                return;
+            }
+        }
+    }
+
 
     private void getStringUrl() {
 
@@ -187,6 +230,8 @@ public class EventArtwork extends AppCompatActivity   {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+
 
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Images.Media.TITLE, "nooi");

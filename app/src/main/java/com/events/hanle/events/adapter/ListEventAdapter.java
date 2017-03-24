@@ -45,7 +45,7 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
     SharedPreferences sharedpreferences;
 
     public class ListEventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView title, message;
+        TextView title, message, date, time;
         ImageView counter, mailbag;
         ArrayList<ListEvent> listevent = new ArrayList<>();
         Context ctx;
@@ -61,6 +61,8 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
             message = (TextView) itemView.findViewById(R.id.message);
             counter = (ImageView) itemView.findViewById(R.id.counter);
             mailbag = (ImageView) itemView.findViewById(R.id.mail_bag);
+            date = (TextView) itemView.findViewById(R.id.date);
+            time = (TextView) itemView.findViewById(R.id.time);
 
 
         }
@@ -72,7 +74,7 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
             ListEvent listEvent = this.listevent.get(position);
 
 
-            listEvent = new ListEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(),listEvent.getArtwork());
+            listEvent = new ListEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(), listEvent.getArtwork(), listEvent.getEvent_type(), listEvent.getChat_window());
 
             int user_Status = Integer.parseInt(listEvent.getUser_status());
             MyApplication.getInstance().getPrefManager().storeEventId(listEvent);
@@ -81,6 +83,9 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
                 Intent i = new Intent(mContext, UserAttendingStatus.class);
                 i.putExtra("event_title", listEvent.getEvent_title());
                 i.putExtra("share_detail", listEvent.getShare_detail());
+                i.putExtra("artwork", listEvent.getArtwork());
+                i.putExtra("eventtype", listEvent.getEvent_type());
+                i.putExtra("chatw", listEvent.getChat_window());
                 this.ctx.startActivity(i);
             } else if (user_Status == 3) {
                 Toast.makeText(this.ctx, "You said you are not attending this Event!!", Toast.LENGTH_LONG).show();
@@ -92,6 +97,8 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
                 i.putExtra("event_title", listEvent.getEvent_title());
                 i.putExtra("share_detail", listEvent.getShare_detail());
                 i.putExtra("artwork", listEvent.getArtwork());
+                i.putExtra("eventtype", listEvent.getEvent_type());
+                i.putExtra("chatw", listEvent.getChat_window());
                 this.ctx.startActivity(i);
 
                 sharedpreferences = this.ctx.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -133,9 +140,9 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
         String eventId = prefs.getString("chateventID" + feedItem.getId(), null);
         String mailbagorgnisereventId = prefs.getString("organisereventID" + feedItem.getId(), null);
         String mailbagpartnereventId = prefs.getString("partnereventID" + feedItem.getId(), null);
-        System.out.println("eID" + eventId);
-        System.out.println("organisereventID" + mailbagorgnisereventId);
-        System.out.println("partnereventID" + mailbagpartnereventId);
+//        System.out.println("eID" + eventId);
+//        System.out.println("organisereventID" + mailbagorgnisereventId);
+//        System.out.println("partnereventID" + mailbagpartnereventId);
         int status = Integer.parseInt(feedItem.getUser_status());
         customViewHolder.message.setText(feedItem.getLastMessage());
         String s = feedItem.getLastMessage();
@@ -179,6 +186,21 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
         }
 
         customViewHolder.title.setText(Html.fromHtml(feedItem.getEvent_title() + " : " + feedItem.getInvitername()));
+
+        String[] monthName = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+                "Aug", "Sep", "Oct", "Nov", "Dec"};
+        String s1 = feedItem.getMonthno();
+        if (s1 != null) {
+            int m = Integer.parseInt(s1);
+            String month = monthName[m - 1];
+            String dat = feedItem.getDate().substring(0, 2);
+            customViewHolder.date.setText(Html.fromHtml(month + " " + dat + ", " + feedItem.getWeekday()));
+            customViewHolder.time.setText(Html.fromHtml(feedItem.getTime()));
+        } else {
+            customViewHolder.time.setVisibility(View.GONE);
+            customViewHolder.date.setVisibility(View.GONE);
+        }
+
 
     }
 

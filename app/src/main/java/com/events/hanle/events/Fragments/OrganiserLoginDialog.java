@@ -1,7 +1,9 @@
 package com.events.hanle.events.Fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -31,6 +33,7 @@ import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.User;
 import com.events.hanle.events.R;
+import com.events.hanle.events.interf.MyDialogCloseListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +75,13 @@ public class OrganiserLoginDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (ConnectionDetector.isInternetAvailable(getActivity())) {
-                    checkLogin();
+                   // checkLogin();
+                    getDialog().dismiss();
+                    Bundle args = new Bundle();
+                    args.putString("orgniser_id", "1");
+                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+                    dialogFragment.setArguments(args);
+                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
 
                 } else {
                     Snackbar snackbar = Snackbar
@@ -149,10 +158,10 @@ public class OrganiserLoginDialog extends DialogFragment {
                             Bundle args = new Bundle();
                             args.putString("orgniser_id", orgniser_id);
                             ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+                            dialogFragment.setArguments(args);
                             dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
                         } else {
-                            Snackbar snackbar = Snackbar
-                                    .make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
+                            Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
                             snackbar.show();
                         }
 
@@ -219,6 +228,13 @@ public class OrganiserLoginDialog extends DialogFragment {
 
     }
 
+    public void onDismiss(DialogInterface dialog)
+    {
+        Activity activity = getActivity();
+        if(activity instanceof MyDialogCloseListener)
+            ((MyDialogCloseListener)activity).handleDialogClose(dialog);
+        Log.d("check","dialog dismissed");
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

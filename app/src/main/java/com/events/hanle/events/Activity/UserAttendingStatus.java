@@ -2,6 +2,7 @@ package com.events.hanle.events.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -52,6 +53,9 @@ public class UserAttendingStatus extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_attending_status);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         textView = (TextView) findViewById(R.id.textView4);
         next = (Button) findViewById(R.id.next);
         rg = (RadioGroup) findViewById(R.id.rgroup);
@@ -132,6 +136,9 @@ public class UserAttendingStatus extends AppCompatActivity {
                             Intent intent = new Intent(UserAttendingStatus.this, UserTabView.class);
                             intent.putExtra("event_title", getIntent().getStringExtra("event_title"));
                             intent.putExtra("share_detail", getIntent().getStringExtra("share_detail"));
+                            intent.putExtra("artwork", getIntent().getStringExtra("artwork"));
+                            intent.putExtra("eventtype", getIntent().getStringExtra("eventtype"));
+                            intent.putExtra("chatw", getIntent().getStringExtra("chatw"));
                             startActivity(intent);
                             finish();
                             Toast.makeText(UserAttendingStatus.this, message, Toast.LENGTH_SHORT).show();

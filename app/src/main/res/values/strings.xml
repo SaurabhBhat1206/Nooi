@@ -34,6 +34,9 @@
     <string name="list">Active Events</string>
     <string name="action_settings">Settings</string>
     <string name="organiser_login">Organiser login</string>
+    <string name="n">Saurabh Bhat</string>
+    <string name="p">+91 8147494497</string>
+    <string name="h">Select Invitee (Please Invite yourself too)</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 
@@ -43,7 +46,7 @@
     <string name="nooilink"><a href="http://www.nooitheinviteapp.com">www.nooitheinviteapp.com</a></string>
     <string name="hello_blank_fragment">
      <![CDATA[
-        1. Terms of Service The software application “nooi” is a copyrighted work belonging to M/s Hanle Solutions Private Limitedand Associates (“Hanle, “nooi”, “us”, or “we”).  “nooi” provides a smartphonesoftware application and related services (collectively, the “nooi”).
+        1. The software application “nooi” is developed by M/s Hanle Solutions Private Limited (“Hanle”, “nooi”, “us”, or “we”) on behalf of its copyrighted owner.  “nooi” provides a smartphone software application and related services (collectively, the “nooi”).
         This Terms of Service (“Agreement”) sets forth the legally binding terms for your use of “nooi”. By using “nooi”, you are accepting this Agreement and you represent and warrant that you have the right, authority, and capacity to enter into this Agreement. If you do not agree with all of the provisions of this Agreement, please do not use “nooi”. This Agreement is the final, complete and exclusive agreement of you and “nooi” with respect to the subject matters hereof and supersedes and merges all prior discussions and agreements between the parties with respect to such subject matters (including any prior End User License Agreements and Terms of Service).Agreement Version Date: August 18, 2016.<br/>
         2.	End User License Agreement<br/>
         a)	License. Subject to the terms of this Agreement, “nooi”grants you a non-transferable, non-exclusive, license to download, install and use one copy of “nooi” on a mobile device that you own or control for your use (the “License”). “nooi” will not be liable for your losses caused by any unauthorized use of your account, you may be liable for the losses of “nooi” or others due to such unauthorized use.<br/>

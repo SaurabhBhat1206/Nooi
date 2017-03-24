@@ -9,9 +9,10 @@ import java.util.List;
  * Created by Hanle on 10/18/2016.
  */
 
-public class CanceledEvent  {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail,artwork;
+public class CanceledEvent {
+    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, eventtype, chatw;
     int unreadCount;
+
 
     public CanceledEvent() {
 
@@ -25,7 +26,7 @@ public class CanceledEvent  {
         this.unreadCount = unreadCount;
     }
 
-    public CanceledEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail,String artwork) {
+    public CanceledEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String eventtype, String chatw) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -34,6 +35,8 @@ public class CanceledEvent  {
         this.lastMessage = lastMessage;
         this.share_detail = share_detail;
         this.artwork = artwork;
+        this.eventtype = eventtype;
+        this.chatw = chatw;
     }
 
     public String getId() {
@@ -122,5 +125,21 @@ public class CanceledEvent  {
 
     public void setArtwork(String artwork) {
         this.artwork = artwork;
+    }
+
+    public String getEventtype() {
+        return eventtype;
+    }
+
+    public void setEventtype(String eventtype) {
+        this.eventtype = eventtype;
+    }
+
+    public String getChatw() {
+        return chatw;
+    }
+
+    public void setChatw(String chatw) {
+        this.chatw = chatw;
     }
 }

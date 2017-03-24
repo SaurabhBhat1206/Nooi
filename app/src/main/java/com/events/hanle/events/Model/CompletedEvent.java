@@ -5,7 +5,7 @@ package com.events.hanle.events.Model;
  */
 
 public class CompletedEvent {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail,artwork;
+    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, event_type, chat_window;
     int unreadCount;
 
 
@@ -21,7 +21,7 @@ public class CompletedEvent {
         this.unreadCount = unreadCount;
     }
 
-    public CompletedEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork) {
+    public CompletedEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -30,6 +30,8 @@ public class CompletedEvent {
         this.lastMessage = lastMessage;
         this.share_detail = share_detail;
         this.artwork = artwork;
+        this.event_type = event_type;
+        this.chat_window = chat_window;
     }
 
     public String getId() {
@@ -118,5 +120,21 @@ public class CompletedEvent {
 
     public void setArtwork(String artwork) {
         this.artwork = artwork;
+    }
+
+    public String getEvent_type() {
+        return event_type;
+    }
+
+    public void setEvent_type(String event_type) {
+        this.event_type = event_type;
+    }
+
+    public String getChat_window() {
+        return chat_window;
+    }
+
+    public void setChat_window(String chat_window) {
+        this.chat_window = chat_window;
     }
 }

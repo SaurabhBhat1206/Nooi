@@ -2,9 +2,11 @@ package com.events.hanle.events.Activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -36,14 +38,17 @@ public class UserChangeOfDescision extends AppCompatActivity {
     private static final String TAG = "UserChangeOfDescision";
     Button next;
     RadioGroup rg;
-    RadioButton yes, no;
+    AppCompatRadioButton yes, no;
     private AlertDialog progressDialog;
     private String selection_strng, eventinfoID, user_id, mobileno, countrycode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_change_of_descision);
+        setContentView(R.layout.mapdetails);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(t);
         assert t != null;
@@ -190,8 +195,8 @@ public class UserChangeOfDescision extends AppCompatActivity {
 
         next = (Button) findViewById(R.id.next);
         rg = (RadioGroup) findViewById(R.id.rgroup1);
-        yes = (RadioButton) findViewById(R.id.yes);
-        no = (RadioButton) findViewById(R.id.no);
+        yes = (AppCompatRadioButton) findViewById(R.id.yes_r);
+        no = (AppCompatRadioButton) findViewById(R.id.no_r);
     }
 
     @Override

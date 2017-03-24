@@ -1,56 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/login_form"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp"
+    android:layout_gravity="center"
+    android:background="#98cbe5">
 
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <LinearLayout
-        android:id="@+id/ll_fooditem_list"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:elevation="5dp"
-       >
+        tools:context="com.events.hanle.events.UserChangeOfDescision">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/toolbar"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/toolbar"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="Tell the Organiser that you are not attending?"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:typeface="serif" />
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/linearLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/textView4"-->
+        <!--android:layout_marginLeft="75dp"-->
+        <!--android:layout_marginTop="75dp"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<RadioGroup-->
+        <!--android:id="@+id/rgroup1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:layout_marginLeft="50dp"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<RadioButton-->
+        <!--android:id="@+id/yes"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:checked="false"-->
+        <!--android:text="Yes" />-->
+
+        <!--<RadioButton-->
+        <!--android:id="@+id/no"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:checked="true"-->
+        <!--android:text="No" />-->
+
+        <!--</RadioGroup>-->
+
+        <!--</LinearLayout>-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <RadioGroup
+                android:id="@+id/rgroup1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/yes_r"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/eventtitle"
-                    android:typeface="serif" />
+                android:text="Yes"
+                android:checked="false"
+                android:textColor="#ffffff"
+                android:typeface="serif" />
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/no_r"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/eventdetials"
-                    android:typeface="serif"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
+                android:text="No"
+                android:checked="true"
+                android:textColor="#ffffff"
+                android:typeface="serif" />
+            </RadioGroup>
         </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/next"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/admin_button"
+            android:gravity="center"
+            android:shadowColor="@android:color/black"
+            android:text="Ok"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:typeface="serif"
+            android:layout_margin="25dp" />
+
     </LinearLayout>
-</LinearLayout>
+
+</ScrollView>

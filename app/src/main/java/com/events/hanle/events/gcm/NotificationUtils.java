@@ -118,30 +118,70 @@ public class NotificationUtils {
     }
 
 
-    private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
+//    private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
+//
+//        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+//
+//
+//        inboxStyle.addLine(message);
+//
+//
+//        Notification notification;
+//        notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+//                .setAutoCancel(true)
+//                .setContentTitle(title)
+//                .setContentIntent(resultPendingIntent)
+//                .setSound(alarmSound)
+//                .setStyle(inboxStyle)
+//                .setWhen(getTimeMilliSec(timeStamp))
+//                .setSmallIcon(R.drawable.nooiiconnew)
+//                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+//                .setContentText(message)
+//                .build();
+//
+//        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+//        notificationManager.notify(Config.NOTIFICATION_ID, notification);
+//    }
 
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
-
-        inboxStyle.addLine(message);
-
-
+    private void showSmallNotification( NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
         Notification notification;
-        notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
-                .setAutoCancel(true)
-                .setContentTitle(title)
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
+        notification = mBuilder
                 .setContentIntent(resultPendingIntent)
-                .setSound(alarmSound)
-                .setStyle(inboxStyle)
-                .setWhen(getTimeMilliSec(timeStamp))
                 .setSmallIcon(R.drawable.nooiiconnew)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+                .setAutoCancel(true)
+                .setWhen(getTimeMilliSec(timeStamp))
+                .setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(message))
+                .setSound(alarmSound)
+                .setContentTitle(title)
                 .setContentText(message)
                 .build();
 
+
+
+
+//        bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
+//        Notification notification;
+//        notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+//                .setAutoCancel(true)
+//                .setContentTitle(title)
+//                .setContentIntent(resultPendingIntent)
+//                .setSound(alarmSound)
+//                .setStyle(bigPictureStyle)
+//                .setWhen(getTimeMilliSec(timeStamp))
+//                .setSmallIcon(R.drawable.nooiiconnew)
+//                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+//                .setContentText(message)
+//                .build();
+
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(Config.NOTIFICATION_ID, notification);
+        notificationManager.notify(Config.NOTIFICATION_ID_BIG_IMAGE, notification);
     }
+
 
     private void showBigNotification(Bitmap bitmap, NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();

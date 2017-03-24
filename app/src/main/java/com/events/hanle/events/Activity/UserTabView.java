@@ -2,6 +2,7 @@ package com.events.hanle.events.Activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class UserTabView extends AppCompatActivity {
     private static TabLayout tabLayout;
     private static ViewPager viewPager;
     int event_id;
-
+    String eventtype;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -48,23 +49,32 @@ public class UserTabView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_user_tab_view);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         String event_title = getIntent().getStringExtra("event_title");
         // Toast.makeText(UserTabView.this, event_title, Toast.LENGTH_SHORT).show();
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
         assert t != null;
         t.setTitleTextColor(Color.WHITE);
         setSupportActionBar(t);
-
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(event_title);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         assert viewPager != null;
         setupViewPager(viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         assert tabLayout != null;
         tabLayout.setupWithViewPager(viewPager);
+
+        eventtype = getIntent().getStringExtra("eventtype");
+
+        if (eventtype == null) {
+            eventtype = "1";
+        }
+
 
         if (getIntent().getStringExtra("classcheck") != null) {
             if (getIntent().getStringExtra("classcheck").equals("from_notifications")) {
@@ -84,15 +94,30 @@ public class UserTabView extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        int et = Integer.parseInt(eventtype);
 
+
+        UserTabView.this.invalidateOptionsMenu();
         MenuInflater inflater = getMenuInflater();
+
+
         inflater.inflate(R.menu.menu_user_tab, menu);
+
+        MenuItem notattending, organiserlogin;
+        notattending = menu.findItem(R.id.not_attending);
+        organiserlogin = menu.findItem(R.id.organiser_login);
+
+        if (et == 2) {
+            notattending.setVisible(false);
+            organiserlogin.setVisible(false);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
+        int et, cW;
 
         switch (item.getItemId()) {
 
@@ -101,11 +126,15 @@ public class UserTabView extends AppCompatActivity {
                 return true;
 
             case R.id.not_attending:
+
+
                 Intent i = new Intent(getApplicationContext(), UserChangeOfDescision.class);
                 i.putExtra("classcheck", getIntent().getStringExtra("classcheck"));
                 i.putExtra("chat_room_id", getIntent().getExtras().getString("chat_room_id"));
                 i.putExtra("eventId", getIntent().getExtras().getString("eventId"));
                 startActivity(i);
+
+
                 return true;
 
             case R.id.create_event:
@@ -114,8 +143,16 @@ public class UserTabView extends AppCompatActivity {
 
             case R.id.organiser_login:
                 //startActivity(new Intent(getApplicationContext(),OrganiserLogin.class));
-                OrganiserLoginDialog dialogFragment= new OrganiserLoginDialog();
-                dialogFragment.show(getSupportFragmentManager(),"missiles");
+                et = Integer.parseInt(eventtype);
+                if (et == 2) {
+                    Toast.makeText(UserTabView.this, "This feature is not available for this Event", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    OrganiserLoginDialog dialogFragment = new OrganiserLoginDialog();
+                    dialogFragment.show(getSupportFragmentManager(), "missiles");
+                }
+
+
                 return true;
 
             case R.id.feedback:
@@ -131,10 +168,12 @@ public class UserTabView extends AppCompatActivity {
                 return true;
             case R.id.invite_image:
                 String artwork = getIntent().getStringExtra("artwork");
-
-                System.out.println("artwork"+artwork);
-                if (artwork.equals("")) {
+                et = Integer.parseInt(eventtype);
+                if (artwork != null && artwork.equals("") && et == 1) {
                     Toast.makeText(UserTabView.this, "Organiser has not uploaded the image", Toast.LENGTH_SHORT).show();
+                } else if (artwork != null && artwork.equals("") && et == 2) {
+                    Toast.makeText(UserTabView.this, "Organiser has not uploaded the image", Toast.LENGTH_SHORT).show();
+
                 } else {
                     Intent intent = new Intent(getApplicationContext(), EventArtwork.class);
                     intent.putExtra("classcheck", getIntent().getStringExtra("classcheck"));
@@ -143,17 +182,23 @@ public class UserTabView extends AppCompatActivity {
                     startActivity(intent);
                 }
 
-
                 return true;
 
             case R.id.list_invitee:
                 String sharedetails = getIntent().getStringExtra("share_detail");
+                eventtype = getIntent().getStringExtra("eventtype");
 
+                et = Integer.parseInt(eventtype);
                 //Toast.makeText(UserTabView.this, sharedetails, Toast.LENGTH_SHORT).show();
                 int s = Integer.parseInt(sharedetails);
+
+
                 if (sharedetails != null) {
-                    if (s == 1) {
+                    if (s == 1 && et == 1) {
                         showDialog();
+
+                    } else if (et == 2) {
+                        Toast.makeText(UserTabView.this, "This feature is not available for this Event", Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(UserTabView.this, "Organiser has not enabled this feature", Toast.LENGTH_SHORT).show();

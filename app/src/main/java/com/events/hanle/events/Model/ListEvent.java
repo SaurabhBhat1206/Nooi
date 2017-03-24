@@ -4,10 +4,8 @@ package com.events.hanle.events.Model;
  * Created by Hanle on 6/15/2016.
  */
 public class ListEvent {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, share_detail,artwork;
-    int unreadCount,unreadcount1;
-
-
+    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, share_detail, artwork, event_type, chat_window,date,time,monthno,weekday;
+    int unreadCount, unreadcount1;
 
 
     public ListEvent() {
@@ -22,7 +20,7 @@ public class ListEvent {
         this.unreadCount = unreadCount;
     }
 
-    public ListEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail,String artwork) {
+    public ListEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -31,6 +29,8 @@ public class ListEvent {
         this.lastMessage = lastMessage;
         this.share_detail = share_detail;
         this.artwork = artwork;
+        this.event_type = event_type;
+        this.chat_window = chat_window;
     }
 
     public String getShare_detail() {
@@ -123,5 +123,51 @@ public class ListEvent {
         this.artwork = artwork;
     }
 
+    public String getEvent_type() {
+        return event_type;
+    }
 
+    public void setEvent_type(String event_type) {
+        this.event_type = event_type;
+    }
+
+    public String getChat_window() {
+        return chat_window;
+    }
+
+    public void setChat_window(String chat_window) {
+        this.chat_window = chat_window;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getMonthno() {
+        return monthno;
+    }
+
+    public void setMonthno(String monthno) {
+        this.monthno = monthno;
+    }
+
+    public String getWeekday() {
+        return weekday;
+    }
+
+    public void setWeekday(String weekday) {
+        this.weekday = weekday;
+    }
 }

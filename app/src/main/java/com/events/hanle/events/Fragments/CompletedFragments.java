@@ -115,6 +115,8 @@ public class CompletedFragments extends DialogFragment {
                                 cr.setEvent_status(chatRoomsObj.getString("event_status"));
                                 cr.setShare_detail(chatRoomsObj.getString("share_detail"));
                                 cr.setArtwork(chatRoomsObj.getString("artwork"));
+                                cr.setEvent_type(chatRoomsObj.getString("type"));
+                                cr.setChat_window(chatRoomsObj.getString("chatW"));
                                 cr.setLastMessage("");
                                 cr.setUnreadCount(0);
                                 cr.setTimestamp(chatRoomsObj.getString("created_at"));

@@ -19,12 +19,14 @@ public class Config {
     public static final String SCHEDULEDPUSH = "alarmnotification";
     public static final String PUSH_NOTIFICATION_FROM_PARTNER = "pushNotificationfrompartner";
     public static final String PUSH_NOTIFICATION_FROM_ORGANISER = "pushNotificationfromorganiser";
+    public static final String PUSH_NOTIFICATION_FROM_KARGE_EVENT = "pushNotificationfromlargeevent";
 
     // type of push messages
     public static final int PUSH_TYPE_CHATROOM = 1;
     public static final int PUSH_TYPE_USER = 2;
     public static final int PUSH_TYPE_PARTNER = 3;
     public static final int PUSH_TYPE_ORGANISER = 4;
+    public static final int PUSH_TYPE_LARGE_EVENT = 5;
 
     // id to handle the notification in the notification try
     public static final int NOTIFICATION_ID = 100;

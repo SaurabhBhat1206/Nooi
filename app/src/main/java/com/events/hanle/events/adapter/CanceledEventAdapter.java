@@ -107,7 +107,7 @@ public class CanceledEventAdapter extends RecyclerView.Adapter<CanceledEventAdap
             int position = getAdapterPosition();
             CanceledEvent canceledevent = this.listevent.get(position);
 
-            canceledevent = new CanceledEvent(canceledevent.getId(), canceledevent.getEvent_title(), canceledevent.getUser_status(), canceledevent.getInvitername(), canceledevent.getEvent_status(), null, canceledevent.getShare_detail(),canceledevent.getArtwork());
+            canceledevent = new CanceledEvent(canceledevent.getId(), canceledevent.getEvent_title(), canceledevent.getUser_status(), canceledevent.getInvitername(), canceledevent.getEvent_status(), null, canceledevent.getShare_detail(),canceledevent.getArtwork(),canceledevent.getEventtype(),canceledevent.getChatw());
 
             MyApplication.getInstance().getPrefManager().storeEventIdCanceledEvent(canceledevent);
             int user_Status = Integer.parseInt(canceledevent.getUser_status());
@@ -121,6 +121,8 @@ public class CanceledEventAdapter extends RecyclerView.Adapter<CanceledEventAdap
                 i.putExtra("event_title", canceledevent.getEvent_title());
                 i.putExtra("share_detail", canceledevent.getShare_detail());
                 i.putExtra("artwork", canceledevent.getArtwork());
+                i.putExtra("eventtype", canceledevent.getEventtype());
+                i.putExtra("chatw", canceledevent.getChatw());
                 i.putExtra("classcheck", "cancelledevent");
 
                 this.ctx.startActivity(i);

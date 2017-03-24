@@ -12,14 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.TextView;
 
 import com.events.hanle.events.Activity.OrganiserContactForm;
+import com.events.hanle.events.Model.Invitee;
 import com.events.hanle.events.R;
 
 public class ListOfOrganiserActionsFragment extends DialogFragment {
 
     CardView inviteemanagemnt,inviteelist;
+    String organiser_id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,13 +29,30 @@ public class ListOfOrganiserActionsFragment extends DialogFragment {
         inviteemanagemnt = (CardView) v.findViewById(R.id.invitee_management);
         inviteelist = (CardView)v.findViewById(R.id.cardlist_invited);
 
+
+        Bundle mArgs = getArguments();
+        System.out.println("organiserId"+ mArgs.getString("orgniser_id"));
+        if (mArgs != null) {
+             organiser_id = mArgs.getString("orgniser_id");
+
+        }
         inviteemanagemnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), OrganiserContactForm.class);
+                i.putExtra("organiser_id",organiser_id);
                 startActivity(i);
             }
         });
+
+       inviteelist.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+              InviteeList d = new InviteeList();
+               d.show(getActivity().getFragmentManager(),"inviteelist");
+           }
+       });
+
 
         return v;
     }

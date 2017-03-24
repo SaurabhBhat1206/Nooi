@@ -85,6 +85,7 @@
             android:shadowColor="@android:color/black"
             android:text="next"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:typeface="serif" />
     </RelativeLayout>
 </ScrollView>

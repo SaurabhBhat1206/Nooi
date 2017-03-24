@@ -43,10 +43,14 @@ import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 
+import static com.events.hanle.events.R.id.message;
+
 public class OtpFragment extends Fragment {
     private Button b;
     String user_id, mobile, country_code;
-    EditText otp;
+    //EditText otp;
+
+    static EditText otp;
     private TextInputLayout otpnputlayout;
     public static final String TAG = "OtpFragment";
     private AlertDialog progressDialog;
@@ -73,8 +77,15 @@ public class OtpFragment extends Fragment {
 
 
         return v;
+
     }
 
+    public void recivedSms(String message) {
+        try {
+            otp.setText(message);
+        } catch (Exception e) {
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -82,6 +93,7 @@ public class OtpFragment extends Fragment {
         user_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getTempUserId().getId();
         mobile = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getTempUserId().getMobile();
         country_code = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getTempUserId().getCountrycode();
+
 
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +110,7 @@ public class OtpFragment extends Fragment {
         });
 
     }
+
 
     private void verifyOtp() {
         final String otpuser = otp.getText().toString();
@@ -175,7 +188,7 @@ public class OtpFragment extends Fragment {
                     Toast.makeText(getActivity(),
                             getActivity().getString(R.string.error_network_server),
                             Toast.LENGTH_LONG).show();
-                } else{
+                } else {
                     Toast.makeText(getActivity(), "Server did not respond!!", Toast.LENGTH_SHORT).show();
 
                 }

@@ -94,10 +94,18 @@ public class ChatRoomThreadAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         String timestamp = message.getCreatedAt();
         String name = message.getUser().getName();
 
-        if (message.getUser().getName() != null)
+        if (message.getUser().getName() != null) {
+            if (message.getUser().getId().equals(userId)) {
+                ((ViewHolder) holder).name.setVisibility(View.GONE);
+                ((ViewHolder) holder).timestamp.setText(timestamp);
+            } else {
+                ((ViewHolder) holder).name.setText(name);
+                ((ViewHolder) holder).timestamp.setText(timestamp);
+            }
 
-            ((ViewHolder) holder).name.setText(name);
-        ((ViewHolder) holder).timestamp.setText(timestamp);
+        }
+
+
     }
 
     @Override

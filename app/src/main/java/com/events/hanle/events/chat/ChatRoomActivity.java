@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,12 +73,13 @@ public class ChatRoomActivity extends Fragment {
     private EditText inputMessage;
     private Button btnSend;
     private RecyclerView.LayoutManager layoutManager;
-    private TextView tv;
     private int requestCount = 1;
     private RequestQueue requestQueue;
     String event_status, event_title, Username, invitername, s;
     int es;
-
+    LinearLayout lin;
+    TextView tv;
+    String chatwindow, eventtype;
 
     @Nullable
     @Override
@@ -85,8 +87,10 @@ public class ChatRoomActivity extends Fragment {
         View v = inflater.inflate(R.layout.activity_chat_room, container, false);
         inputMessage = (EditText) v.findViewById(R.id.message);
         btnSend = (Button) v.findViewById(R.id.btn_send);
+        lin = (LinearLayout) v.findViewById(R.id.ln);
+        tv = (TextView) v.findViewById(R.id.nochattoshow);
 
-        tv = (TextView) v.findViewById(R.id.textView10);
+
         s = getActivity().getIntent().getStringExtra("classcheck");
 
         UserTabView activity = (UserTabView) getActivity();
@@ -99,36 +103,47 @@ public class ChatRoomActivity extends Fragment {
                 event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getEvent_title();
                 invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getInvitername();
                 chatRoomId = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getId();
+                eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getEventtype();
+                chatwindow = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getChatw();
 
             } else if (s.equalsIgnoreCase("completedevent")) {
                 event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getEvent_status();
                 event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getEvent_title();
                 invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getInvitername();
                 chatRoomId = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
+                eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getEvent_type();
+                chatwindow = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getChat_window();
 
             } else if (s.equalsIgnoreCase("from_notifications")) {
                 event_status = activity.getIntent().getExtras().getString("eventstatus");
                 event_title = activity.getIntent().getExtras().getString("event_title");
                 invitername = activity.getIntent().getStringExtra("invitername");
                 chatRoomId = activity.getIntent().getExtras().getString("chat_room_id");
+                chatwindow = activity.getIntent().getExtras().getString("chatw");
+                eventtype = activity.getIntent().getStringExtra("eventtype");
 
             } else if (s.equalsIgnoreCase("from_partner")) {
                 event_status = activity.getIntent().getExtras().getString("eventstatus");
                 event_title = activity.getIntent().getExtras().getString("event_title");
                 invitername = activity.getIntent().getStringExtra("invitername");
                 chatRoomId = activity.getIntent().getExtras().getString("eventId");
+                chatwindow = activity.getIntent().getExtras().getString("chatw");
+                eventtype = activity.getIntent().getStringExtra("eventtype");
             } else if (s.equalsIgnoreCase("from_organiser")) {
                 event_status = activity.getIntent().getExtras().getString("eventstatus");
                 event_title = activity.getIntent().getExtras().getString("event_title");
                 invitername = activity.getIntent().getStringExtra("invitername");
                 chatRoomId = activity.getIntent().getExtras().getString("eventId");
+                chatwindow = activity.getIntent().getExtras().getString("chatw");
+                eventtype = activity.getIntent().getStringExtra("eventtype");
             }
         } else {
             event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_status();
             event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_title();
             invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getInvitername();
             chatRoomId = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
-
+            chatwindow = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getChat_window();
+            eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_type();
         }
 
         if (event_status != null) {
@@ -152,6 +167,16 @@ public class ChatRoomActivity extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
+
+
+        int cW = Integer.parseInt(chatwindow);
+        int event_type = Integer.parseInt(eventtype);
+        if (cW == 0 && event_type == 2) {
+            lin.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+            tv.setVisibility(View.VISIBLE);
+        }
+
 
         requestQueue = Volley.newRequestQueue(getActivity());
 

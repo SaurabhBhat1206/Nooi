@@ -6,9 +6,9 @@ package com.events.hanle.events.Constants;
 public class WebUrl {
 
     //production url
-    //public final static String BASE_URL = "http://hanlesolutions.com/nooi/event_mobile_webservices/phpscript";
+    //public final static String BASE_URL = "http://nooitheinviteapp.com/mobile/event_mobile_webservices/phpscript";
     public final static String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/mobiletest/event_mobile_webservices/phpscript";
-    //public final static String BASE_URL = "http://www.hanlesolutions.com/nooi/test/event_mobile_webservices/phpscript";
+   // public static final String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/beta/mobiletest/event_mobile_webservices/phpscript";
 
     public final static String USER_LOGIN_URL = BASE_URL + "/otp/login_smscountry.php";
     public final static String CHECK_OTP = BASE_URL + "/otp/confirm.php";
@@ -21,6 +21,8 @@ public class WebUrl {
     public final static String LIST_ATTENDING_CONTACT = BASE_URL + "/list_attending.php?eventid=";
     public final static String ORGANISER_ARTWORK = BASE_URL+"/organiser_art_work.php?id=";
     public final static String ORGANISER_LOGIN = "http://uat.hanlesolutions.com/hanle-test/mobiletest/mobile/Login/admin_login";
+    public final static String ORGANISER_CREATE_NEW_USER = "http://uat.hanlesolutions.com/hanle-test/mobiletest/mobile/User/createNewUser";
+    public final static String ORGANISER_Invitee_list= "http://uat.hanlesolutions.com/hanle-test/mobiletest/mobile/event/getinviteedata?organiser_id=1";
 
     public static final int MY_SOCKET_TIMEOUT_MS = 30000;
 

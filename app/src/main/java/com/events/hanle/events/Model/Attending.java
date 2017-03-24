@@ -4,7 +4,7 @@ package com.events.hanle.events.Model;
  * Created by Hanle on 8/30/2016.
  */
 public class Attending {
-    String id, nsme,status;
+    String id, nsme,status,mobile;
 
     public String getStatus() {
         return status;
@@ -28,5 +28,13 @@ public class Attending {
 
     public void setNsme(String nsme) {
         this.nsme = nsme;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

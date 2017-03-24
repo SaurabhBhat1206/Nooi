@@ -52,9 +52,9 @@ public class Three extends Fragment {
     EventMessage mess;
     TextView tv;
     String s;
-    String event_status, event_title, Username, invitername, event_id;
+    String event_status, event_title, Username, invitername, event_id, eventtype;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
-
+    private boolean isFragmentLoaded=false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,18 +84,21 @@ public class Three extends Fragment {
                 event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getEvent_title();
                 invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getInvitername();
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getId();
+                eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getEventtype();
 
             } else if (s.equalsIgnoreCase("completedevent")) {
                 event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getEvent_status();
                 event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getEvent_title();
                 invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getInvitername();
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
+                eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getEvent_type();
 
             } else if (s.equalsIgnoreCase("from_notifications")) {
                 event_status = activity.getIntent().getStringExtra("eventstatus");
                 event_title = activity.getIntent().getStringExtra("event_title");
                 invitername = activity.getIntent().getStringExtra("invitername");
                 event_id = activity.getIntent().getStringExtra("chat_room_id");
+                eventtype = activity.getIntent().getStringExtra("eventtype");
 
 
             } else if (s.equalsIgnoreCase("from_partner")) {
@@ -103,11 +106,13 @@ public class Three extends Fragment {
                 event_title = activity.getIntent().getStringExtra("event_title");
                 event_id = activity.getIntent().getStringExtra("eventId");
                 invitername = activity.getIntent().getStringExtra("invitername");
+                eventtype = activity.getIntent().getStringExtra("eventtype");
             } else if (s.equalsIgnoreCase("from_organiser")) {
                 event_status = activity.getIntent().getStringExtra("eventstatus");
                 event_title = activity.getIntent().getStringExtra("event_title");
                 invitername = activity.getIntent().getStringExtra("invitername");
                 event_id = activity.getIntent().getStringExtra("eventId");
+                eventtype = activity.getIntent().getStringExtra("eventtype");
             }
 
         } else {
@@ -115,6 +120,7 @@ public class Three extends Fragment {
             event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_title();
             invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getInvitername();
             event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+            eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_type();
 
 
         }
@@ -123,16 +129,17 @@ public class Three extends Fragment {
         //event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_status();
         //event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_title();
         int es = Integer.parseInt(event_status);
+        int et = Integer.parseInt(eventtype);
         feedsList = new ArrayList<>();
         EventMessage eventMessage = new EventMessage();
-        if (es == 2) {
+        if (es == 2 && et == 1) {
             tv.setVisibility(View.GONE);
             eventMessage.setTitle("Dear " + Username + ",");
             eventMessage.setDescription("Please be informed, the event " + event_title + " stands cancelled. The chat feature is now disabled. Regards. " + invitername + ".");
             feedsList.add(eventMessage);
             eventMessageAdapter = new EventMessageAdapter(getActivity(), (ArrayList<EventMessage>) feedsList, s);
             mRecyclerView.setAdapter(eventMessageAdapter);
-        } else if (es == 3) {
+        } else if (es == 3 && et == 1) {
             tv.setVisibility(View.GONE);
             eventMessage.setTitle("Dear " + Username + ",");
             eventMessage.setDescription("Thank you for participating. This event is now concluded. The chat feature is now disabled. Regards. " + invitername + ".");
@@ -140,6 +147,20 @@ public class Three extends Fragment {
             eventMessageAdapter = new EventMessageAdapter(getActivity(), (ArrayList<EventMessage>) feedsList, s);
             mRecyclerView.setAdapter(eventMessageAdapter);
 
+        } else if (es == 2 && et == 2) {
+            tv.setVisibility(View.GONE);
+            eventMessage.setTitle("Hello there!");
+            eventMessage.setDescription("Please be informed, the event " + event_title + " stands cancelled. Regards. " + invitername + ".");
+            feedsList.add(eventMessage);
+            eventMessageAdapter = new EventMessageAdapter(getActivity(), (ArrayList<EventMessage>) feedsList, s);
+            mRecyclerView.setAdapter(eventMessageAdapter);
+        } else if (es == 3 && et == 2) {
+            tv.setVisibility(View.GONE);
+            eventMessage.setTitle("Hello there!");
+            eventMessage.setDescription("Thank you. This event is now concluded. Regards." + invitername + ".");
+            feedsList.add(eventMessage);
+            eventMessageAdapter = new EventMessageAdapter(getActivity(), (ArrayList<EventMessage>) feedsList, s);
+            mRecyclerView.setAdapter(eventMessageAdapter);
         } else {
             eventMessageAdapter = new EventMessageAdapter(getActivity(), (ArrayList<EventMessage>) feedsList, s);
             mRecyclerView.setAdapter(eventMessageAdapter);
@@ -147,13 +168,13 @@ public class Three extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-            System.out.println("Checking the eventstatus"+event_status);
-            if (ConnectionDetector.isInternetAvailable(getActivity())) {
+                    System.out.println("Checking the eventstatus" + event_status);
+                    if (ConnectionDetector.isInternetAvailable(getActivity())) {
 
                         fetchdata();
-            } else {
-                Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
-            }
+                    } else {
+                        Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -162,6 +183,17 @@ public class Three extends Fragment {
         return v;
     }
 
+
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//
+//        if (isVisibleToUser && !isFragmentLoaded ) {
+//            // Load your data here or do network operations here
+//            fetchdata();
+//            isFragmentLoaded = true;
+//        }
+//    }
 
     private void fetchdata() {
 

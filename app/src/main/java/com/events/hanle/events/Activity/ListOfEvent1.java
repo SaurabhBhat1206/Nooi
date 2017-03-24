@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -81,8 +82,7 @@ public class ListOfEvent1 extends AppCompatActivity {
     private String TAG = ListOfEvent1.class.getSimpleName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private AlertDialog progressDialog;
-    TextView tv;
-    private ArrayList<ListEventCopy> copylistevent = new ArrayList<>();
+    TextView tv, toolbarttxt;
     Double VersionCOde;
 
     @Override
@@ -91,19 +91,19 @@ public class ListOfEvent1 extends AppCompatActivity {
         setContentView(R.layout.activity_list_of_event);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView_for_listevent);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
+        toolbarttxt = (TextView) findViewById(R.id.toolbar_title);
         setSupportActionBar(t);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        t.setLogo(R.drawable.nooismall);
         assert t != null;
-        t.setTitleTextColor(Color.WHITE);
-        t.setTitle("nooi");
         tv = (TextView) findViewById(R.id.list_event_id);
         noEvent = (TextView) findViewById(R.id.no_events_to_show);
-        listEventID = (TextView) findViewById(R.id.list_event_id);
         user_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUserId().getId();
         mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getMobile();
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
-
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -156,6 +156,10 @@ public class ListOfEvent1 extends AppCompatActivity {
                     // new push notification is received
                     String desc = intent.getStringExtra("description");
                     calldialogfrombroadcastfororganiser(desc);
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION_FROM_ORGANISER)) {
+
+                    String desc = intent.getStringExtra("description");
+                    calldialogfrombroadcastforLargeEvent(desc);
                 }
 
 
@@ -188,14 +192,14 @@ public class ListOfEvent1 extends AppCompatActivity {
             if (chatRoomId != null) {
                 updateRow(chatRoomId, message);
             }
-        } else if(type == Config.PUSH_TYPE_ORGANISER || type == Config.PUSH_TYPE_PARTNER){
+        } else if (type == Config.PUSH_TYPE_ORGANISER || type == Config.PUSH_TYPE_PARTNER) {
             String chatRoomId = intent.getStringExtra("eventId");
-            if(chatRoomId!=null){
+            if (chatRoomId != null) {
                 updateRowwehninbackgroundforparneeorganiser(chatRoomId);
 
             }
 
-        }else if (type == Config.PUSH_TYPE_USER) {
+        } else if (type == Config.PUSH_TYPE_USER) {
             // push belongs to user alone
             // just showing the message in a toast
             Message message = (Message) intent.getSerializableExtra("message");
@@ -278,6 +282,12 @@ public class ListOfEvent1 extends AppCompatActivity {
                                 cr.setEvent_status(chatRoomsObj.getString("event_status"));
                                 cr.setShare_detail(chatRoomsObj.getString("share_detail"));
                                 cr.setArtwork(chatRoomsObj.getString("artwork"));
+                                cr.setEvent_type(chatRoomsObj.getString("type"));
+                                cr.setChat_window(chatRoomsObj.getString("chatW"));
+                                cr.setDate(chatRoomsObj.getString("date"));
+                                cr.setMonthno(chatRoomsObj.getString("date1"));
+                                cr.setWeekday(chatRoomsObj.getString("weekday"));
+                                cr.setTime(chatRoomsObj.getString("time"));
                                 cr.setLastMessage("");
                                 cr.setUnreadCount(0);
                                 cr.setTimestamp(chatRoomsObj.getString("created_at"));
@@ -456,13 +466,21 @@ public class ListOfEvent1 extends AppCompatActivity {
     private void calldialogue() {
 
 
-        CreateEvent dialogFragment= new CreateEvent();
-        dialogFragment.show(getSupportFragmentManager(),"missiles");
+        CreateEvent dialogFragment = new CreateEvent();
+        dialogFragment.show(getSupportFragmentManager(), "missiles");
     }
 
     private void calldialogfrombroadcastforpartner(String desc) {
         new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Message from partner")
+                .setTitleText("Message from Partner")
+                .setContentText(desc)
+                .setCustomImage(R.drawable.images)
+                .show();
+    }
+
+    private void calldialogfrombroadcastforLargeEvent(String desc) {
+        new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText("Message from Organiser")
                 .setContentText(desc)
                 .setCustomImage(R.drawable.images)
                 .show();
@@ -470,7 +488,7 @@ public class ListOfEvent1 extends AppCompatActivity {
 
     private void calldialogfrombroadcastfororganiser(String desc) {
         new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText("Message from partner")
+                .setTitleText("Message from Organiser")
                 .setContentText(desc)
                 .setCustomImage(R.drawable.images)
                 .show();
@@ -596,19 +614,18 @@ public class ListOfEvent1 extends AppCompatActivity {
         dialog.show(manager, "dialog");
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_event, menu);
-        menu.getItem(0).setIcon(android.R.drawable.ic_delete);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
+
 
         switch (item.getItemId()) {
 

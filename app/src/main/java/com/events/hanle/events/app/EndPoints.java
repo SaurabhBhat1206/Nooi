@@ -7,10 +7,10 @@ public class EndPoints {
 
     // localhost url
     //production url
-  // public static final String BASE_URL = "http://hanlesolutions.com/nooi/newchat1.11/gcm_chat/v1/index.php";
+  // public static final String BASE_URL = "http://www.nooitheinviteapp.com/newchat/gcm_chat/v1/index.php";
 
-    public static final String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/mobiletest/newchat/gcm_chat/v1/index.php";
-    //public static final String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/14-09-2016-live/newchat/gcm_chat/v1/index.php";
+  public static final String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/mobiletest/newchat/gcm_chat/v1/index.php";
+   // public static final String BASE_URL = "http://uat.hanlesolutions.com/hanle-test/beta/mobiletest/newchat/gcm_chat/v1/index.php";
     public static final String LOGIN = BASE_URL + "/user/login";
     public static final String USER = BASE_URL + "/user/_ID_";
     public static final String CHAT_ROOMS = BASE_URL + "/chat_rooms";

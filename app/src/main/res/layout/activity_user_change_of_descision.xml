@@ -35,15 +35,15 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="50dp"
             android:gravity="center"
-            android:text="Tell the inviter that you are not attending?"
+            android:text="Tell the Organiser that you are not attending?"
             android:textColor="#000"
             android:textSize="18sp"
             android:typeface="serif" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/textView4"
             android:layout_marginLeft="75dp"
             android:layout_marginTop="75dp"
@@ -92,7 +92,8 @@
             android:shadowColor="@android:color/black"
             android:text="Ok"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:typeface="serif" />
 
     </RelativeLayout>
 
