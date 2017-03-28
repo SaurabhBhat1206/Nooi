@@ -22,7 +22,8 @@ public class WebUrl {
     public final static String ORGANISER_ARTWORK = BASE_URL+"/organiser_art_work.php?id=";
     public final static String ORGANISER_LOGIN = "http://uat.hanlesolutions.com/hanle-test/mobiletest/mobile/Login/admin_login";
     public final static String ORGANISER_CREATE_NEW_USER = "http://uat.hanlesolutions.com/hanle-test/mobiletest/mobile/User/createNewUser";
-    public final static String ORGANISER_Invitee_list= "http://uat.hanlesolutions.com/hanle-test/mobiletest/mobile/event/getinviteedata?organiser_id=1";
+    public final static String ORGANISER_Invitee_list= "http://uat.hanlesolutions.com/hanle-test/mobiletest/mobile/event/getinviteedata?organiser_id=1&eventId=2";
+    public final static String INVITE_USER= "http://uat.hanlesolutions.com/hanle-test/mobiletest/mobile/event/inviteMultipleUsers";
 
     public static final int MY_SOCKET_TIMEOUT_MS = 30000;
 

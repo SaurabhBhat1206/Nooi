@@ -1,6 +1,7 @@
 package com.events.hanle.events.Activity;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -13,12 +14,23 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Fragments.AttendingDialogFragment;
 import com.events.hanle.events.Fragments.CreateEvent;
 import com.events.hanle.events.Fragments.MuteDialog;
@@ -31,8 +43,13 @@ import com.events.hanle.events.R;
 import com.events.hanle.events.chat.ChatRoomActivity;
 import com.events.hanle.events.gcm.GcmIntentService;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -42,6 +59,8 @@ public class UserTabView extends AppCompatActivity {
     private static ViewPager viewPager;
     int event_id;
     String eventtype;
+    ProgressDialog pDialog;
+    private static final String TAG = "UserTabView";
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -270,6 +289,99 @@ public class UserTabView extends AppCompatActivity {
         adapter.addFragment(new ChatRoomActivity(), "Chat");
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(adapter);
+    }
+
+    public void Inviteepost(final ArrayList<String> checkedist) {
+
+//        for (int i = 0; i < checkedist.size(); i++) {
+//            System.out.println("Usertab : The total value is" + checkedist.get(i));
+//        }
+
+        pDialog = new ProgressDialog(UserTabView.this);
+        pDialog.setMessage("Inviting please wait....");
+        pDialog.show();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                WebUrl.INVITE_USER, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, "response: " + response);
+
+                //Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
+                pDialog.hide();
+
+                try {
+                    JSONObject obj = new JSONObject(response);
+
+                    // check for error flag
+                    if (obj.length() != 0) {
+                        String message;
+                        int success;
+                        // user successfully logged in
+                        success = obj.getInt("result");
+                        message = obj.getString("message");
+
+                        if (success == 1) {
+
+
+                            Toast.makeText(UserTabView.this, "success", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(UserTabView.this, message, Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        // login error - simply toast the message
+                        Toast.makeText(UserTabView.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "json parsing error: " + e.getMessage());
+                    Toast.makeText(UserTabView.this, "Json parse error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                pDialog.hide();
+                NetworkResponse networkResponse = error.networkResponse;
+                Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    Toast.makeText(getApplicationContext(),
+                            getApplicationContext().getString(R.string.error_network_timeout),
+                            Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+                    Toast.makeText(getApplicationContext(),
+                            getApplicationContext().getString(R.string.error_network_server),
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(UserTabView.this, "Server did not respond!!", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                for (int i = 0; i < checkedist.size(); i++) {
+                    params.put("UserValues", checkedist.get(i));
+                    params.put("invite_EventId", "2");
+                    Log.e(TAG, "params: " + params.toString());
+                }
+
+                return params;
+            }
+        };
+
+        strReq.setRetryPolicy(new DefaultRetryPolicy(
+                WebUrl.MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //Adding request to request queue
+        com.events.hanle.events.app.MyApplication.getInstance().addToRequestQueue(strReq);
     }
 
 

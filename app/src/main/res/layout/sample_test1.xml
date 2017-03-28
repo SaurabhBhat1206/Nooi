@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent"
+        android:padding="10dp">
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/checkbox" />
+
+        <TextView
+            android:id="@+id/name_invitee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/n"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#000000"
+            android:textStyle="normal"
+            android:typeface="serif"
+            tools:ignore="RtlHardcoded" />
+
+
+        <TextView
+            android:id="@+id/phoneno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/p"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#000000"
+            android:textStyle="normal"
+            android:typeface="serif"
+            tools:ignore="RtlHardcoded" />
+
+    </LinearLayout>
+</RelativeLayout>

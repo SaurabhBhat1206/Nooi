@@ -27,6 +27,7 @@ import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.SimpleDividerItemDecoration;
 import com.events.hanle.events.Constants.WebUrl;
+import com.events.hanle.events.Model.AlreadyInvitedUser;
 import com.events.hanle.events.Model.Attending;
 import com.events.hanle.events.Model.Invitee;
 import com.events.hanle.events.R;
@@ -47,6 +48,7 @@ import java.util.List;
 public class InviteeList extends DialogFragment {
     RecyclerView rv;
     private ArrayList<Attending> inviteelist = new ArrayList<>();
+    private ArrayList<AlreadyInvitedUser> alreadyinvited = new ArrayList<>();
     InviteeListAdapter adapter;
     private String TAG = "InviteeList";
     Context ctx;
@@ -60,7 +62,7 @@ public class InviteeList extends DialogFragment {
         invite = (AppCompatButton) v.findViewById(R.id.invite_btn);
         t = (TextView) v.findViewById(R.id.tm);
 
-        adapter = new InviteeListAdapter(getActivity(), inviteelist,invite);
+        adapter = new InviteeListAdapter(getActivity(), inviteelist, alreadyinvited, invite);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(ctx));
 
@@ -76,7 +78,7 @@ public class InviteeList extends DialogFragment {
     }
 
     private void fetchattendinglist() {
-        String endpoint = WebUrl.ORGANISER_Invitee_list ;
+        String endpoint = WebUrl.ORGANISER_Invitee_list;
         Log.e(TAG, "end point: " + endpoint);
 
 
@@ -94,16 +96,30 @@ public class InviteeList extends DialogFragment {
                     JSONArray jsonArray = res.getJSONArray("server_response");
 
                     for (int i = 0; i < jsonArray.length(); i++) {
+                        Attending item = new Attending();
+
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                        Attending item = new Attending();
                         item.setId(jsonObject.getString("id"));
                         item.setNsme(jsonObject.getString("name"));
                         item.setMobile(jsonObject.getString("phone"));
                         inviteelist.add(item);
 
+                        JSONArray invitedarray = res.getJSONArray("alreadyinvited");
+                        for (int j = 0; j < invitedarray.length(); j++) {
+
+                            AlreadyInvitedUser alreadyInvitedUser = new AlreadyInvitedUser();
+                            JSONObject jsonO = invitedarray.getJSONObject(j);
+                            alreadyInvitedUser.setAlreadyinvited(jsonO.getString("userid"));
+                            alreadyinvited.add(alreadyInvitedUser);
+
+                            System.out.println("alredyinvi" + alreadyinvited.get(j).getAlreadyinvited());
+                        }
+
+                        System.out.println("Invited" + inviteelist.get(i).getId());
 
                     }
+
 
                 } catch (JSONException e) {
                     Log.e(TAG, "json parsing error: " + e.getMessage());

@@ -14,6 +14,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.events.hanle.events.Activity.UserTabView;
+import com.events.hanle.events.Fragments.InviteeList;
+import com.events.hanle.events.Model.AlreadyInvitedUser;
 import com.events.hanle.events.Model.Attending;
 import com.events.hanle.events.R;
 
@@ -26,12 +29,16 @@ import java.util.ArrayList;
 public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.InviteeListAdapterviewholder> {
     private static final String TAG = "ListAttending";
     private ArrayList<Attending> inviteelist;
+    private ArrayList<AlreadyInvitedUser> alreadyinvited;
     private Context mContext;
     AppCompatButton invitee;
-    ArrayList<Integer> selectedStrings = new ArrayList<>();
+    ArrayList<String> checkedist = new ArrayList<>();
+    Attending attending;
+    AlreadyInvitedUser alredyinvi;
 
-    public InviteeListAdapter(Context context, ArrayList<Attending> inviteelist, AppCompatButton invitee) {
+    public InviteeListAdapter(Context context, ArrayList<Attending> inviteelist, ArrayList<AlreadyInvitedUser> alreadyinvited, AppCompatButton invitee) {
         this.inviteelist = inviteelist;
+        this.alreadyinvited = alreadyinvited;
         this.mContext = context;
         this.invitee = invitee;
     }
@@ -39,7 +46,7 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
 
     @Override
     public InviteeListAdapterviewholder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.invite_list_adapter, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sample_test1, null);
         InviteeListAdapterviewholder viewHolder = new InviteeListAdapterviewholder(view, mContext, inviteelist);
 
         return viewHolder;
@@ -47,64 +54,65 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
 
     @Override
     public void onBindViewHolder(final InviteeListAdapterviewholder holder, int position) {
-        Attending attending = inviteelist.get(position);
+        attending = inviteelist.get(position);
+        alredyinvi = alreadyinvited.get(position);
 
 
-        TableRow row = new TableRow(mContext);
+//        if (alredyinvi.getAlreadyinvited().equals(attending.getId())) {
+//            holder.ac.setChecked(true);
+//            holder.ac.setEnabled(false);
+//            System.out.println("Comparision"+alredyinvi.getAlreadyinvited().equals(attending.getId()));
+//            System.out.println("AlreadyInvitedList"+alredyinvi.getAlreadyinvited());
+//            System.out.println("InvitedList"+attending.getId());
+//        }
 
-        //TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-        //row.setLayoutParams(lp);
+//        for (int i = 0; i < inviteelist.size(); i++) {
+//            for (int j = 0; j < alreadyinvited.size(); j++) {
+//                if (inviteelist.get(i).getId().equals(alreadyinvited.get(j).getAlreadyinvited()))
+//                    holder.ac.setEnabled(false);
+//                holder.ac.setChecked(true);
+//            }
+//        }
 
-        holder.ac = new AppCompatCheckBox(mContext);
-        holder.attendingname = new TextView(mContext);
-        holder.attendingmobile = new TextView(mContext);
-        row.addView(holder.ac);
-        row.addView(holder.attendingname);
-        row.addView(holder.attendingmobile);
+        for (int counter = 0; counter < inviteelist.size(); counter++) {
+            if (alreadyinvited.get(counter).getAlreadyinvited().contains(inviteelist.get(counter).getId())) {
+                holder.ac.setEnabled(false);
+                holder.ac.setChecked(true);
+            }
+        }
 
         holder.attendingname.setText(attending.getNsme());
         holder.attendingmobile.setText(attending.getMobile());
         holder.ac.setId(Integer.parseInt(attending.getId()));
-        holder.ll.addView(row);
 
-        //System.out.println("Size of array"+inviteelist.get(i).getNsme());
-        System.out.println("Size of array" + inviteelist.size());
+        holder.ac.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    checkedist.add(String.valueOf(holder.ac.getId()));
+                    System.out.println("Checked ID is" + String.valueOf(holder.ac.getId()));
+                } else {
+                    System.out.println("deleted is " + String.valueOf(holder.ac.getId()));
+                    checkedist.remove(String.valueOf(holder.ac.getId()));
+
+                }
+            }
+        });
 
         invitee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < selectedStrings.size(); i++) {
-                    System.out.println("Selected Id's are" + selectedStrings.get(i));
-                }
 
-            }
-        });
-
-        holder.ac.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int checkBoxId = v.getId();
-                if (((CheckBox) v).isChecked()) {
-                    selectedStrings.add(holder.ac.getId());
-
-                } else {
-                    selectedStrings.remove(holder.ac.getId());
-                }
-
-                Toast.makeText(mContext, "Clicked id is" + String.valueOf(checkBoxId), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-//        holder.ac.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    selectedStrings.add(holder.ac.getId());
-//                } else {
-//                    selectedStrings.remove(holder.ac.getId());
+//                for (int i = 0; i < checkedist.size(); i++) {
+//                    System.out.println("The total value is" + checkedist.get(i));
 //                }
-//            }
-//        });
+
+                if (mContext instanceof UserTabView) {
+                    ((UserTabView) mContext).Inviteepost(checkedist);
+                }
+            }
+        });
 
 
     }
@@ -124,9 +132,9 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
         public InviteeListAdapterviewholder(View itemView, Context mContext, ArrayList<Attending> attendinglist) {
             super(itemView);
             ll = (TableLayout) itemView.findViewById(R.id.tb);
-//            attendingname = (TextView) itemView.findViewById(R.id.name_invitee);
-//            attendingmobile = (TextView) itemView.findViewById(R.id.phoneno);
-            //ac = (AppCompatCheckBox) itemView.findViewById(R.id.checkBox);
+            attendingname = (TextView) itemView.findViewById(R.id.name_invitee);
+            attendingmobile = (TextView) itemView.findViewById(R.id.phoneno);
+            ac = (AppCompatCheckBox) itemView.findViewById(R.id.checkBox);
 
 
         }
