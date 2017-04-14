@@ -41,6 +41,7 @@
     <style name="ThemeOverlay.MyApp.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
         <item name="android:textColorPrimary">@color/actionbar_title_text</item>
+        <item name="actionMenuTextColor">@color/actionbar_title_text</item>
     </style>
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
@@ -51,17 +52,18 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="Custom" parent="android:Theme.DeviceDefault.Dialog">
-        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="DialogTitleText">Please Wait</item>
-        <item name="DialogSpotColor">@color/pdialog</item>
-    </style>
+
 
     <color name="simpletooltip_background">@color/tool_background</color>
     <color name="simpletooltip_text">@color/tool_background_text_color</color>
 
     <style name="checkbox">
-        <item name="colorAccent">@color/tool_background</item>
+        <item name="colorAccent">@color/toolbar</item>
     </style>
+    <style name="TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">8sp</item>
+    </style>
+
+
 
 </resources>

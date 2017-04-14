@@ -38,6 +38,8 @@ import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.R;
 import com.events.hanle.events.app.CustomVolleyRequestQueue;
 import com.events.hanle.events.app.MyApplication;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +55,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class EventArtwork extends AppCompatActivity {
     String eventinfoID;
-    private NetworkImageView artwork;
+    private ImageView artwork;
     private ImageLoader imageLoader;
     private String TAG = EventArtwork.class.getSimpleName();
     FloatingActionButton fab;
@@ -67,7 +69,7 @@ public class EventArtwork extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_artwork);
-        artwork = (NetworkImageView) findViewById(R.id.artwork);
+        artwork = (ImageView) findViewById(R.id.artwork);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
@@ -196,18 +198,56 @@ public class EventArtwork extends AppCompatActivity {
         MyApplication.getInstance().addToRequestQueue(strReq);
     }
 
-    private void loadImage(String url) {
+//    private void loadImage(String url) {
+//
+//        imageLoader = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
+//                .getImageLoader();
+//        imageLoader.get(url, ImageLoader.getImageListener(artwork,
+//                R.drawable.nooismall, android.R.drawable
+//                        .ic_dialog_alert));
+//        artwork.setImageUrl(url, imageLoader);
+//        fab.setVisibility(View.VISIBLE);
+//        mAttacher.update();
+//        mAttacher.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//
+//
+//
+//    }
 
-        imageLoader = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
-                .getImageLoader();
-        imageLoader.get(url, ImageLoader.getImageListener(artwork,
-                R.drawable.nooismall, android.R.drawable
-                        .ic_dialog_alert));
-        artwork.setImageUrl(url, imageLoader);
-        fab.setVisibility(View.VISIBLE);
-        mAttacher.update();
+
+        private void loadImage(String url) {
+
+            Callback imageLoadedCallback = new Callback() {
+
+                @Override
+                public void onSuccess() {
+                    if(mAttacher!=null){
+                        mAttacher.update();
+                        fab.setVisibility(View.VISIBLE);
+
+                    }else{
+                        mAttacher = new PhotoViewAttacher(artwork);
+
+                    }
+                }
+
+                @Override
+                public void onError() {
+                    // TODO Auto-generated method stub
+
+                }
+            };
+
+            Picasso.with(getApplicationContext())
+                    .load(url)
+                    .placeholder(R.drawable.nooismall)
+                    .error(android.R.drawable.ic_dialog_alert)
+                    .into(artwork,imageLoadedCallback);
+
+
 
     }
+
 
     private void downloadImage() {
         ImageRequest im = new ImageRequest(url1, new Response.Listener<Bitmap>() {
@@ -272,79 +312,30 @@ public class EventArtwork extends AppCompatActivity {
         MyApplication.getInstance().addToRequestQueue(im);
 
     }
-//     private void downloadImage() {
-//            ImageRequest im = new ImageRequest(url1, new Response.Listener<Bitmap>() {
-//                @Override
-//                public void onResponse(Bitmap response) {
-//                    File pictureFile = getOutputMediaFile();
-//                    if (pictureFile == null) {
-//                        Log.d(TAG, "Error creating media file, check storage permissions: ");// e.getMessage());
-//                        return;
-//                    }
-//                    try {
-//                        FileOutputStream fos = new FileOutputStream(pictureFile);
-//                        response.compress(Bitmap.CompressFormat.PNG, 100, fos);
-//                        fos.close();
-//                    } catch (FileNotFoundException e) {
-//                        Log.d(TAG, "File not found: " + e.getMessage());
-//                    } catch (IOException e) {
-//                        Log.d(TAG, "Error accessing file: " + e.getMessage());
-//                    }
-//                }
-//            },0,0, ImageView.ScaleType.CENTER_CROP,null, new Response.ErrorListener() {
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Callback imageLoadedCallback = new Callback(){
 //
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    NetworkResponse networkResponse = error.networkResponse;
-//                    Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
-//                    //Toast.makeText(ListOfEvent1.this, "Server did not respond!!", Toast.LENGTH_SHORT).show();
-//                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-//                        Toast.makeText(getApplicationContext(),
-//                                getApplicationContext().getString(R.string.error_network_timeout),
-//                                Toast.LENGTH_LONG).show();
-//                    } else if (error instanceof ServerError) {
-//                        Toast.makeText(getApplicationContext(),
-//                                getApplicationContext().getString(R.string.error_network_server),
-//                                Toast.LENGTH_LONG).show();
-//                    } else {
-//                        Toast.makeText(EventArtwork.this, "Server did not respond!!", Toast.LENGTH_SHORT).show();
+//            @Override
+//            public void onSuccess() {
 //
-//                    }
-//                }
-//            });
-//            im.setRetryPolicy(new DefaultRetryPolicy(
-//                    WebUrl.MY_SOCKET_TIMEOUT_MS,
-//                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//            MyApplication.getInstance().addToRequestQueue(im);
-//
-//        }
-//
-//    private File getOutputMediaFile() {
-//
-//
-//
-//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-//                + appDirectoryName);
-//
-//
-//        // This location works best if you want the created images to be shared
-//        // between applications and persist after your app has been uninstalled.
-//
-//        // Create the storage directory if it does not exist
-//        if (!mediaStorageDir.exists()) {
-//            if (!mediaStorageDir.mkdirs()) {
-//                return null;
 //            }
-//        }
-//        // Create a media file name
-//        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-//        File mediaFile;
-//        String mImageName = "MI_" + timeStamp + ".jpg";
-//        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-//        return mediaFile;
-//    }
 //
+//            @Override
+//            public void onError() {
+//
+//            }
+//        };
+//        mAttacher.update();
+//
+//        mAttacher.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//
+//    }
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

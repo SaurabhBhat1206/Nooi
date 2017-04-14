@@ -1,17 +1,22 @@
 package com.events.hanle.events.Activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,6 +38,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Fragments.ListOfOrganiserActionsFragment;
 import com.events.hanle.events.R;
+import com.events.hanle.events.app.MyApplication;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 
@@ -42,17 +48,16 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
 import static android.content.ContentValues.TAG;
 
 public class OrganiserContactForm extends AppCompatActivity {
 
     AppCompatButton pickphonecontact, createinvitee;
-    EditText firstname, lastname, phone, countrycode;
+    AppCompatEditText firstname, lastname, phone, countrycode;
     private static final int RESULT_PICK_CONTACT = 1;
     private CountryPicker countryPicker;
-     String country_code = null;
+    String country_code = null;
     private CoordinatorLayout coordinatorLayout;
     TextView hlp;
     String organiser_id;
@@ -73,22 +78,40 @@ public class OrganiserContactForm extends AppCompatActivity {
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
 
-        firstname = (EditText) findViewById(R.id.input_name_organiser_contact_form);
-        lastname = (EditText) findViewById(R.id.input_lastname);
-        phone = (EditText) findViewById(R.id.input_mobileno);
-        countrycode = (EditText) findViewById(R.id.input_countrycode_organiser);
-        hlp = (TextView) findViewById(R.id.help);
+        firstname = (AppCompatEditText) findViewById(R.id.input_name_organiser_contact_form);
+        lastname = (AppCompatEditText) findViewById(R.id.input_lastname);
+        phone = (AppCompatEditText) findViewById(R.id.input_mobileno);
+        countrycode = (AppCompatEditText) findViewById(R.id.input_countrycode_organiser);
+        //hlp = (TextView) findViewById(R.id.help);
         countrycode.setKeyListener(null);
         countryPicker = CountryPicker.newInstance("Select Country");
+
 
         createinvitee = (AppCompatButton) findViewById(R.id.create_invitee);
         pickphonecontact = (AppCompatButton) findViewById(R.id.create_invitee_from_phone);
         pickphonecontact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.System.canWrite(getApplicationContext())) {
+                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 2909);
+                    } else {
+                        // continue with your code
+                        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                        startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+
+                    }
+                } else {
+                    // continue with your code
+                    Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                    startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+
+                }
+
+
             }
         });
         countrycodepicker();
@@ -100,28 +123,54 @@ public class OrganiserContactForm extends AppCompatActivity {
             }
         });
 
-        hlp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SimpleTooltip.Builder(OrganiserContactForm.this)
-                        .anchorView(hlp)
-                        .text("Texto do Tooltip")
-                        .gravity(Gravity.START)
-                        .animated(true)
-                        .transparentOverlay(false)
-                        .build()
-                        .show();
-            }
-        });
-        if (getIntent().getStringExtra("organiser_id") != null) {
-            organiser_id = getIntent().getStringExtra("organiser_id");
-            System.out.println("organiserID " + organiser_id);
 
-        }
+//        hlp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new SimpleTooltip.Builder(OrganiserContactForm.this)
+//                        .anchorView(hlp)
+//                        .text("Texto do Tooltip")
+//                        .gravity(Gravity.START)
+//                        .animated(true)
+//                        .transparentOverlay(false)
+//                        .build()
+//                        .show();
+//            }
+//        });
+//        if (getIntent().getStringExtra("organiser_id") != null) {
+//            organiser_id = getIntent().getStringExtra("organiser_id");
+//            System.out.println("organiserID " + organiser_id);
+//
+//        }
+
+
+        organiser_id = MyApplication.getInstance().getPrefManager().getOrganiserID();
+        System.out.println("organiserID " + organiser_id);
 
 
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 2909: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Permission", "Granted");
+                    //Toast.makeText(getApplicationContext(), "Permission Granted!!", Toast.LENGTH_LONG).show();
+                    Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                    startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+
+                } else {
+                    Log.e("Permission", "Denied");
+                    Toast.makeText(getApplicationContext(), "Permission Denied!!", Toast.LENGTH_LONG).show();
+
+                }
+                return;
+            }
+        }
+    }
 
     private void countrycodepicker() {
         countrycode.setOnClickListener(new View.OnClickListener() {
@@ -245,6 +294,9 @@ public class OrganiserContactForm extends AppCompatActivity {
                         if (success == 1 && user_exist == 0) {
 
                             Toast.makeText(getApplicationContext(), "Successfully created!!", Toast.LENGTH_SHORT).show();
+                            ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+                            dialogFragment.show(getSupportFragmentManager(), "missiles");
+                            finish();
 
                         } else if (success == 0 && user_exist == 1) {
                             Snackbar snackbar = Snackbar

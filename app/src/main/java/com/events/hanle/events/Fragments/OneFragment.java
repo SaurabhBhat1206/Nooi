@@ -31,6 +31,7 @@ import com.events.hanle.events.Model.FeedItem;
 import com.events.hanle.events.R;
 import com.events.hanle.events.adapter.MyRecyclerAdapter;
 import com.events.hanle.events.gcm.GcmIntentService;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +43,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmax.dialog.SpotsDialog;
 
 
 public class OneFragment extends Fragment {
@@ -52,11 +52,11 @@ public class OneFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MyRecyclerAdapter adapter;
     Context ctx;
-    private AlertDialog progressDialog;
     View mainview;
     TextView t;
     String event_id, mobileno, countrycode;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
+    private AVLoadingIndicatorView avi;
 
 
     @Override
@@ -74,7 +74,9 @@ public class OneFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
         mainview = inflater.inflate(R.layout.fragment_one, container, false);
+        avi= (AVLoadingIndicatorView) mainview.findViewById(R.id.avi);
         mRecyclerView = (RecyclerView) mainview.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(ctx));
         mRecyclerView.setHasFixedSize(true);
@@ -161,9 +163,9 @@ public class OneFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), GcmIntentService.class);
         intent.putExtra(GcmIntentService.KEY, GcmIntentService.SUBSCRIBE);
-        //intent.putExtra(GcmIntentService.TOPIC, "topic_" + eventID);
+        intent.putExtra(GcmIntentService.TOPIC, "topic_" + eventID);
         //intent.putExtra(GcmIntentService.TOPIC, "topic_" + "15092016");
-        intent.putExtra(GcmIntentService.TOPIC, "topic_" + "test_android_ios");
+        //intent.putExtra(GcmIntentService.TOPIC, "topic_" + "test_android_ios");
         getActivity().startService(intent);
         //Toast.makeText(getActivity(), "topic_" + "android_ios", Toast.LENGTH_SHORT).show();
 
@@ -179,8 +181,8 @@ public class OneFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            progressDialog = new SpotsDialog(getActivity());
-            progressDialog.show();
+
+            avi.show();
 
         }
 
@@ -225,13 +227,18 @@ public class OneFragment extends Fragment {
             if (result == 1) {
                 adapter = new MyRecyclerAdapter(OneFragment.this, feedsList);
                 mRecyclerView.setAdapter(adapter);
-                progressDialog.hide();
+                avi.hide();
+                avi.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
 
             } else {
-                progressDialog.hide();
+                avi.hide();
+                avi.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                 Toast.makeText(getActivity(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -283,7 +290,9 @@ public class OneFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressDialog.hide();
+                avi.hide();
+                avi.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                 t.setVisibility(View.VISIBLE);
                 if (status == 3) {
                     t.setText("You have cancelled this event!!!");

@@ -9,8 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal"
-        tools:ignore="UselessParent"
-        android:padding="10dp">
+        tools:ignore="UselessParent">
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/checkBox"
@@ -22,7 +21,7 @@
             android:id="@+id/name_invitee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="3dp"
             android:text="@string/n"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#000000"
@@ -35,7 +34,7 @@
             android:id="@+id/phoneno"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="3dp"
             android:text="@string/p"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#000000"

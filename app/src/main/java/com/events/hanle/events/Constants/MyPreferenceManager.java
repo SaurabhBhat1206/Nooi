@@ -71,8 +71,7 @@ public class MyPreferenceManager {
     private static final String CHATWINDOW = "chat_window";
     private static final String CHATWINDOW1 = "chat_window1";
     private static final String CHATWINDOW2 = "chat_window2";
-
-
+    private static final String OrganiserId = "organiser_id";
 
 
     // Constructor
@@ -223,7 +222,7 @@ public class MyPreferenceManager {
 
     public ListEvent getEventId() {
         if (pref.getString(KEY_EVENT_ID, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail,artwork,eventtype,chatwindow;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatwindow;
             eventId = pref.getString(KEY_EVENT_ID, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE, null);
             event_Status = pref.getString(KEY_EVENT_STATUS, null);
@@ -234,7 +233,7 @@ public class MyPreferenceManager {
             eventtype = pref.getString(EVENTTYPE, null);
             chatwindow = pref.getString(CHATWINDOW, null);
 
-            ListEvent listEvent = new ListEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail,artwork,eventtype,chatwindow);
+            ListEvent listEvent = new ListEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatwindow);
             return listEvent;
 
         }
@@ -243,7 +242,7 @@ public class MyPreferenceManager {
 
     public CompletedEvent getCompletedEventId() {
         if (pref.getString(KEY_EVENT_ID1, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail,artwork,eventtype,chatw;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatw;
             eventId = pref.getString(KEY_EVENT_ID1, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE1, null);
             event_Status = pref.getString(KEY_EVENT_STATUS1, null);
@@ -254,7 +253,7 @@ public class MyPreferenceManager {
             eventtype = pref.getString(EVENTTYPE1, null);
             chatw = pref.getString(CHATWINDOW1, null);
 
-            CompletedEvent listEvent = new CompletedEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail,artwork,eventtype,chatw);
+            CompletedEvent listEvent = new CompletedEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatw);
             return listEvent;
 
         }
@@ -263,7 +262,7 @@ public class MyPreferenceManager {
 
     public CanceledEvent getCancelledEventID() {
         if (pref.getString(EVENT_INFO_ID2, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail,artwork,eventtype,chatw;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatw;
             eventId = pref.getString(EVENT_INFO_ID2, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE2, null);
             event_Status = pref.getString(KEY_EVENT_STATUS2, null);
@@ -274,12 +273,23 @@ public class MyPreferenceManager {
             eventtype = pref.getString(EVENTTYPE2, null);
             chatw = pref.getString(CHATWINDOW2, null);
 
-            CanceledEvent listEvent = new CanceledEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail,artwork,eventtype,chatw);
+            CanceledEvent listEvent = new CanceledEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatw);
             return listEvent;
 
         }
         return null;
     }
+
+    public String getOrganiserID() {
+        if (pref.getString(OrganiserId, null) != null) {
+            String organiserID;
+            organiserID = pref.getString(OrganiserId, null);
+            return organiserID;
+        }
+
+        return null;
+    }
+
 
     public void addNotification(String notification) {
 
@@ -296,7 +306,15 @@ public class MyPreferenceManager {
         editor.commit();
     }
 
-    public void clearnotification(){
+    public void addorganiserId(String Id) {
+        editor.putString(OrganiserId, Id);
+        editor.commit();
+        Log.e(TAG, "Organiser ID stored  " + Id);
+
+    }
+
+
+    public void clearnotification() {
         editor.remove(KEY_NOTIFICATIONS);
         editor.apply();
     }
@@ -304,7 +322,6 @@ public class MyPreferenceManager {
     public String getNotifications() {
         return pref.getString(KEY_NOTIFICATIONS, null);
     }
-
 
 
     public void clear() {

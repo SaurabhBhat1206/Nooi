@@ -6,15 +6,15 @@ package com.events.hanle.events.Model;
 
 public class AlreadyInvitedUser {
 
-    String Alreadyinvited;
+    int Alreadyinvited;
 
 
 
-    public String getAlreadyinvited() {
+    public int getAlreadyinvited() {
         return Alreadyinvited;
     }
 
-    public void setAlreadyinvited(String alreadyinvited) {
+    public void setAlreadyinvited(int alreadyinvited) {
         Alreadyinvited = alreadyinvited;
     }
 }

@@ -237,12 +237,28 @@ public class ChatRoomActivity extends Fragment {
                 }
             });
         } else {
-            recyclerView.setOnScrollChangeListener(new RecyclerView.OnScrollChangeListener() {
+//            recyclerView.setOnScrollChangeListener(new RecyclerView.OnScrollChangeListener() {
+//                @Override
+//                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+////Ifscrolled at last then
+//                    if (isLastItemDisplaying(recyclerView)) {
+////Calling the method getdata again
+//                        getData();
+//                    }
+//                }
+//            });
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//Ifscrolled at last then
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
                     if (isLastItemDisplaying(recyclerView)) {
-//Calling the method getdata again
                         getData();
                     }
                 }

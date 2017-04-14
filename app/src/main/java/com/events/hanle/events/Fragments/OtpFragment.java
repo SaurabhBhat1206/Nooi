@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -41,12 +42,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import dmax.dialog.SpotsDialog;
 
 import static com.events.hanle.events.R.id.message;
 
 public class OtpFragment extends Fragment {
-    private Button b;
+    static Button b;
     String user_id, mobile, country_code;
     //EditText otp;
 
@@ -83,6 +83,13 @@ public class OtpFragment extends Fragment {
     public void recivedSms(String message) {
         try {
             otp.setText(message);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    b.performClick();
+                }
+            }, 1000);
+
         } catch (Exception e) {
         }
     }
@@ -108,6 +115,7 @@ public class OtpFragment extends Fragment {
                 }
             }
         });
+
 
     }
 

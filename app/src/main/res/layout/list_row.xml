@@ -16,8 +16,9 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
     card_view:cardBackgroundColor="@android:color/white"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="@dimen/cardview_default_elevation">
+    card_view:cardCornerRadius="14dp"
+    card_view:cardElevation="10dp"
+    card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"

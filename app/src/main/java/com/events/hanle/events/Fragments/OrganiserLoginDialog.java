@@ -9,6 +9,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.User;
 import com.events.hanle.events.R;
+import com.events.hanle.events.app.MyApplication;
 import com.events.hanle.events.interf.MyDialogCloseListener;
 
 import org.json.JSONException;
@@ -59,8 +61,6 @@ public class OrganiserLoginDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_organiser_login, container, false);
 
-        String s = getActivity().getIntent().getStringExtra("classcheck");
-
         inputLayoutemail = (TextInputLayout) v.findViewById(R.id.email_input_layout);
         inputpassword = (TextInputLayout) v.findViewById(R.id.password_input_layout);
         email = (EditText) v.findViewById(R.id.email_organiser);
@@ -75,13 +75,24 @@ public class OrganiserLoginDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (ConnectionDetector.isInternetAvailable(getActivity())) {
-                   // checkLogin();
-                    getDialog().dismiss();
-                    Bundle args = new Bundle();
-                    args.putString("orgniser_id", "1");
-                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
-                    dialogFragment.setArguments(args);
-                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
+                    final String email_id = email.getText().toString();
+                    final String pwd = password.getText().toString();
+                    if(TextUtils.isEmpty(email_id) && TextUtils.isEmpty(pwd)){
+                        Snackbar snackbar = Snackbar
+                                .make(coordinatorLayout, "All fields required!!", Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    } else{
+                        checkLogin(email_id,pwd);
+
+                    }
+//                    dismiss();
+//                    dismissAllowingStateLoss();
+//
+//                    Bundle args = new Bundle();
+//                    args.putString("orgniser_id", "1");
+//                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+//                    dialogFragment.setArguments(args);
+//                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
 
                 } else {
                     Snackbar snackbar = Snackbar
@@ -117,10 +128,9 @@ public class OrganiserLoginDialog extends DialogFragment {
         }
     }
 
-    private void checkLogin() {
+    private void checkLogin(final String email_id, final String pwd) {
 
-        final String email_id = email.getText().toString();
-        final String pwd = password.getText().toString();
+
 
 
 //            progressDialog = new ProgressDialog(getActivity());
@@ -154,11 +164,10 @@ public class OrganiserLoginDialog extends DialogFragment {
                         if (success == 1) {
 
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                            getDialog().dismiss();
-                            Bundle args = new Bundle();
-                            args.putString("orgniser_id", orgniser_id);
+                            dismiss();
+                            dismissAllowingStateLoss();
+                            MyApplication.getInstance().getPrefManager().addorganiserId(orgniser_id);
                             ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
-                            dialogFragment.setArguments(args);
                             dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
                         } else {
                             Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
@@ -228,12 +237,11 @@ public class OrganiserLoginDialog extends DialogFragment {
 
     }
 
-    public void onDismiss(DialogInterface dialog)
-    {
+    public void onDismiss(DialogInterface dialog) {
         Activity activity = getActivity();
-        if(activity instanceof MyDialogCloseListener)
-            ((MyDialogCloseListener)activity).handleDialogClose(dialog);
-        Log.d("check","dialog dismissed");
+        if (activity instanceof MyDialogCloseListener)
+            ((MyDialogCloseListener) activity).handleDialogClose(dialog);
+        Log.d("check", "dialog dismissed");
     }
 
     @Override

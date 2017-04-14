@@ -1,19 +1,29 @@
 package com.events.hanle.events.Fragments;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.support.v4.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,16 +33,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Constants.ConnectionDetector;
-import com.events.hanle.events.Constants.SimpleDividerItemDecoration;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.AlreadyInvitedUser;
 import com.events.hanle.events.Model.Attending;
-import com.events.hanle.events.Model.Invitee;
 import com.events.hanle.events.R;
 import com.events.hanle.events.adapter.InviteeListAdapter;
-import com.events.hanle.events.adapter.ListAttending;
+import com.events.hanle.events.app.MyApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,13 +54,14 @@ import java.util.List;
 
 public class InviteeList extends DialogFragment {
     RecyclerView rv;
-    private ArrayList<Attending> inviteelist = new ArrayList<>();
-    private ArrayList<AlreadyInvitedUser> alreadyinvited = new ArrayList<>();
+    private List<Attending> inviteelist = new ArrayList<>();
+    private List<AlreadyInvitedUser> alreadyinvited = new ArrayList<>();
     InviteeListAdapter adapter;
     private String TAG = "InviteeList";
     Context ctx;
     TextView t;
     AppCompatButton invite;
+    AppCompatEditText ed;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,29 +69,137 @@ public class InviteeList extends DialogFragment {
         rv = (RecyclerView) v.findViewById(R.id.recyclerView_for_invitee_list);
         invite = (AppCompatButton) v.findViewById(R.id.invite_btn);
         t = (TextView) v.findViewById(R.id.tm);
+        ed = (AppCompatEditText) v.findViewById(R.id.toolbar_title);
 
-        adapter = new InviteeListAdapter(getActivity(), inviteelist, alreadyinvited, invite);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(ctx));
+        //search = (AppCompatEditText) v.findViewById(R.id.search);
+        //adapter = new InviteeListAdapter(getActivity(), inviteelist, alreadyinvited, invite);
+        //rv.setHasFixedSize(true);
+        //rv.setLayoutManager(new LinearLayoutManager(ctx));
+        //rv.setAdapter(adapter);
 
-        rv.setAdapter(adapter);
 
         if (ConnectionDetector.isInternetAvailable(getActivity())) {
             fetchattendinglist();
         } else {
             Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
         }
+//        addTextListener();
+//        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+//        toolbar.inflateMenu(R.menu.invitee_list_search);
+//        //toolbar.setTitle("Search");
+//        MenuItem myActionMenuItem = toolbar.getMenu().findItem(R.id.action_search);
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(myActionMenuItem);
+//        //final SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                final List<Attending> filteredModelList = filter(inviteelist, newText);
+//
+//                adapter.setFilter(filteredModelList);
+//                //Toast.makeText(getActivity(),newText,Toast.LENGTH_LONG).show();
+//                rv.setVisibility(View.VISIBLE);
+//                if (newText.equals("") || newText.length() < 0) {
+//                    rv.setVisibility(View.GONE);
+//
+//                }
+//
+//                return true;
+//            }
+//        });
+//
+//        MenuItemCompat.setOnActionExpandListener(myActionMenuItem,
+//                new MenuItemCompat.OnActionExpandListener() {
+//                    @Override
+//                    public boolean onMenuItemActionExpand(MenuItem item) {
+////
+////                        ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+////                        dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onMenuItemActionCollapse(MenuItem item) {
+//                        adapter.setFilter(inviteelist);
+//
+//                        return true;
+//                    }
+//                });
+
+        ed.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                if (count < 0 || count ==0) {
+                    rv.setVisibility(View.GONE);
+
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                String s1 = "" + s;
+
+                if (count < 0 || count ==0) {
+                    rv.setVisibility(View.GONE);
+
+
+                } else {
+                    final List<Attending> filteredModelList = filter(inviteelist, s1);
+                    adapter.setFilter(filteredModelList);
+                    adapter.setFilter(inviteelist);
+                    rv.setVisibility(View.VISIBLE);
+
+                }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         return v;
     }
 
+
+    private List<Attending> filter(List<Attending> models, String query) {
+        query = query.toLowerCase();
+        final List<Attending> filteredModelList = new ArrayList<>();
+        rv.setLayoutManager(new LinearLayoutManager(ctx));
+        adapter = new InviteeListAdapter(getActivity(), filteredModelList, alreadyinvited, invite, getDialog());
+        rv.setHasFixedSize(true);
+        rv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        for (Attending model : models) {
+            final String text = model.getNsme().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
+    }
+
+
     private void fetchattendinglist() {
-        String endpoint = WebUrl.ORGANISER_Invitee_list;
-        Log.e(TAG, "end point: " + endpoint);
+
+
+        String endpoint = WebUrl.ORGANISER_Invitee_list.replace("ORGANISER_ID", MyApplication.getInstance().getPrefManager().getOrganiserID());
+        String endpoint1 = endpoint.replace("EVENT_ID", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
+        Log.e(TAG, "end point: " + endpoint1);
 
 
         StringRequest strReq = new StringRequest(Request.Method.GET,
-                endpoint, new Response.Listener<String>() {
+                endpoint1, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -100,9 +216,9 @@ public class InviteeList extends DialogFragment {
 
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                        item.setId(jsonObject.getString("id"));
-                        item.setNsme(jsonObject.getString("name"));
-                        item.setMobile(jsonObject.getString("phone"));
+                        item.setId(jsonObject.getInt("id"));
+                        item.setNsme(jsonObject.getString("name") + " " + jsonObject.getString("last_name"));
+                        item.setMobile("+" + jsonObject.getString("countrycode") + " " + jsonObject.getString("phone"));
                         inviteelist.add(item);
 
                         JSONArray invitedarray = res.getJSONArray("alreadyinvited");
@@ -110,7 +226,7 @@ public class InviteeList extends DialogFragment {
 
                             AlreadyInvitedUser alreadyInvitedUser = new AlreadyInvitedUser();
                             JSONObject jsonO = invitedarray.getJSONObject(j);
-                            alreadyInvitedUser.setAlreadyinvited(jsonO.getString("userid"));
+                            alreadyInvitedUser.setAlreadyinvited(jsonO.getInt("userid"));
                             alreadyinvited.add(alreadyInvitedUser);
 
                             System.out.println("alredyinvi" + alreadyinvited.get(j).getAlreadyinvited());
@@ -126,7 +242,7 @@ public class InviteeList extends DialogFragment {
                     Toast.makeText(getActivity(), "Server did not respond!!", Toast.LENGTH_LONG).show();
                 }
 
-                adapter.notifyDataSetChanged();
+//                adapter.notifyDataSetChanged();
 
                 // subscribing to all chat room topics
             }
@@ -149,15 +265,67 @@ public class InviteeList extends DialogFragment {
         com.events.hanle.events.app.MyApplication.getInstance().addToRequestQueue(strReq);
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+//        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+//            @Override
+//            public boolean onKey(android.content.DialogInterface dialog,
+//                                 int keyCode, android.view.KeyEvent event) {
+//                if ((keyCode == android.view.KeyEvent.KEYCODE_BACK)) {
+//                    // To dismiss the fragment when the back-button is pressed.
+//
+//                    return true;
+//                }
+//                // Otherwise, do nothing else
+//                else return false;
+//            }
+//        });
+
+
+        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(android.content.DialogInterface dialog,
+                                 int keyCode, android.view.KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    // To dismiss the fragment when the back-button is pressed.
+                    dismiss();
+                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
+
+                    return true;
+                }
+                // Otherwise, do nothing else
+                else return false;
+            }
+        });
+
+
+    }
+
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // The only reason you might override this method when using onCreateView() is
         // to modify any dialog characteristics. For example, the dialog includes a
         // title by default, but your custom layout might not need it. So here you can
         // remove the dialog title, but you must call the superclass to get the Dialog.
+
+
         Dialog dialog = super.onCreateDialog(savedInstanceState);
+        WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+
+        wmlp.gravity = Gravity.TOP | Gravity.CENTER;
+        wmlp.x = -5;   //x position
+        wmlp.y = 0;
+
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.dismiss();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        //dialog.dismiss();
 
         return dialog;
     }

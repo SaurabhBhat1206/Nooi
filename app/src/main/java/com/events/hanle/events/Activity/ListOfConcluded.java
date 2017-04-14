@@ -34,7 +34,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import dmax.dialog.SpotsDialog;
 
 public class ListOfConcluded extends AppCompatActivity {
     private List<ConcludedEventView> feedsList = new ArrayList<ConcludedEventView>();

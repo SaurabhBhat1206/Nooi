@@ -4,10 +4,14 @@ package com.events.hanle.events.Fragments;
  * Created by Hanle on 9/28/2016.
  */
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -47,7 +51,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import dmax.dialog.SpotsDialog;
 
 
 public class Login extends Fragment {
@@ -131,9 +134,38 @@ public class Login extends Fragment {
             }
         });
 
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(getActivity())) {
+                requestPermissions(new String[]{
+                        Manifest.permission.READ_SMS,Manifest.permission.SEND_SMS}, 2909);
+            }
+        }
+
         return v;
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 2909: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Permission", "Granted");
+                    //Toast.makeText(getApplicationContext(), "Permission Granted!!", Toast.LENGTH_LONG).show();
+
+
+                } else {
+                    Log.e("Permission", "Denied");
+                    Toast.makeText(getActivity(), "Permission Denied!!", Toast.LENGTH_LONG).show();
+
+                }
+                return;
+            }
+        }
+    }
+
 
     @Override
     public void onAttach(Context context) {

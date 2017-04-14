@@ -1,6 +1,7 @@
 package com.events.hanle.events.Activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -31,7 +32,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import dmax.dialog.SpotsDialog;
 
 
 public class UserChangeOfDescision extends AppCompatActivity {
@@ -110,7 +110,7 @@ public class UserChangeOfDescision extends AppCompatActivity {
 
     private void NotifyAdmin() {
 
-        progressDialog = new SpotsDialog(UserChangeOfDescision.this);
+        progressDialog = new ProgressDialog(UserChangeOfDescision.this);
         progressDialog.show();
 
         StringRequest strReq = new StringRequest(Request.Method.POST,

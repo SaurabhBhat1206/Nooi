@@ -33,6 +33,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Fragments.AttendingDialogFragment;
 import com.events.hanle.events.Fragments.CreateEvent;
+import com.events.hanle.events.Fragments.InviteeList;
+import com.events.hanle.events.Fragments.ListOfOrganiserActionsFragment;
 import com.events.hanle.events.Fragments.MuteDialog;
 import com.events.hanle.events.Fragments.OneFragment;
 import com.events.hanle.events.Fragments.OrganiserLoginDialog;
@@ -40,6 +42,8 @@ import com.events.hanle.events.Fragments.Three;
 import com.events.hanle.events.Fragments.TwoFragment;
 import com.events.hanle.events.Model.ListEvent;
 import com.events.hanle.events.R;
+import com.events.hanle.events.app.EndPoints;
+import com.events.hanle.events.app.MyApplication;
 import com.events.hanle.events.chat.ChatRoomActivity;
 import com.events.hanle.events.gcm.GcmIntentService;
 
@@ -58,9 +62,11 @@ public class UserTabView extends AppCompatActivity {
     private static TabLayout tabLayout;
     private static ViewPager viewPager;
     int event_id;
+
     String eventtype;
     ProgressDialog pDialog;
     private static final String TAG = "UserTabView";
+    String organiser_id;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -291,7 +297,7 @@ public class UserTabView extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
-    public void Inviteepost(final ArrayList<String> checkedist) {
+    public void Inviteepost(final List<String> checkedist) {
 
 //        for (int i = 0; i < checkedist.size(); i++) {
 //            System.out.println("Usertab : The total value is" + checkedist.get(i));
@@ -319,13 +325,15 @@ public class UserTabView extends AppCompatActivity {
                         String message;
                         int success;
                         // user successfully logged in
-                        success = obj.getInt("result");
+                        success = obj.getInt("success");
                         message = obj.getString("message");
 
                         if (success == 1) {
 
 
-                            Toast.makeText(UserTabView.this, "success", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UserTabView.this, "Successfully Invited ", Toast.LENGTH_SHORT).show();
+                            ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+                            dialogFragment.show(getSupportFragmentManager(), "missiles");
 
                         } else {
                             Toast.makeText(UserTabView.this, message, Toast.LENGTH_SHORT).show();
@@ -368,9 +376,11 @@ public class UserTabView extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 for (int i = 0; i < checkedist.size(); i++) {
                     params.put("UserValues", checkedist.get(i));
-                    params.put("invite_EventId", "2");
-                    Log.e(TAG, "params: " + params.toString());
                 }
+                params.put("invite_EventId", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
+                params.put("organiser_id", MyApplication.getInstance().getPrefManager().getOrganiserID());
+                Log.e(TAG, "params: " + params.toString());
+
 
                 return params;
             }

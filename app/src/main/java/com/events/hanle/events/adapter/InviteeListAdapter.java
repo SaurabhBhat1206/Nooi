@@ -1,6 +1,8 @@
 package com.events.hanle.events.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +21,13 @@ import com.events.hanle.events.Fragments.InviteeList;
 import com.events.hanle.events.Model.AlreadyInvitedUser;
 import com.events.hanle.events.Model.Attending;
 import com.events.hanle.events.R;
+import com.events.hanle.events.interf.P;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Hanle on 3/8/2017.
@@ -28,19 +35,24 @@ import java.util.ArrayList;
 
 public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.InviteeListAdapterviewholder> {
     private static final String TAG = "ListAttending";
-    private ArrayList<Attending> inviteelist;
-    private ArrayList<AlreadyInvitedUser> alreadyinvited;
+    private List<Attending> inviteelist = new ArrayList<>();
+    private List<Integer> inviteelistTemp = new ArrayList<>();
+    private List<AlreadyInvitedUser> alreadyinvited;
+
     private Context mContext;
     AppCompatButton invitee;
-    ArrayList<String> checkedist = new ArrayList<>();
+    List<String> checkedist = new ArrayList<>();
     Attending attending;
     AlreadyInvitedUser alredyinvi;
+    int temp;
+    Dialog d;
 
-    public InviteeListAdapter(Context context, ArrayList<Attending> inviteelist, ArrayList<AlreadyInvitedUser> alreadyinvited, AppCompatButton invitee) {
+    public InviteeListAdapter(Context context, List<Attending> inviteelist, List<AlreadyInvitedUser> alreadyinvited, AppCompatButton invitee, Dialog dialog) {
         this.inviteelist = inviteelist;
         this.alreadyinvited = alreadyinvited;
         this.mContext = context;
         this.invitee = invitee;
+        this.d = dialog;
     }
 
 
@@ -58,32 +70,32 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
         alredyinvi = alreadyinvited.get(position);
 
 
-//        if (alredyinvi.getAlreadyinvited().equals(attending.getId())) {
-//            holder.ac.setChecked(true);
-//            holder.ac.setEnabled(false);
-//            System.out.println("Comparision"+alredyinvi.getAlreadyinvited().equals(attending.getId()));
-//            System.out.println("AlreadyInvitedList"+alredyinvi.getAlreadyinvited());
-//            System.out.println("InvitedList"+attending.getId());
-//        }
+        if (attending.getNsme().length() < 15) {
+            holder.attendingname.setText(attending.getNsme());
+        } else {
+            holder.attendingname.setText(attending.getNsme().substring(0, 12) + "..");
+        }
+        holder.attendingmobile.setText(attending.getMobile());
+        holder.ac.setId(attending.getId());
+        holder.ac.setTag(holder);
 
-//        for (int i = 0; i < inviteelist.size(); i++) {
-//            for (int j = 0; j < alreadyinvited.size(); j++) {
-//                if (inviteelist.get(i).getId().equals(alreadyinvited.get(j).getAlreadyinvited()))
-//                    holder.ac.setEnabled(false);
-//                holder.ac.setChecked(true);
-//            }
-//        }
 
-        for (int counter = 0; counter < inviteelist.size(); counter++) {
-            if (alreadyinvited.get(counter).getAlreadyinvited().contains(inviteelist.get(counter).getId())) {
-                holder.ac.setEnabled(false);
+        for (int i = 0; i < alreadyinvited.size(); i++) {
+            for (int j = 0; j < inviteelist.size(); j++) {
+                if (alreadyinvited.get(i).getAlreadyinvited() == (inviteelist.get(j).getId())) {
+                    inviteelistTemp.add(inviteelist.get(j).getId());
+                    System.out.println("Duplicates are" + inviteelist.get(j).getId());
+                }
+            }
+
+        }
+        for (int k = 0; k < inviteelistTemp.size(); k++) {
+            if (inviteelistTemp.get(k) == attending.getId()) {
                 holder.ac.setChecked(true);
+                holder.ac.setEnabled(false);
             }
         }
 
-        holder.attendingname.setText(attending.getNsme());
-        holder.attendingmobile.setText(attending.getMobile());
-        holder.ac.setId(Integer.parseInt(attending.getId()));
 
         holder.ac.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -92,9 +104,12 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
                 if (isChecked) {
                     checkedist.add(String.valueOf(holder.ac.getId()));
                     System.out.println("Checked ID is" + String.valueOf(holder.ac.getId()));
+                    invitee.setVisibility(View.VISIBLE);
+
                 } else {
                     System.out.println("deleted is " + String.valueOf(holder.ac.getId()));
                     checkedist.remove(String.valueOf(holder.ac.getId()));
+                    invitee.setVisibility(View.GONE);
 
                 }
             }
@@ -109,7 +124,13 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
 //                }
 
                 if (mContext instanceof UserTabView) {
-                    ((UserTabView) mContext).Inviteepost(checkedist);
+                    if (checkedist.size() > 1) {
+                        Toast.makeText(mContext, "You cannot invite more than one user!!", Toast.LENGTH_LONG).show();
+                    } else {
+                        d.dismiss();
+                        ((UserTabView) mContext).Inviteepost(checkedist);
+
+                    }
                 }
             }
         });
@@ -122,6 +143,11 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
         return (null != inviteelist ? inviteelist.size() : 0);
     }
 
+    public void setFilter(List<Attending> attendings) {
+        notifyDataSetChanged();
+    }
+
+
     public class InviteeListAdapterviewholder extends RecyclerView.ViewHolder {
         TextView attendingname, attendingmobile;
         AppCompatCheckBox ac;
@@ -129,7 +155,7 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
         private ArrayList<Attending> inviteelist;
 
 
-        public InviteeListAdapterviewholder(View itemView, Context mContext, ArrayList<Attending> attendinglist) {
+        public InviteeListAdapterviewholder(View itemView, Context mContext, List<Attending> attendinglist) {
             super(itemView);
             ll = (TableLayout) itemView.findViewById(R.id.tb);
             attendingname = (TextView) itemView.findViewById(R.id.name_invitee);

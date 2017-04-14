@@ -15,10 +15,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +28,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +58,9 @@ import com.events.hanle.events.gcm.GcmIntentService;
 import com.events.hanle.events.gcm.NotificationUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.wang.avi.AVLoadingIndicatorView;
 
 
 import org.json.JSONArray;
@@ -62,7 +68,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -75,16 +83,16 @@ public class ListOfEvent1 extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ListEventAdapter adapter;
     Context ctx;
-    TextView noEvent, listEventID;
+    TextView noEvent;
     String user_id, mobileno, countrycode;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
     BroadcastReceiver mRegistrationBroadcastReceiver;
     private String TAG = ListOfEvent1.class.getSimpleName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private AlertDialog progressDialog;
     TextView tv, toolbarttxt;
     Double VersionCOde;
-
+    private AVLoadingIndicatorView avi;
+    private Gson gson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,12 +107,16 @@ public class ListOfEvent1 extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         t.setLogo(R.drawable.nooismall);
         assert t != null;
+
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        gson = gsonBuilder.create();
+
         tv = (TextView) findViewById(R.id.list_event_id);
         noEvent = (TextView) findViewById(R.id.no_events_to_show);
         user_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUserId().getId();
         mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getMobile();
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
-
+        avi= (AVLoadingIndicatorView) findViewById(R.id.avi);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -168,6 +180,7 @@ public class ListOfEvent1 extends AppCompatActivity {
         adapter = new ListEventAdapter(ListOfEvent1.this, listevent);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(ctx));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mRecyclerView.setAdapter(adapter);
         if (mSwipeRefreshLayout.isRefreshing()) {
@@ -249,9 +262,8 @@ public class ListOfEvent1 extends AppCompatActivity {
 
         Log.e(TAG, "end point: " + endpoint);
 
-        progressDialog = new ProgressDialog(ListOfEvent1.this);
-        progressDialog.setMessage("Loading Events please wait...");
-        progressDialog.show();
+        avi.show();
+        avi.setVisibility(View.VISIBLE);
 
         StringRequest strReq = new StringRequest(Request.Method.GET,
                 endpoint1, new Response.Listener<String>() {
@@ -260,7 +272,15 @@ public class ListOfEvent1 extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.e(TAG, "response: " + response);
                 mSwipeRefreshLayout.setRefreshing(false);
-                progressDialog.hide();
+                //progressDialog.hide();
+                avi.hide();
+                avi.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+//                List<ListEvent> posts = Arrays.asList(gson.fromJson(response, ListEvent[].class));
+//                Log.i(ListOfEvent1.class.getSimpleName(), response);
+//
+//                Log.i(ListOfEvent1.class.getSimpleName(), posts.size() + " posts loaded.");
 
                 try {
                     JSONObject obj = new JSONObject(response);
@@ -321,7 +341,11 @@ public class ListOfEvent1 extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressDialog.hide();
+                //progressDialog.hide();
+                avi.hide();
+                avi.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
                 mSwipeRefreshLayout.setRefreshing(false);
                 NetworkResponse networkResponse = error.networkResponse;
                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
@@ -572,7 +596,8 @@ public class ListOfEvent1 extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressDialog.hide();
+                //progressDialog.hide();
+                avi.hide();
                 mSwipeRefreshLayout.setRefreshing(false);
                 NetworkResponse networkResponse = error.networkResponse;
                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
