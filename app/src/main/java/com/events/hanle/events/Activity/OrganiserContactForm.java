@@ -41,6 +41,7 @@ import com.events.hanle.events.R;
 import com.events.hanle.events.app.MyApplication;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +62,7 @@ public class OrganiserContactForm extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     TextView hlp;
     String organiser_id;
+    private AVLoadingIndicatorView avi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,24 +126,6 @@ public class OrganiserContactForm extends AppCompatActivity {
         });
 
 
-//        hlp.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new SimpleTooltip.Builder(OrganiserContactForm.this)
-//                        .anchorView(hlp)
-//                        .text("Texto do Tooltip")
-//                        .gravity(Gravity.START)
-//                        .animated(true)
-//                        .transparentOverlay(false)
-//                        .build()
-//                        .show();
-//            }
-//        });
-//        if (getIntent().getStringExtra("organiser_id") != null) {
-//            organiser_id = getIntent().getStringExtra("organiser_id");
-//            System.out.println("organiserID " + organiser_id);
-//
-//        }
 
 
         organiser_id = MyApplication.getInstance().getPrefManager().getOrganiserID();

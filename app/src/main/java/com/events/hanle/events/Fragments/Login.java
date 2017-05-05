@@ -127,7 +127,7 @@ public class Login extends Fragment {
                     callOtp();
                     btnEnter.setEnabled(false);
                 } else {
-                    Toast.makeText(getActivity(), "No Internet!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No Internet!!!", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -231,16 +231,16 @@ public class Login extends Fragment {
                         if (success == 1) {
                             User user = new User(obj.getString("user_id"), obj.getString("name"), obj.getString("phone"), obj.getString("countrycode"));
                             com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storetempuserID(user);
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                             navigateToRegistration();
                         } else {
                             btnEnter.setEnabled(true);
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                         }
 
                     } else {
                         // login error - simply toast the message
-                        Toast.makeText(getActivity(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
@@ -263,15 +263,15 @@ public class Login extends Fragment {
                 //Toast.makeText(getActivity(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(getActivity(), "Something went wrong please try after sometime", Toast.LENGTH_LONG).show();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Toast.makeText(getActivity(),
+                    Toast.makeText(getContext(),
                             getActivity().getString(R.string.error_network_timeout),
                             Toast.LENGTH_LONG).show();
                 } else if (error instanceof ServerError) {
-                    Toast.makeText(getActivity(),
+                    Toast.makeText(getContext(),
                             getActivity().getString(R.string.error_network_server),
                             Toast.LENGTH_LONG).show();
                 } else{
-                    Toast.makeText(getActivity(), "Server did not respond!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Server did not respond!!", Toast.LENGTH_SHORT).show();
 
                 }
 

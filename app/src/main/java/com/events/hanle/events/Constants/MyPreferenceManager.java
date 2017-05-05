@@ -72,6 +72,8 @@ public class MyPreferenceManager {
     private static final String CHATWINDOW1 = "chat_window1";
     private static final String CHATWINDOW2 = "chat_window2";
     private static final String OrganiserId = "organiser_id";
+    private static final String COUNTRY_CODE = "country_code";
+    private static final String PHONE = "phone";
 
 
     // Constructor
@@ -99,6 +101,7 @@ public class MyPreferenceManager {
         Log.e(TAG, "User is stored in shared preferences. " + user.getId());
     }
 
+
     public void storetempuserID(User user) {
         editor.putString(TEMP_USER_ID, user.getId());
         editor.putString(TEMP_COUNTRY_CODE, user.getCountrycode());
@@ -117,6 +120,8 @@ public class MyPreferenceManager {
         editor.putString(ARTWORK, listEvent.getArtwork());
         editor.putString(EVENTTYPE, listEvent.getEvent_type());
         editor.putString(CHATWINDOW, listEvent.getChat_window());
+        editor.putString(COUNTRY_CODE, listEvent.getCountrycode());
+        editor.putString(PHONE, listEvent.getPhone());
         editor.commit();
 
     }
@@ -186,6 +191,18 @@ public class MyPreferenceManager {
         return null;
     }
 
+    public ListEvent getOrganiserphone() {
+        if (pref.getString(COUNTRY_CODE, null) != null) {
+            String countrycode, phone;
+            countrycode = pref.getString(COUNTRY_CODE, null);
+            phone = pref.getString(PHONE, null);
+
+            ListEvent user = new ListEvent(countrycode, phone);
+            return user;
+        }
+        return null;
+    }
+
     public User getUserId() {
         if (pref.getString(KEY_USER_ID, null) != null) {
             String userId, countrycode;
@@ -222,7 +239,7 @@ public class MyPreferenceManager {
 
     public ListEvent getEventId() {
         if (pref.getString(KEY_EVENT_ID, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatwindow;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatwindow,countrycode,phone;
             eventId = pref.getString(KEY_EVENT_ID, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE, null);
             event_Status = pref.getString(KEY_EVENT_STATUS, null);
@@ -232,8 +249,10 @@ public class MyPreferenceManager {
             artwork = pref.getString(ARTWORK, null);
             eventtype = pref.getString(EVENTTYPE, null);
             chatwindow = pref.getString(CHATWINDOW, null);
+            countrycode = pref.getString(COUNTRY_CODE, null);
+            phone = pref.getString(PHONE, null);
 
-            ListEvent listEvent = new ListEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatwindow);
+            ListEvent listEvent = new ListEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatwindow,countrycode,phone);
             return listEvent;
 
         }

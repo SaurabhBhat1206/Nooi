@@ -58,8 +58,6 @@ import com.events.hanle.events.gcm.GcmIntentService;
 import com.events.hanle.events.gcm.NotificationUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wang.avi.AVLoadingIndicatorView;
 
 
@@ -78,6 +76,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by Hanle on 8/2/2016.
  */
 
+
 public class ListOfEvent1 extends AppCompatActivity {
     private ArrayList<ListEvent> listevent = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -91,8 +90,8 @@ public class ListOfEvent1 extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     TextView tv, toolbarttxt;
     Double VersionCOde;
+
     private AVLoadingIndicatorView avi;
-    private Gson gson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -308,6 +307,8 @@ public class ListOfEvent1 extends AppCompatActivity {
                                 cr.setMonthno(chatRoomsObj.getString("date1"));
                                 cr.setWeekday(chatRoomsObj.getString("weekday"));
                                 cr.setTime(chatRoomsObj.getString("time"));
+                                cr.setCountrycode(chatRoomsObj.getString("countrycode"));
+                                cr.setPhone(chatRoomsObj.getString("phone"));
                                 cr.setLastMessage("");
                                 cr.setUnreadCount(0);
                                 cr.setTimestamp(chatRoomsObj.getString("created_at"));

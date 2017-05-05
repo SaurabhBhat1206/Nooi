@@ -150,7 +150,7 @@ public class NotificationUtils {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
         notification = mBuilder
                 .setContentIntent(resultPendingIntent)
-                .setSmallIcon(R.drawable.nooiiconnew)
+                .setSmallIcon(R.drawable.ic_stat_nooi_logo_transpaprent2)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setAutoCancel(true)
                 .setWhen(getTimeMilliSec(timeStamp))
@@ -196,7 +196,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(bigPictureStyle)
                 .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.drawable.nooiiconnew)
+                .setSmallIcon(R.drawable.ic_stat_nooi_logo_transpaprent2)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message)
                 .build();

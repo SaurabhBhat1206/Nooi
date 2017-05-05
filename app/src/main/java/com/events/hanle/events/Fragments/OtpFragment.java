@@ -110,7 +110,7 @@ public class OtpFragment extends Fragment {
                 if (ConnectionDetector.isInternetAvailable(getActivity())) {
                     verifyOtp();
                 } else {
-                    Toast.makeText(getActivity(), "No internet connection!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No internet connection!!!", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -155,29 +155,29 @@ public class OtpFragment extends Fragment {
 
 
                         if (success == 1) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                             User user = new User(obj.getString("user_id"), obj.getString("name"), obj.getString("phone"), obj.getString("countrycode"));
                             com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storeUser(user);
-                            sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                            sharedpreferences = getContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.putString(USER_INPUT, "OFF");
-                            editor.commit();
+                            editor.apply();
                             Intent i = new Intent(getActivity(), ListOfEvent1.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(i);
                             getActivity().finish();
                         } else {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                         }
 
                     } else {
                         // login error - simply toast the message
-                        Toast.makeText(getActivity(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
                     Log.e(TAG, "json parsing error: " + e.getMessage());
-                    Toast.makeText(getActivity(), "Json parse error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Json parse error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -189,15 +189,15 @@ public class OtpFragment extends Fragment {
                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
                 //Toast.makeText(getActivity(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Toast.makeText(getActivity(),
+                    Toast.makeText(getContext(),
                             getActivity().getString(R.string.error_network_timeout),
                             Toast.LENGTH_LONG).show();
                 } else if (error instanceof ServerError) {
-                    Toast.makeText(getActivity(),
+                    Toast.makeText(getContext(),
                             getActivity().getString(R.string.error_network_server),
                             Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getActivity(), "Server did not respond!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Server did not respond!!", Toast.LENGTH_SHORT).show();
 
                 }
             }

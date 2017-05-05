@@ -33,8 +33,8 @@ android {
                                 onesignal_google_project_number: "82826241058"]
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 17
-        versionName "2.03"
+        versionCode 18
+        versionName "2.04"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -72,7 +72,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.chrisbanes.photoview:library:+'
-    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.wang.avi:library:2.1.3'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {
         transitive = true;

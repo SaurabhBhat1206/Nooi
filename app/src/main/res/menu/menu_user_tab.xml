@@ -12,6 +12,14 @@
         android:title="@string/mute" />
 
     <item
+        android:id="@+id/invite"
+        android:title="@string/invite" />
+
+    <item
+        android:id="@+id/coupon_detials"
+        android:title="@string/coupon_detials" />
+
+    <item
         android:id="@+id/list_invitee"
         android:title="@string/attending"
         app:showAsAction="ifRoom"

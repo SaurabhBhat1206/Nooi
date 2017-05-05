@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Environment;
@@ -71,7 +72,6 @@ public class EventArtwork extends AppCompatActivity {
         setContentView(R.layout.activity_event_artwork);
         artwork = (ImageView) findViewById(R.id.artwork);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);

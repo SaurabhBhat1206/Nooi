@@ -15,14 +15,14 @@
         android:paddingBottom="12dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        tools:ignore="UnknownIdInLayout">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="55dp"
-            android:background="@color/alphabet_text_t"
             android:scrollbars="vertical">
 
         </android.support.v7.widget.RecyclerView>
@@ -35,7 +35,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:text="This feature is not available for this Event"
+            android:text="@string/this_feature_is_not_available_for_this_event"
             android:textSize="22sp"
             android:typeface="serif"
             android:visibility="gone" />
@@ -55,14 +55,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Enter Message"/>
+            android:background="@drawable/edittext_border"
+            android:hint="@string/type_your_message"
+            android:padding="10dp" />
 
         <Button
             android:id="@+id/btn_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="Send"
+            android:text="@string/send"
             android:background="@drawable/unread_message_background"
             android:textColor="#ffffff"
             android:textStyle="bold" />

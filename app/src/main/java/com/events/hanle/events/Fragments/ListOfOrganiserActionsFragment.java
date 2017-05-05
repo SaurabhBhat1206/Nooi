@@ -8,11 +8,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,18 +22,38 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Activity.OrganiserContactForm;
+import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.Invitee;
+import com.events.hanle.events.Model.User;
 import com.events.hanle.events.R;
 import com.events.hanle.events.app.MyApplication;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ListOfOrganiserActionsFragment extends DialogFragment {
 
-    CardView inviteemanagemnt, inviteelist,pushmessage,coupondisplay,cancelevent;
+    CardView inviteemanagemnt, inviteelist, pushmessage, coupondisplay, cancelevent;
+
+    private static final String TAG = "ListOfOrganis";
 
 
     @Override
@@ -85,12 +107,159 @@ public class ListOfOrganiserActionsFragment extends DialogFragment {
             }
         });
 
+
+        cancelevent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getDialog().hide();
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("A Cancel Message will be sent to the invitee.")
+                        .setCancelText("No")
+                        .setConfirmText("Yes")
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                // reuse previous dialog instance, keep widget user state, reset them if you need
+                                sDialog.dismiss();
+                                getDialog().show();
+
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+
+                                sendCancelMessage(sDialog);
+
+                            }
+
+                        })
+                        .show();
+            }
+
+
+        });
+
+        coupondisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                dismissAllowingStateLoss();
+                CouponDetials couponDetials = new CouponDetials();
+                couponDetials.show(getActivity().getSupportFragmentManager(), "couponDetials");
+            }
+        });
+
+
         return v;
     }
 
+
+    private void sendCancelMessage(final SweetAlertDialog sDialog) {
+
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                WebUrl.CANCEL_MESSAGE, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, "response: " + response);
+
+                try {
+                    JSONObject obj = new JSONObject(response);
+
+                    // check for error flag
+                    if (obj.length() != 0) {
+                        String message;
+                        int success;
+                        // user successfully logged in
+                        success = obj.getInt("result");
+                        message = obj.getString("message");
+
+                        if (success == 1) {
+
+
+                            dismiss();
+                            dismissAllowingStateLoss();
+
+                            sDialog.setTitleText("Cancelled")
+                                    .setContentText("Your event has been cancelled.")
+                                    .setConfirmText("OK")
+                                    .showCancelButton(false)
+                                    .setCancelClickListener(null)
+                                    .setConfirmClickListener(null)
+                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
+                        } else {
+
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        // login error - simply toast the message
+                        Toast.makeText(getActivity(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "json parsing error: " + e.getMessage());
+
+                    Toast.makeText(getActivity(), "Something went wrong please try after sometime", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                NetworkResponse networkResponse = error.networkResponse;
+                Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
+
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    Toast.makeText(getActivity(),
+                            getActivity().getString(R.string.error_network_timeout),
+                            Toast.LENGTH_LONG).show();
+                } else if (error instanceof ServerError) {
+                    Toast.makeText(getActivity(),
+                            getActivity().getString(R.string.error_network_server),
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "Server did not respond!!", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("EventId", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
+                params.put("status", "2");
+                params.put("organiser_id", MyApplication.getInstance().getPrefManager().getOrganiserID());
+                Log.d(TAG, params.toString());
+
+                return params;
+            }
+        };
+
+//        strReq.setRetryPolicy(new DefaultRetryPolicy(
+//                WebUrl.MY_SOCKET_TIMEOUT_MS,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //Adding request to request queue
+
+        strReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        com.events.hanle.events.app.MyApplication.getInstance().addToRequestQueue(strReq);
+    }
+
+
     private void showLocationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Are you sure you want to logout?");
+        builder.setMessage("Are you sure you want to logout?");
 
         String positiveText = getString(android.R.string.ok);
         builder.setPositiveButton(positiveText,

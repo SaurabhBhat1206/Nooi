@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import static com.events.hanle.events.gcm.MyFcmListenerService.MyPREFERENCES;
@@ -38,7 +39,7 @@ import static com.events.hanle.events.gcm.MyFcmListenerService.MyPREFERENCES;
  */
 public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.ListEventViewHolder> {
     private static final String TAG = "ListEventAdapter";
-    private ArrayList<ListEvent> feedItemList;
+    private List<ListEvent> feedItemList;
     private Context mContext;
     private static String today;
     public static final String MyPREFERENCES = "PrefChat";
@@ -74,7 +75,7 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
             ListEvent listEvent = this.listevent.get(position);
 
 
-            listEvent = new ListEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(), listEvent.getArtwork(), listEvent.getEvent_type(), listEvent.getChat_window());
+            listEvent = new ListEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(), listEvent.getArtwork(), listEvent.getEvent_type(), listEvent.getChat_window(),listEvent.getCountrycode(),listEvent.getPhone());
 
             int user_Status = Integer.parseInt(listEvent.getUser_status());
             MyApplication.getInstance().getPrefManager().storeEventId(listEvent);
@@ -113,7 +114,7 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
     }
 
 
-    public ListEventAdapter(Context context, ArrayList<ListEvent> feedItemList) {
+    public ListEventAdapter(Context context, List<ListEvent> feedItemList) {
         this.feedItemList = feedItemList;
         this.mContext = context;
 

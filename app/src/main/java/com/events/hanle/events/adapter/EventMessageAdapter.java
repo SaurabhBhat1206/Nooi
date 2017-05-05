@@ -73,10 +73,10 @@ public class EventMessageAdapter extends RecyclerView.Adapter<EventMessageAdapte
     @Override
     public int getItemViewType(int position) {
         EventMessage eventMessage = eventmessageArrayList.get(position);
-        if (eventMessage.getPushtype()!=null && eventMessage.getPushtype().equalsIgnoreCase("partner")) {
+        if (eventMessage.getPushtype() != null && eventMessage.getPushtype().equalsIgnoreCase("partner")) {
             return PARTNER;
 
-        } else{
+        } else {
             return ORGNAISER;
         }
 
@@ -120,7 +120,13 @@ public class EventMessageAdapter extends RecyclerView.Adapter<EventMessageAdapte
                 if (eventMessage.getPushtype().equalsIgnoreCase("partner")) {
                     holder.title.setText("Message from Partner: " + eventMessage.getTitle());
                     holder.description.setText(eventMessage.getPush_message());
-                    holder.timestamp.setText(eventMessage.getTimestamp().substring(0, 24));
+                    if (eventMessage.getTimestamp().length() > 24) {
+                        holder.timestamp.setText(eventMessage.getTimestamp().substring(0, 24));
+
+                    } else {
+                        holder.timestamp.setText(eventMessage.getTimestamp());
+
+                    }
                 } else if (eventMessage.getPushtype().equalsIgnoreCase("organiser")) {
                     holder.title.setText("Message from Organiser: " + eventMessage.getTitle());
                     holder.description.setText(eventMessage.getPush_message());

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -49,8 +50,18 @@ public class IncomingSms extends BroadcastReceiver {
         try {
             if (bundle != null) {
                 final Object[] pdusObj = (Object[]) bundle.get("pdus");
-                for (int i = 0; i < pdusObj.length; i++) {
-                    SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
+                assert pdusObj != null;
+                for (Object aPdusObj : pdusObj) {
+                    SmsMessage currentMessage;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                        String format = bundle.getString("format");
+                        currentMessage = SmsMessage.createFromPdu((byte[]) aPdusObj, format);
+
+                    } else {
+                        currentMessage = SmsMessage.createFromPdu((byte[]) aPdusObj);
+                    }
+
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
                     String senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();

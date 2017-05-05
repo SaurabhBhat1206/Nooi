@@ -66,4 +66,13 @@
 
 
 
+    <style name="counterOverride">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="counterText">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+
 </resources>

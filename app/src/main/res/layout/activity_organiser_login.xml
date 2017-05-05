@@ -51,8 +51,7 @@
                     android:id="@+id/email_organiser"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_account_circle_black_24dp"
-                    android:drawableTint="#000000"
+                    android:drawableLeft="@drawable/person_male"
                     android:maxLines="1"
                     android:hint="User Name"
                     android:inputType="textEmailAddress" />
@@ -69,8 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:maxLines="1"
-                    android:drawableLeft="@drawable/ic_lock_black_24dp"
-                    android:drawableTint="#000000"
+                    android:drawableLeft="@drawable/padlock"
                     android:hint="Password"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>

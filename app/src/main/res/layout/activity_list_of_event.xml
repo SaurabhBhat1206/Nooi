@@ -35,7 +35,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/toolbar"
-                app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:titleMarginTop="13dp">
@@ -56,9 +55,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/ab"
+            android:id="@+id/ln"
             android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_below="@+id/ab">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
             <TextView
@@ -69,6 +69,7 @@
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:textSize="20sp"
+                android:layout_marginTop="2dp"
                 android:typeface="serif" />
 
 
@@ -96,9 +97,21 @@
                 android:layout_marginBottom="50dp"
                 android:text="No Events to show"
                 android:textSize="22sp"
+                android:layout_marginTop="2dp"
                 android:textStyle="normal"
                 android:visibility="gone" />
 
         </LinearLayout>
+
     </RelativeLayout>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/activity_horizontal_margin"-->
+        <!--app:fabSize="normal"-->
+        <!--app:backgroundTint="@color/toolbar"-->
+        <!--android:src="@drawable/person_male" />-->
 </android.support.design.widget.CoordinatorLayout>

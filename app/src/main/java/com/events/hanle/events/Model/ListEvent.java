@@ -4,14 +4,12 @@ package com.events.hanle.events.Model;
  * Created by Hanle on 6/15/2016.
  */
 public class ListEvent {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, share_detail, artwork, event_type, chat_window,date,time,monthno,weekday;
-    int unreadCount, unreadcount1;
-
+    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, share_detail, artwork, event_type, chat_window,date,time,monthno,weekday,countrycode,phone;
+    private int unreadCount, unreadcount1;
 
     public ListEvent() {
 
     }
-
     public ListEvent(String id, String event_title, String lastMessage, String timestamp, int unreadCount) {
         this.id = id;
         this.event_title = event_title;
@@ -20,7 +18,7 @@ public class ListEvent {
         this.unreadCount = unreadCount;
     }
 
-    public ListEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window) {
+    public ListEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window,String countrycode,String phone) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -31,6 +29,13 @@ public class ListEvent {
         this.artwork = artwork;
         this.event_type = event_type;
         this.chat_window = chat_window;
+        this.countrycode = countrycode;
+        this.phone = phone;
+    }
+
+    public ListEvent(String countrycode,String phone){
+        this.countrycode = countrycode;
+        this.phone = phone;
     }
 
     public String getShare_detail() {
@@ -169,5 +174,20 @@ public class ListEvent {
 
     public void setWeekday(String weekday) {
         this.weekday = weekday;
+    }
+    public String getCountrycode() {
+        return countrycode;
+    }
+
+    public void setCountrycode(String countrycode) {
+        this.countrycode = countrycode;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,16 +58,17 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static android.content.ContentValues.TAG;
+
 public class UserTabView extends AppCompatActivity {
 
     private static TabLayout tabLayout;
     private static ViewPager viewPager;
-    int event_id;
 
     String eventtype;
     ProgressDialog pDialog;
     private static final String TAG = "UserTabView";
-    String organiser_id;
+    String event_id;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -100,18 +102,17 @@ public class UserTabView extends AppCompatActivity {
             eventtype = "1";
         }
 
-
-        if (getIntent().getStringExtra("classcheck") != null) {
-            if (getIntent().getStringExtra("classcheck").equals("from_notifications")) {
-                viewPager.setCurrentItem(3);
-            } else if (getIntent().getStringExtra("classcheck").equals("from_partner")) {
-                viewPager.setCurrentItem(2);
-
-            } else if (getIntent().getStringExtra("classcheck").equals("from_organiser")) {
-                viewPager.setCurrentItem(2);
-
+        String s = getIntent().getStringExtra("classcheck");
+        if (s != null) {
+            if (s.equalsIgnoreCase("cancelledevent")) {
+                event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getId();
+            } else if (s.equalsIgnoreCase("completedevent")) {
+                event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
             }
+        } else {
+            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
         }
+
 
 
     }
@@ -128,13 +129,27 @@ public class UserTabView extends AppCompatActivity {
 
         inflater.inflate(R.menu.menu_user_tab, menu);
 
-        MenuItem notattending, organiserlogin;
+        MenuItem notattending, organiserlogin,invite,coupon_details;
         notattending = menu.findItem(R.id.not_attending);
         organiserlogin = menu.findItem(R.id.organiser_login);
+        invite = menu.findItem(R.id.invite);
+        coupon_details = menu.findItem(R.id.coupon_detials);
+
+        if(!(MyApplication.getInstance().getPrefManager().getEventId().getCountrycode().equals(MyApplication.getInstance().getPrefManager().getUser().getCountrycode()
+        )&&(MyApplication.getInstance().getPrefManager().getEventId().getPhone().equals(MyApplication.getInstance().getPrefManager().getUser().getMobile())))){
+            invite.setEnabled(false);
+            coupon_details.setEnabled(false);
+        }
 
         if (et == 2) {
             notattending.setVisible(false);
             organiserlogin.setVisible(false);
+        }
+        if (getIntent().getStringExtra("classcheck") != null || getIntent().getStringExtra("classcheck") != null) {
+            if (getIntent().getStringExtra("classcheck").equals("cancelledevent") || getIntent().getStringExtra("classcheck").equals("completedevent")) {
+                notattending.setVisible(false);
+                organiserlogin.setVisible(false);
+            }
         }
         return true;
     }
@@ -175,6 +190,7 @@ public class UserTabView extends AppCompatActivity {
                 } else {
                     OrganiserLoginDialog dialogFragment = new OrganiserLoginDialog();
                     dialogFragment.show(getSupportFragmentManager(), "missiles");
+
                 }
 
 
@@ -238,6 +254,8 @@ public class UserTabView extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
 
     }
+
+
 
     private void mute() {
 

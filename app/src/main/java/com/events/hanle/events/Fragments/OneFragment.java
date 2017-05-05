@@ -163,9 +163,9 @@ public class OneFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), GcmIntentService.class);
         intent.putExtra(GcmIntentService.KEY, GcmIntentService.SUBSCRIBE);
-        intent.putExtra(GcmIntentService.TOPIC, "topic_" + eventID);
+        //intent.putExtra(GcmIntentService.TOPIC, "topic_" + eventID);
         //intent.putExtra(GcmIntentService.TOPIC, "topic_" + "15092016");
-        //intent.putExtra(GcmIntentService.TOPIC, "topic_" + "test_android_ios");
+        intent.putExtra(GcmIntentService.TOPIC, "topic_" + "test_android_ios");
         getActivity().startService(intent);
         //Toast.makeText(getActivity(), "topic_" + "android_ios", Toast.LENGTH_SHORT).show();
 
