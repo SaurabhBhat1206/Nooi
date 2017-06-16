@@ -10,8 +10,9 @@ import java.util.List;
  */
 
 public class CanceledEvent {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, eventtype, chatw;
-    int unreadCount;
+    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, eventtype, chatw,countrycode,phone;
+    private int unreadCount;
+
 
 
     public CanceledEvent() {
@@ -26,7 +27,7 @@ public class CanceledEvent {
         this.unreadCount = unreadCount;
     }
 
-    public CanceledEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String eventtype, String chatw) {
+    public CanceledEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String eventtype, String chatw,String countrycode,String phone) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -37,6 +38,8 @@ public class CanceledEvent {
         this.artwork = artwork;
         this.eventtype = eventtype;
         this.chatw = chatw;
+        this.countrycode = countrycode;
+        this.phone = phone;
     }
 
     public String getId() {
@@ -141,5 +144,20 @@ public class CanceledEvent {
 
     public void setChatw(String chatw) {
         this.chatw = chatw;
+    }
+    public String getCountrycode() {
+        return countrycode;
+    }
+
+    public void setCountrycode(String countrycode) {
+        this.countrycode = countrycode;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

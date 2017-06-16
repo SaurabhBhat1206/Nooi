@@ -4,12 +4,13 @@ package com.events.hanle.events.Model;
  * Created by Hanle on 6/15/2016.
  */
 public class ListEvent {
-    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, share_detail, artwork, event_type, chat_window,date,time,monthno,weekday,countrycode,phone;
+    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, share_detail, artwork, event_type, chat_window, date, time, monthno, weekday, countrycode, phone, organiserId;
     private int unreadCount, unreadcount1;
 
     public ListEvent() {
 
     }
+
     public ListEvent(String id, String event_title, String lastMessage, String timestamp, int unreadCount) {
         this.id = id;
         this.event_title = event_title;
@@ -18,7 +19,7 @@ public class ListEvent {
         this.unreadCount = unreadCount;
     }
 
-    public ListEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window,String countrycode,String phone) {
+    public ListEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window, String countrycode, String phone, String organiserId) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -31,9 +32,10 @@ public class ListEvent {
         this.chat_window = chat_window;
         this.countrycode = countrycode;
         this.phone = phone;
+        this.organiserId = organiserId;
     }
 
-    public ListEvent(String countrycode,String phone){
+    public ListEvent(String countrycode, String phone) {
         this.countrycode = countrycode;
         this.phone = phone;
     }
@@ -175,6 +177,7 @@ public class ListEvent {
     public void setWeekday(String weekday) {
         this.weekday = weekday;
     }
+
     public String getCountrycode() {
         return countrycode;
     }
@@ -189,5 +192,13 @@ public class ListEvent {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getOrganiserId() {
+        return organiserId;
+    }
+
+    public void setOrganiserId(String organiserId) {
+        this.organiserId = organiserId;
     }
 }

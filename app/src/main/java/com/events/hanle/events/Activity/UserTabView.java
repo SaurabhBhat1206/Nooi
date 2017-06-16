@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -16,9 +17,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -31,8 +34,10 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Fragments.AttendingDialogFragment;
+import com.events.hanle.events.Fragments.CouponDetials;
 import com.events.hanle.events.Fragments.CreateEvent;
 import com.events.hanle.events.Fragments.InviteeList;
 import com.events.hanle.events.Fragments.ListOfOrganiserActionsFragment;
@@ -43,6 +48,7 @@ import com.events.hanle.events.Fragments.Three;
 import com.events.hanle.events.Fragments.TwoFragment;
 import com.events.hanle.events.Model.ListEvent;
 import com.events.hanle.events.R;
+import com.events.hanle.events.app.Config;
 import com.events.hanle.events.app.EndPoints;
 import com.events.hanle.events.app.MyApplication;
 import com.events.hanle.events.chat.ChatRoomActivity;
@@ -68,33 +74,36 @@ public class UserTabView extends AppCompatActivity {
     String eventtype;
     ProgressDialog pDialog;
     private static final String TAG = "UserTabView";
-    String event_id;
+    String event_id, countrycode, mobileno;
+    private TextView eventtitle;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_user_tab_view);
-
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         String event_title = getIntent().getStringExtra("event_title");
         // Toast.makeText(UserTabView.this, event_title, Toast.LENGTH_SHORT).show();
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
+        eventtitle = (TextView) findViewById(R.id.event_title);
         assert t != null;
         t.setTitleTextColor(Color.WHITE);
         setSupportActionBar(t);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(event_title);
+        t.setTitle("");
+        if (event_title != null) {
+            eventtitle.setText(event_title);
+        }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         assert viewPager != null;
         setupViewPager(viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+
         assert tabLayout != null;
         tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
 
         eventtype = getIntent().getStringExtra("eventtype");
 
@@ -106,13 +115,18 @@ public class UserTabView extends AppCompatActivity {
         if (s != null) {
             if (s.equalsIgnoreCase("cancelledevent")) {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getId();
+                countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getCountrycode();
+                mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getPhone();
             } else if (s.equalsIgnoreCase("completedevent")) {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
+                countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getCountrycode();
+                mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getPhone();
             }
         } else {
             event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+            countrycode = MyApplication.getInstance().getPrefManager().getEventId().getCountrycode();
+            mobileno = MyApplication.getInstance().getPrefManager().getEventId().getPhone();
         }
-
 
 
     }
@@ -121,38 +135,79 @@ public class UserTabView extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         int et = Integer.parseInt(eventtype);
-
-
         UserTabView.this.invalidateOptionsMenu();
         MenuInflater inflater = getMenuInflater();
-
-
         inflater.inflate(R.menu.menu_user_tab, menu);
-
-        MenuItem notattending, organiserlogin,invite,coupon_details;
+        MenuItem notattending, organiserlogin, invite, coupon_details;
         notattending = menu.findItem(R.id.not_attending);
         organiserlogin = menu.findItem(R.id.organiser_login);
         invite = menu.findItem(R.id.invite);
         coupon_details = menu.findItem(R.id.coupon_detials);
 
-        if(!(MyApplication.getInstance().getPrefManager().getEventId().getCountrycode().equals(MyApplication.getInstance().getPrefManager().getUser().getCountrycode()
-        )&&(MyApplication.getInstance().getPrefManager().getEventId().getPhone().equals(MyApplication.getInstance().getPrefManager().getUser().getMobile())))){
-            invite.setEnabled(false);
-            coupon_details.setEnabled(false);
+        if (countrycode != null && MyApplication.getInstance().getPrefManager().getUser().getCountrycode() != null && mobileno != null && MyApplication.getInstance().getPrefManager().getUser().getMobile() != null) {
+            if (!(countrycode.equals(MyApplication.getInstance().getPrefManager().getUser().getCountrycode()
+            ) && (mobileno.equals(MyApplication.getInstance().getPrefManager().getUser().getMobile())))) {
+                invite.setEnabled(false);
+                coupon_details.setEnabled(false);
+                organiserlogin.setEnabled(false);
+            }
         }
 
         if (et == 2) {
             notattending.setVisible(false);
             organiserlogin.setVisible(false);
+            invite.setVisible(false);
+            coupon_details.setVisible(false);
         }
+
         if (getIntent().getStringExtra("classcheck") != null || getIntent().getStringExtra("classcheck") != null) {
             if (getIntent().getStringExtra("classcheck").equals("cancelledevent") || getIntent().getStringExtra("classcheck").equals("completedevent")) {
                 notattending.setVisible(false);
                 organiserlogin.setVisible(false);
+                invite.setVisible(false);
+                coupon_details.setVisible(false);
             }
         }
         return true;
     }
+
+
+    private void setupTabIcons() {
+
+
+        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        Config.typeface = Typeface.createFromAsset(getAssets(), "font/Verdana.ttf");
+        tabOne.setTypeface(Config.typeface);
+        tabOne.setText("Event");
+        tabOne.setTextColor(Color.parseColor("#3B4673"));
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_events, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        Config.typeface = Typeface.createFromAsset(getAssets(), "font/Verdana.ttf");
+        tabOne.setTypeface(Config.typeface);
+        tabTwo.setText("Venue");
+        tabTwo.setTextColor(Color.parseColor("#3B4673"));
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_map, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        Config.typeface = Typeface.createFromAsset(getAssets(), "font/Verdana.ttf");
+        tabOne.setTypeface(Config.typeface);
+        tabThree.setText("Mailbag");
+        tabThree.setTextColor(Color.parseColor("#3B4673"));
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_mailbag, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabThree);
+
+        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        Config.typeface = Typeface.createFromAsset(getAssets(), "font/Verdana.ttf");
+        tabOne.setTypeface(Config.typeface);
+        tabFour.setText("Chat");
+        tabFour.setTextColor(Color.parseColor("#3B4673"));
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_chat, 0, 0);
+        tabLayout.getTabAt(3).setCustomView(tabFour);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -174,7 +229,6 @@ public class UserTabView extends AppCompatActivity {
                 i.putExtra("eventId", getIntent().getExtras().getString("eventId"));
                 startActivity(i);
 
-
                 return true;
 
             case R.id.create_event:
@@ -192,8 +246,6 @@ public class UserTabView extends AppCompatActivity {
                     dialogFragment.show(getSupportFragmentManager(), "missiles");
 
                 }
-
-
                 return true;
 
             case R.id.feedback:
@@ -208,54 +260,79 @@ public class UserTabView extends AppCompatActivity {
                 mute();
                 return true;
             case R.id.invite_image:
-                String artwork = getIntent().getStringExtra("artwork");
-                et = Integer.parseInt(eventtype);
-                if (artwork != null && artwork.equals("") && et == 1) {
-                    Toast.makeText(UserTabView.this, "Organiser has not uploaded the image", Toast.LENGTH_SHORT).show();
-                } else if (artwork != null && artwork.equals("") && et == 2) {
-                    Toast.makeText(UserTabView.this, "Organiser has not uploaded the image", Toast.LENGTH_SHORT).show();
+                if (ConnectionDetector.isInternetAvailable(UserTabView.this)) {
+                    String artwork = getIntent().getStringExtra("artwork");
+                    et = Integer.parseInt(eventtype);
+                    if (artwork != null && artwork.equals("") && et == 1) {
+                        Toast.makeText(UserTabView.this, "Organiser has not uploaded the image", Toast.LENGTH_SHORT).show();
+                    } else if (artwork != null && artwork.equals("") && et == 2) {
+                        Toast.makeText(UserTabView.this, "Organiser has not uploaded the image", Toast.LENGTH_SHORT).show();
 
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), EventArtwork.class);
+                        intent.putExtra("classcheck", getIntent().getStringExtra("classcheck"));
+                        intent.putExtra("chat_room_id", getIntent().getExtras().getString("chat_room_id"));
+                        intent.putExtra("eventId", getIntent().getExtras().getString("eventId"));
+                        startActivity(intent);
+                    }
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), EventArtwork.class);
-                    intent.putExtra("classcheck", getIntent().getStringExtra("classcheck"));
-                    intent.putExtra("chat_room_id", getIntent().getExtras().getString("chat_room_id"));
-                    intent.putExtra("eventId", getIntent().getExtras().getString("eventId"));
-                    startActivity(intent);
+                    Toast.makeText(UserTabView.this, "No Internet!!", Toast.LENGTH_SHORT).show();
+
                 }
 
                 return true;
 
             case R.id.list_invitee:
-                String sharedetails = getIntent().getStringExtra("share_detail");
-                eventtype = getIntent().getStringExtra("eventtype");
+                if (ConnectionDetector.isInternetAvailable(UserTabView.this)) {
 
-                et = Integer.parseInt(eventtype);
-                //Toast.makeText(UserTabView.this, sharedetails, Toast.LENGTH_SHORT).show();
-                int s = Integer.parseInt(sharedetails);
+                    String sharedetails = getIntent().getStringExtra("share_detail");
+                    eventtype = getIntent().getStringExtra("eventtype");
+
+                    et = Integer.parseInt(eventtype);
+                    //Toast.makeText(UserTabView.this, sharedetails, Toast.LENGTH_SHORT).show();
+                    int s = Integer.parseInt(sharedetails);
 
 
-                if (sharedetails != null) {
-                    if (s == 1 && et == 1) {
-                        showDialog();
+                    if (sharedetails != null) {
+                        if (s == 1 && et == 1) {
+                            showDialog();
 
-                    } else if (et == 2) {
-                        Toast.makeText(UserTabView.this, "This feature is not available for this Event", Toast.LENGTH_SHORT).show();
+                        } else if (et == 2) {
+                            Toast.makeText(UserTabView.this, "This feature is not available for this Event", Toast.LENGTH_SHORT).show();
 
+                        } else {
+                            Toast.makeText(UserTabView.this, "Organiser has not enabled this feature", Toast.LENGTH_SHORT).show();
+
+                        }
                     } else {
-                        Toast.makeText(UserTabView.this, "Organiser has not enabled this feature", Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(this, "Something went wrong!!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Something went wrong!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserTabView.this, "No Internet!!", Toast.LENGTH_SHORT).show();
+
                 }
 
                 return true;
+
+            case R.id.invite:
+                InviteeList d = new InviteeList();
+                d.show(getSupportFragmentManager(), "inviteelist");
+                return true;
+
+            case R.id.coupon_detials:
+                if (ConnectionDetector.isInternetAvailable(UserTabView.this)) {
+                    CouponDetials couponDetials = new CouponDetials();
+                    couponDetials.show(getSupportFragmentManager(), "couponDetials");
+                } else {
+                    Toast.makeText(UserTabView.this, "No Internet!!", Toast.LENGTH_SHORT).show();
+
+                }
+
+
         }
         return super.onOptionsItemSelected(item);
 
     }
-
-
 
     private void mute() {
 
@@ -317,10 +394,6 @@ public class UserTabView extends AppCompatActivity {
 
     public void Inviteepost(final List<String> checkedist) {
 
-//        for (int i = 0; i < checkedist.size(); i++) {
-//            System.out.println("Usertab : The total value is" + checkedist.get(i));
-//        }
-
         pDialog = new ProgressDialog(UserTabView.this);
         pDialog.setMessage("Inviting please wait....");
         pDialog.show();
@@ -350,8 +423,8 @@ public class UserTabView extends AppCompatActivity {
 
 
                             Toast.makeText(UserTabView.this, "Successfully Invited ", Toast.LENGTH_SHORT).show();
-                            ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
-                            dialogFragment.show(getSupportFragmentManager(), "missiles");
+//                            ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+//                            dialogFragment.show(getSupportFragmentManager(), "missiles");
 
                         } else {
                             Toast.makeText(UserTabView.this, message, Toast.LENGTH_SHORT).show();
@@ -396,7 +469,7 @@ public class UserTabView extends AppCompatActivity {
                     params.put("UserValues", checkedist.get(i));
                 }
                 params.put("invite_EventId", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
-                params.put("organiser_id", MyApplication.getInstance().getPrefManager().getOrganiserID());
+                params.put("organiser_id", MyApplication.getInstance().getPrefManager().getEventId().getOrganiserId());
                 Log.e(TAG, "params: " + params.toString());
 
 

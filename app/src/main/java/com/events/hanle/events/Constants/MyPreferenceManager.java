@@ -34,7 +34,6 @@ public class MyPreferenceManager {
     // All Shared Preferences Keys
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_USER_NAME = "user_name";
-    private static final String KEY_USER_EMAIL = "user_email";
     private static final String KEY_NOTIFICATIONS = "notifications";
     private static final String KEY_USER_MOBILE = "user_mobile";
     private static final String KEY_COUNTRY_CODE = "country_code";
@@ -47,7 +46,6 @@ public class MyPreferenceManager {
     private static final String EVENT_INFO_ID = "EVENTINFOID";
     private static final String EVENT_INFO_ID1 = "EVENTINFOID1";
     private static final String EVENT_INFO_ID2 = "EVENTINFOID2";
-    private static final String KEY_USER_PHONE = "user_phone";
     private static final String KEY_EVENT_STATUS = "event_status";
     private static final String KEY_EVENT_STATUS1 = "event_status1";
     private static final String KEY_EVENT_STATUS2 = "event_status2";
@@ -72,8 +70,14 @@ public class MyPreferenceManager {
     private static final String CHATWINDOW1 = "chat_window1";
     private static final String CHATWINDOW2 = "chat_window2";
     private static final String OrganiserId = "organiser_id";
+    private static final String OrganiserId_AUTO_LOGIN = "organiser_id_auto_login";
     private static final String COUNTRY_CODE = "country_code";
     private static final String PHONE = "phone";
+    private static final String COUNTRY_CODE1 = "country_code";
+    private static final String PHONE1 = "phone";
+    private static final String COUNTRY_CODE2 = "country_code";
+    private static final String PHONE2 = "phone";
+    private static final String LISTEVENTORGANISERID = "list_event_organiser_id";
 
 
     // Constructor
@@ -122,6 +126,7 @@ public class MyPreferenceManager {
         editor.putString(CHATWINDOW, listEvent.getChat_window());
         editor.putString(COUNTRY_CODE, listEvent.getCountrycode());
         editor.putString(PHONE, listEvent.getPhone());
+        editor.putString(OrganiserId_AUTO_LOGIN, listEvent.getOrganiserId());
         editor.commit();
 
     }
@@ -135,6 +140,8 @@ public class MyPreferenceManager {
         editor.putString(ARTWORK1, completedEvent.getArtwork());
         editor.putString(EVENTTYPE1, completedEvent.getEvent_type());
         editor.putString(CHATWINDOW1, completedEvent.getChat_window());
+        editor.putString(COUNTRY_CODE1, completedEvent.getCountrycode());
+        editor.putString(PHONE1, completedEvent.getPhone());
         editor.commit();
 
     }
@@ -148,6 +155,8 @@ public class MyPreferenceManager {
         editor.putString(ARTWORK2, canceledEvent.getArtwork());
         editor.putString(EVENTTYPE2, canceledEvent.getEventtype());
         editor.putString(CHATWINDOW2, canceledEvent.getChatw());
+        editor.putString(COUNTRY_CODE2, canceledEvent.getCountrycode());
+        editor.putString(PHONE2, canceledEvent.getPhone());
         editor.commit();
 
     }
@@ -239,7 +248,7 @@ public class MyPreferenceManager {
 
     public ListEvent getEventId() {
         if (pref.getString(KEY_EVENT_ID, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatwindow,countrycode,phone;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatwindow,countrycode,phone,organiser_id;
             eventId = pref.getString(KEY_EVENT_ID, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE, null);
             event_Status = pref.getString(KEY_EVENT_STATUS, null);
@@ -251,8 +260,9 @@ public class MyPreferenceManager {
             chatwindow = pref.getString(CHATWINDOW, null);
             countrycode = pref.getString(COUNTRY_CODE, null);
             phone = pref.getString(PHONE, null);
+            organiser_id = pref.getString(OrganiserId_AUTO_LOGIN, null);
 
-            ListEvent listEvent = new ListEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatwindow,countrycode,phone);
+            ListEvent listEvent = new ListEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatwindow,countrycode,phone,organiser_id);
             return listEvent;
 
         }
@@ -261,18 +271,21 @@ public class MyPreferenceManager {
 
     public CompletedEvent getCompletedEventId() {
         if (pref.getString(KEY_EVENT_ID1, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatw;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatw,countrycode,phone,organiser_id;
             eventId = pref.getString(KEY_EVENT_ID1, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE1, null);
             event_Status = pref.getString(KEY_EVENT_STATUS1, null);
             inviter_name = pref.getString(KEY_INVITER_NAME1, null);
             user_status = pref.getString(KEY_USER_STATUS1, null);
-            sharedetail = pref.getString(SHARE_DETAIL, null);
+            sharedetail = pref.getString(SHARE_DETAIL1, null);
             artwork = pref.getString(ARTWORK1, null);
             eventtype = pref.getString(EVENTTYPE1, null);
             chatw = pref.getString(CHATWINDOW1, null);
+            countrycode = pref.getString(COUNTRY_CODE1, null);
+            phone = pref.getString(PHONE1, null);
+            organiser_id = pref.getString(OrganiserId_AUTO_LOGIN, null);
 
-            CompletedEvent listEvent = new CompletedEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatw);
+            CompletedEvent listEvent = new CompletedEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatw,countrycode,phone,organiser_id);
             return listEvent;
 
         }
@@ -281,7 +294,7 @@ public class MyPreferenceManager {
 
     public CanceledEvent getCancelledEventID() {
         if (pref.getString(EVENT_INFO_ID2, null) != null) {
-            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatw;
+            String eventId, eventTitle, event_Status, inviter_name, user_status, sharedetail, artwork, eventtype, chatw,countrycode,phone,organiser_id;
             eventId = pref.getString(EVENT_INFO_ID2, null);
             eventTitle = pref.getString(KEY_EVENT_TILTLE2, null);
             event_Status = pref.getString(KEY_EVENT_STATUS2, null);
@@ -291,8 +304,11 @@ public class MyPreferenceManager {
             artwork = pref.getString(ARTWORK2, null);
             eventtype = pref.getString(EVENTTYPE2, null);
             chatw = pref.getString(CHATWINDOW2, null);
+            countrycode = pref.getString(COUNTRY_CODE2, null);
+            phone = pref.getString(PHONE2, null);
+            organiser_id = pref.getString(OrganiserId_AUTO_LOGIN, null);
 
-            CanceledEvent listEvent = new CanceledEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatw);
+            CanceledEvent listEvent = new CanceledEvent(eventId, eventTitle, user_status, inviter_name, event_Status, null, sharedetail, artwork, eventtype, chatw,countrycode,phone);
             return listEvent;
 
         }
@@ -303,6 +319,16 @@ public class MyPreferenceManager {
         if (pref.getString(OrganiserId, null) != null) {
             String organiserID;
             organiserID = pref.getString(OrganiserId, null);
+            return organiserID;
+        }
+
+        return null;
+    }
+
+    public String listEventgetorganiserId() {
+        if (pref.getString(LISTEVENTORGANISERID, null) != null) {
+            String organiserID;
+            organiserID = pref.getString(LISTEVENTORGANISERID, null);
             return organiserID;
         }
 
@@ -332,6 +358,12 @@ public class MyPreferenceManager {
 
     }
 
+    public void listeventaddorganiserId(String Id) {
+        editor.putString(LISTEVENTORGANISERID, Id);
+        editor.commit();
+        Log.e(TAG, "Auto Organiser ID stored  " + Id);
+
+    }
 
     public void clearnotification() {
         editor.remove(KEY_NOTIFICATIONS);

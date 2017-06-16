@@ -32,7 +32,7 @@ public class ChatRoomThreadAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private ArrayList<Message> messageArrayList;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView message, timestamp, name;
+        TextView message, timestamp,name;
         RecyclerView recyclerView;
 
         public ViewHolder(View view) {
@@ -64,11 +64,11 @@ public class ChatRoomThreadAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (viewType == SELF) {
             // self message
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.chat_item_other1, parent, false);
+                    .inflate(R.layout.chat_user2_item, parent, false);
         } else {
             // others message
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.chat_item_other, parent, false);
+                    .inflate(R.layout.chat_user1_item, parent, false);
         }
 
 
@@ -96,7 +96,7 @@ public class ChatRoomThreadAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         if (message.getUser().getName() != null) {
             if (message.getUser().getId().equals(userId)) {
-                ((ViewHolder) holder).name.setVisibility(View.GONE);
+                //((ViewHolder) holder).name.setVisibility(View.GONE);
                 ((ViewHolder) holder).timestamp.setText(timestamp);
             } else {
                 ((ViewHolder) holder).name.setText(name);

@@ -1,0 +1,395 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_organisername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:padding="10dp"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="6dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/organisername"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_circle"
+                    android:padding="15dp"
+                    android:text="SB"
+                    android:textColor="#fff"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/organiser_name"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:text="Saurabh Bhat"
+                    android:textColor="#3b4673"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="40dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/organiser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="35dp"
+                    android:gravity="start"
+                    android:text="@string/organiser"
+                    android:textColor="#EC6D4A"
+                    android:textSize="16sp"
+                    android:textStyle="normal"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/call"
+                    android:contentDescription=""
+                    tools:ignore="ContentDescription,RtlHardcoded" />
+
+                <TextView
+                    android:id="@+id/contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="end"
+                    android:text="Contact"
+                    android:textColor="#3B4673"
+                    android:textSize="16sp"
+                    android:textStyle="normal"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_organisername"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="6dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/lcn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:text="@string/location" />
+
+
+                <ImageView
+                    android:id="@+id/lcn_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/lcn"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/location"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lcn"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@+id/lcn_icon"
+                    android:layout_toRightOf="@+id/lcn_icon"
+                    android:gravity="center"
+                    android:text="49, Cunningham Crescent engineering navy layout college 560052"
+                    android:textColor="#000"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_date_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_location"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="6dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/date_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:text="@string/date_and_time" />
+
+
+                <ImageView
+                    android:id="@+id/alarm"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/date_time"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/calender"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/dat_tim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/date_time"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@+id/alarm"
+                    android:layout_toRightOf="@+id/alarm"
+                    android:gravity="center"
+                    android:text="23 MAY THURSDAY | 04:00PM (GMT + 05:30)"
+                    android:textColor="#000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/event_detials"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_date_time"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:padding="10dp"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="6dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/description_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:text="@string/event_details" />
+
+                <ImageView
+                    android:id="@+id/bulb"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/description_title"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/bulb"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/des"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/description_title"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@+id/bulb"
+                    android:layout_toRightOf="@+id/bulb"
+                    android:gravity="center"
+                    android:text="Event management is the application of project management."
+                    android:textColor="#000"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_paid_by_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/event_detials"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:padding="10dp"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="6dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/paid_by_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:text="@string/paid_by" />
+
+                <ImageView
+                    android:id="@+id/paid_by"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/paid_by_title"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/money"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/paidby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/paid_by_title"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@+id/paid_by"
+                    android:layout_toRightOf="@+id/paid_by"
+                    android:gravity="center"
+                    android:text="Organiser"
+                    android:textColor="#000"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_dresscode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_paid_by_title"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:padding="10dp"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="6dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/dresscode_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:text="@string/dresscode" />
+
+                <ImageView
+                    android:id="@+id/dresscode_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/dresscode_title"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/dresscode"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/dresscode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dresscode_title"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@+id/dresscode_image"
+                    android:layout_toRightOf="@+id/dresscode_image"
+                    android:gravity="center"
+                    android:text="Casual"
+                    android:textColor="#000"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+</ScrollView>

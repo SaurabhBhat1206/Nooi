@@ -1,5 +1,7 @@
 package com.events.hanle.events.app;
 
+import android.graphics.Typeface;
+
 /**
  * Created by Lincoln on 05/01/16.
  */
@@ -20,6 +22,7 @@ public class Config {
     public static final String PUSH_NOTIFICATION_FROM_PARTNER = "pushNotificationfrompartner";
     public static final String PUSH_NOTIFICATION_FROM_ORGANISER = "pushNotificationfromorganiser";
     public static final String PUSH_NOTIFICATION_FROM_KARGE_EVENT = "pushNotificationfromlargeevent";
+    public static final long TWO_MINUTES = 2 * 60 * 1000;
 
     // type of push messages
     public static final int PUSH_TYPE_CHATROOM = 1;
@@ -31,4 +34,6 @@ public class Config {
     // id to handle the notification in the notification try
     public static final int NOTIFICATION_ID = 100;
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
+    public static Typeface typeface;
+
 }

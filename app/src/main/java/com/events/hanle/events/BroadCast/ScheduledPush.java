@@ -47,7 +47,8 @@ public class ScheduledPush extends BroadcastReceiver {
                     Date currentD = formatter.parse(localTime2);
                     Date date1 = formatter.parse(entry.get("dat"));
                     System.out.println("Today op:" + date1.equals(currentD));
-                    if (date1.equals(currentD)) {
+                    if (date1.equals(currentD))
+                    {
                         System.out.println("sule" + entry.get("event_title"));
                         mylist.add(entry.get("event_title"));
                         Intent service1 = new Intent(context, SceduledPushNotification.class);
@@ -61,10 +62,7 @@ public class ScheduledPush extends BroadcastReceiver {
 
             }
 
-
-
         }
-
 
     }
 }

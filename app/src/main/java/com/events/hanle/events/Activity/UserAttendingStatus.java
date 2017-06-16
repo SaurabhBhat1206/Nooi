@@ -293,7 +293,7 @@ public class UserAttendingStatus extends AppCompatActivity {
         // Tag used to cancel the request
         String tag_string_req = "string_req";
         showpDialog();
-        String url = WebUrl.LIST_CONFIRMATION + eventinfoID;
+        String url = WebUrl.ATTENDING_OR_NOT + eventinfoID;
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url, null, new Response.Listener<JSONObject>() {

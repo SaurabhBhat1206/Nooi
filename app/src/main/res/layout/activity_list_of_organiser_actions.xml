@@ -42,7 +42,7 @@
                 android:background="@drawable/myrect"
                 android:gravity="center"
                 android:padding="15dp"
-                android:text="Create Invitee"
+                android:text="Add Contacts"
                 android:textColor="#ffffff"
                 android:textSize="15sp"
                 android:textStyle="normal"
@@ -74,21 +74,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-
-            <TextView
-                android:id="@+id/invite_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/myrect"
-                android:gravity="center"
-                android:padding="15dp"
-                android:text="Invite"
-                android:textColor="#ffffff"
-                android:textSize="15sp"
-                android:textStyle="normal"
-                android:typeface="serif" />
 
 
         </LinearLayout>
@@ -158,21 +143,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-
-            <TextView
-                android:id="@+id/coupon_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/myrect"
-                android:gravity="center"
-                android:padding="15dp"
-                android:text="Coupon Detials"
-                android:textColor="#ffffff"
-                android:textSize="15sp"
-                android:textStyle="normal"
-                android:typeface="serif" />
 
 
         </LinearLayout>

@@ -2,6 +2,7 @@ package com.events.hanle.events.Fragments;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ import com.events.hanle.events.Model.CanceledEvent;
 import com.events.hanle.events.Model.EventMessage;
 import com.events.hanle.events.R;
 import com.events.hanle.events.adapter.EventMessageAdapter;
+import com.events.hanle.events.app.Config;
 import com.events.hanle.events.app.EndPoints;
 import com.events.hanle.events.app.MyApplication;
 
@@ -48,11 +51,10 @@ public class Three extends Fragment {
     private ArrayList<EventMessage> feedsList = new ArrayList<EventMessage>();
     private RecyclerView mRecyclerView;
     private EventMessageAdapter eventMessageAdapter;
-    TextView t;
-    EventMessage mess;
     TextView tv;
     String s;
     String event_status, event_title, Username, invitername, event_id, eventtype;
+    ImageView img;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
     private boolean isFragmentLoaded=false;
     @Override
@@ -71,11 +73,10 @@ public class Three extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
         mRecyclerView.setHasFixedSize(true);
         Username = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getName();
-
+        img = (ImageView) v.findViewById(R.id.nointernet);
         UserTabView activity = (UserTabView) getActivity();
-        String data = activity.getIntent().getExtras().getString("eventname");
-        System.out.println("op from intent**********:" + data);
-
+        Config.typeface = Typeface.createFromAsset(getContext().getAssets(), "font/Roboto-Regular.ttf");
+        tv.setTypeface(Config.typeface);
 
         s = getActivity().getIntent().getStringExtra("classcheck");
         if (s != null) {
@@ -173,7 +174,10 @@ public class Three extends Fragment {
 
                         fetchdata();
                     } else {
-                        Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
+                        tv.setVisibility(View.VISIBLE);
+                        img.setVisibility(View.VISIBLE);
+                        tv.setText("No Internet!!");
+                        mRecyclerView.setVisibility(View.GONE);
                     }
                 }
             });

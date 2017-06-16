@@ -2,8 +2,10 @@ package com.events.hanle.events.Fragments;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +33,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Activity.ListOfEvent1;
+import com.events.hanle.events.BroadCast.IncomingSms;
 import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.User;
@@ -49,6 +52,7 @@ public class OtpFragment extends Fragment {
     static Button b;
     String user_id, mobile, country_code;
     //EditText otp;
+    private final BroadcastReceiver mybroadcast = new IncomingSms();
 
     static EditText otp;
     private TextInputLayout otpnputlayout;
@@ -80,13 +84,16 @@ public class OtpFragment extends Fragment {
 
     }
 
+
     public void recivedSms(String message) {
         try {
             otp.setText(message);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
                     b.performClick();
+
                 }
             }, 1000);
 
@@ -109,6 +116,7 @@ public class OtpFragment extends Fragment {
 
                 if (ConnectionDetector.isInternetAvailable(getActivity())) {
                     verifyOtp();
+
                 } else {
                     Toast.makeText(getContext(), "No internet connection!!!", Toast.LENGTH_SHORT).show();
 
@@ -119,6 +127,20 @@ public class OtpFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        getActivity().registerReceiver(mybroadcast, filter);
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mybroadcast);
+    }
 
     private void verifyOtp() {
         final String otpuser = otp.getText().toString();

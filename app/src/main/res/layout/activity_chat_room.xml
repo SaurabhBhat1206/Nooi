@@ -1,75 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:windowSoftInputMode="adjustPan|adjustResize"
+    android:background="@null"
     tools:context=".Activity.UserTabView">
 
-
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:orientation="vertical"
-        android:paddingBottom="12dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        tools:ignore="UnknownIdInLayout">
+        android:layout_above="@+id/ln"
+        android:layout_marginBottom="4dp"
+        android:clipToPadding="false"
+        android:divider="@drawable/chat_divider"
+        android:paddingBottom="4dp"
+        android:paddingTop="8dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:stackFromBottom="false"
+        android:scrollbars="vertical"
+        android:transcriptMode="normal"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="55dp"
-            android:scrollbars="vertical">
+    <ImageView
+        android:id="@+id/nointernet"
+        android:layout_width="150px"
+        android:layout_height="150px"
+        android:layout_above="@+id/nochattoshow"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:srcCompat="@drawable/no_internet" />
 
-        </android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/nochattoshow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="@string/this_feature_is_not_available_for_this_event"
+        android:textSize="20sp"
+        android:typeface="serif"
+        android:visibility="gone" />
 
-
-        <TextView
-            android:id="@+id/nochattoshow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="@string/this_feature_is_not_available_for_this_event"
-            android:textSize="22sp"
-            android:typeface="serif"
-            android:visibility="gone" />
-
-    </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/ln"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:id="@+id/ln"
-        android:orientation="horizontal"
-        android:weightSum="4">
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/message"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
-            android:background="@drawable/edittext_border"
-            android:hint="@string/type_your_message"
-            android:padding="10dp" />
+            android:background="@drawable/input"
+            android:minHeight="50dp"
+            android:orientation="horizontal"
+            android:paddingBottom="15dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="20dp">
 
-        <Button
+            <!--<ImageView-->
+                <!--android:id="@+id/emojiButton"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:layout_gravity="bottom"-->
+                <!--android:src="@drawable/input_emoji" />-->
+
+            <EditText
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="12dp"
+                android:background="@null"
+                android:hint="@string/type_your_message"
+                android:inputType="textMultiLine"
+                android:textColorHint="#c4c0bd"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <ImageButton
             android:id="@+id/btn_send"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="@string/send"
-            android:background="@drawable/unread_message_background"
-            android:textColor="#ffffff"
-            android:textStyle="bold" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/chat_circle"
+            android:src="@drawable/input_send" />
+
     </LinearLayout>
-
-
 
 </RelativeLayout>

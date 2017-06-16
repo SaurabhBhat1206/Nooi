@@ -198,21 +198,6 @@ public class EventArtwork extends AppCompatActivity {
         MyApplication.getInstance().addToRequestQueue(strReq);
     }
 
-//    private void loadImage(String url) {
-//
-//        imageLoader = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
-//                .getImageLoader();
-//        imageLoader.get(url, ImageLoader.getImageListener(artwork,
-//                R.drawable.nooismall, android.R.drawable
-//                        .ic_dialog_alert));
-//        artwork.setImageUrl(url, imageLoader);
-//        fab.setVisibility(View.VISIBLE);
-//        mAttacher.update();
-//        mAttacher.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-//
-//
-//
-//    }
 
 
         private void loadImage(String url) {

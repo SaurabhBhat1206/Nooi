@@ -1,6 +1,7 @@
 package com.events.hanle.events.Fragments;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,8 @@ import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.R;
+import com.events.hanle.events.app.Config;
+import com.events.hanle.events.app.EndPoints;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -45,7 +49,7 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
     private TextView t;
     public String event_id;
     String mobileno, countrycode;
-
+    ImageView img;
 
     @Nullable
     @Override
@@ -56,6 +60,10 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
 
         t = (TextView) parent.findViewById(R.id.textView8);
+        img = (ImageView) parent.findViewById(R.id.nointernet);
+
+         Config.typeface = Typeface.createFromAsset(getContext().getAssets(), "font/Roboto-Regular.ttf");
+        t.setTypeface(Config.typeface);
 
         return parent;
 
@@ -93,7 +101,7 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
         if (mapView != null) {
             mapView.onCreate(savedInstanceState);
         }
-        initializeMap();
+
     }
 
 
@@ -109,13 +117,32 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (ConnectionDetector.isInternetAvailable(getActivity())) {
-            new MarkerTask().execute();
+            //new MarkerTask().execute();
+            if (EndPoints.LATITUDE != null && EndPoints.LONGITUDE != null && EndPoints.EVENTTIME != null && EndPoints.EVENTNAME != null) {
+
+                LatLng latlng = new LatLng(Double.parseDouble(EndPoints.LATITUDE), Double.parseDouble(EndPoints.LONGITUDE));
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latlng).zoom(13).build();
+                mMap.animateCamera(CameraUpdateFactory
+                        .newCameraPosition(cameraPosition));
+                mMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                        .title("Event: " + EndPoints.EVENTNAME)
+                        .snippet("Time of the Event: " + EndPoints.EVENTTIME)
+                        .position(latlng))
+                        .showInfoWindow();
+            }
         } else {
-            Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
+            mapView.setVisibility(View.GONE);
+            t.setVisibility(View.VISIBLE);
+            img.setVisibility(View.VISIBLE);
+
         }
 
     }
@@ -185,7 +212,6 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
                         .showInfoWindow();
 
 
-
                 // Create a marker for each city in the JSON data.
 //                Marker marker = mMap.addMarker(new MarkerOptions()
 //
@@ -226,7 +252,6 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStart() {
         super.onStart();
-        initializeMap();
     }
 
     @Override

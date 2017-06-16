@@ -107,14 +107,13 @@ public class CanceledEventAdapter extends RecyclerView.Adapter<CanceledEventAdap
             int position = getAdapterPosition();
             CanceledEvent canceledevent = this.listevent.get(position);
 
-            canceledevent = new CanceledEvent(canceledevent.getId(), canceledevent.getEvent_title(), canceledevent.getUser_status(), canceledevent.getInvitername(), canceledevent.getEvent_status(), null, canceledevent.getShare_detail(),canceledevent.getArtwork(),canceledevent.getEventtype(),canceledevent.getChatw());
+            canceledevent = new CanceledEvent(canceledevent.getId(), canceledevent.getEvent_title(), canceledevent.getUser_status(), canceledevent.getInvitername(), canceledevent.getEvent_status(), null, canceledevent.getShare_detail(),canceledevent.getArtwork(),canceledevent.getEventtype(),canceledevent.getChatw(),canceledevent.getCountrycode(),canceledevent.getPhone());
 
             MyApplication.getInstance().getPrefManager().storeEventIdCanceledEvent(canceledevent);
             int user_Status = Integer.parseInt(canceledevent.getUser_status());
 
             if (user_Status == 3) {
                 Toast.makeText(this.ctx, "You said you are not attending this Event!!", Toast.LENGTH_LONG).show();
-
 
             } else {
                 Intent i = new Intent(mContext, UserTabView.class);
@@ -130,8 +129,6 @@ public class CanceledEventAdapter extends RecyclerView.Adapter<CanceledEventAdap
 
             }
             //callalertDialog();
-
-
         }
     }
 }

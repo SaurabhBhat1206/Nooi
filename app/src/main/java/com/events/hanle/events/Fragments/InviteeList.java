@@ -193,7 +193,7 @@ public class InviteeList extends DialogFragment {
     private void fetchattendinglist() {
 
 
-        String endpoint = WebUrl.ORGANISER_Invitee_list.replace("ORGANISER_ID", MyApplication.getInstance().getPrefManager().getOrganiserID());
+        String endpoint = WebUrl.ORGANISER_Invitee_list.replace("ORGANISER_ID", MyApplication.getInstance().getPrefManager().getEventId().getOrganiserId());
         String endpoint1 = endpoint.replace("EVENT_ID", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
         Log.e(TAG, "end point: " + endpoint1);
 
@@ -285,22 +285,22 @@ public class InviteeList extends DialogFragment {
 //        });
 
 
-        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(android.content.DialogInterface dialog,
-                                 int keyCode, android.view.KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    // To dismiss the fragment when the back-button is pressed.
-                    dismiss();
-                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
-                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
-
-                    return true;
-                }
-                // Otherwise, do nothing else
-                else return false;
-            }
-        });
+//        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+//            @Override
+//            public boolean onKey(android.content.DialogInterface dialog,
+//                                 int keyCode, android.view.KeyEvent event) {
+//                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+//                    // To dismiss the fragment when the back-button is pressed.
+//                    dismiss();
+//                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+//                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
+//
+//                    return true;
+//                }
+//                // Otherwise, do nothing else
+//                else return false;
+//            }
+//        });
 
 
     }

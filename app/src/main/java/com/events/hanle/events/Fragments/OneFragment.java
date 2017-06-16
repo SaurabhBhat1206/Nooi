@@ -2,20 +2,29 @@ package com.events.hanle.events.Fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +38,12 @@ import com.events.hanle.events.Constants.DividerItemDecoration;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.FeedItem;
 import com.events.hanle.events.R;
+import com.events.hanle.events.SqlliteDB.DBController;
 import com.events.hanle.events.adapter.MyRecyclerAdapter;
+import com.events.hanle.events.app.Config;
+import com.events.hanle.events.app.EndPoints;
 import com.events.hanle.events.gcm.GcmIntentService;
+import com.events.hanle.events.interf.BackPressListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
@@ -40,24 +53,35 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
-
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class OneFragment extends Fragment {
 
     private static final String TAG = "OneFragment";
     private List<FeedItem> feedsList = new ArrayList<FeedItem>();
-    private RecyclerView mRecyclerView;
-    private MyRecyclerAdapter adapter;
+    //private RecyclerView mRecyclerView;
+    // private MyRecyclerAdapter adapter;
     Context ctx;
     View mainview;
     TextView t;
-    String event_id, mobileno, countrycode;
-    private SwipeRefreshLayout mSwipeRefreshLayout = null;
-    private AVLoadingIndicatorView avi;
-
+    String event_id, mobileno, countrycode, n;
+    //private SwipeRefreshLayout mSwipeRefreshLayout = null;
+    //private AVLoadingIndicatorView avi;
+    Activity activity;
+    DBController dbController;
+    HashMap<String, String> eventdetails;
+    CardView organisername, card_location, card_date_time, event_detials, card_paid_by_title, card_dresscode;
+    TextView orgname, address, date_time, eventdesc, paid, dresscode, org, cnt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,70 +99,110 @@ public class OneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        mainview = inflater.inflate(R.layout.fragment_one, container, false);
-        avi= (AVLoadingIndicatorView) mainview.findViewById(R.id.avi);
-        mRecyclerView = (RecyclerView) mainview.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(ctx));
-        mRecyclerView.setHasFixedSize(true);
+        mainview = inflater.inflate(R.layout.list_row_new, container, false);
+        // avi = (AVLoadingIndicatorView) mainview.findViewById(R.id.avi);
+        //mSwipeRefreshLayout = (SwipeRefreshLayout) mainview.findViewById(R.id.swipeRefreshLayout);
+        organisername = (CardView) mainview.findViewById(R.id.card_organisername);
+        card_location = (CardView) mainview.findViewById(R.id.card_location);
+        card_date_time = (CardView) mainview.findViewById(R.id.card_date_time);
+        card_date_time = (CardView) mainview.findViewById(R.id.card_date_time);
+        event_detials = (CardView) mainview.findViewById(R.id.event_detials);
+        card_paid_by_title = (CardView) mainview.findViewById(R.id.card_paid_by_title);
+        card_dresscode = (CardView) mainview.findViewById(R.id.card_dresscode);
 
-        UserTabView activity = (UserTabView) getActivity();
+        orgname = (TextView) mainview.findViewById(R.id.organiser_name);
+        address = (TextView) mainview.findViewById(R.id.address);
+        date_time = (TextView) mainview.findViewById(R.id.dat_tim);
+        eventdesc = (TextView) mainview.findViewById(R.id.des);
+        paid = (TextView) mainview.findViewById(R.id.paidby);
+        dresscode = (TextView) mainview.findViewById(R.id.dresscode);
+        org = (TextView) mainview.findViewById(R.id.organiser);
+        cnt = (TextView) mainview.findViewById(R.id.contact);
+
+        Config.typeface = Typeface.createFromAsset(getActivity().getAssets(), "font/Verdana.ttf");
+        orgname.setTypeface(Config.typeface);
+        address.setTypeface(Config.typeface);
+        date_time.setTypeface(Config.typeface);
+        eventdesc.setTypeface(Config.typeface);
+        paid.setTypeface(Config.typeface);
+        dresscode.setTypeface(Config.typeface);
+        org.setTypeface(Config.typeface);
+        cnt.setTypeface(Config.typeface);
+
 
         String s = getActivity().getIntent().getStringExtra("classcheck");
+        dbController = new DBController(getActivity());
+
         if (s != null) {
             if (s.equalsIgnoreCase("cancelledevent")) {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCancelledEventID().getId();
+                eventdetails = dbController.getfromCancelledEventId(event_id);
             } else if (s.equalsIgnoreCase("completedevent")) {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
-            } else if (s.equalsIgnoreCase("from_notifications")) {
-                event_id = activity.getIntent().getExtras().getString("chat_room_id");
-            } else if (s.equalsIgnoreCase("from_partner")) {
-                event_id = activity.getIntent().getStringExtra("eventId");
-            } else if (s.equalsIgnoreCase("from_organiser")) {
-                event_id = activity.getIntent().getStringExtra("eventId");
+                eventdetails = dbController.getfromConcludedEventId(event_id);
             }
         } else {
             event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
             subscribeToAllTopics(event_id);
+            eventdetails = dbController.getfromEventId(event_id);
+
         }
         mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getMobile();
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
-        //Toast.makeText(getActivity(), "country code"+countrycode, Toast.LENGTH_SHORT).show();
-        t = (TextView) mainview.findViewById(R.id.adc);
-
-        if (savedInstanceState == null) {
-
-            if (ConnectionDetector.isInternetAvailable(getActivity())) {
-                String endpoint = WebUrl.USER_EVENT_URL.replace("MOBILE_NO", mobileno);
-                String endpoint1 = endpoint.replace("EVENT_ID", event_id);
-                System.out.println("One fragment:" + endpoint1);
-                new AsyncHttpTask().execute(endpoint1 + countrycode);
-            } else {
-                Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
-            }
-
-
-        }
-
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mainview.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //Refreshing data on server
-                if (ConnectionDetector.isInternetAvailable(getActivity())) {
-                    String endpoint = WebUrl.USER_EVENT_URL.replace("MOBILE_NO", mobileno);
-                    String endpoint1 = endpoint.replace("EVENT_ID", event_id);
-                    System.out.println("One fragment:" + endpoint1);
-                    new AsyncHttpTask().execute(endpoint1 + countrycode);
-
-                } else {
-                    Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         return mainview;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ConnectionDetector.isInternetAvailable(getActivity())) {
+            String endpoint = WebUrl.EVENT_DETAILS.replace("MOBILE_NO", mobileno);
+            String endpoint1 = endpoint.replace("EVENT_ID", event_id);
+            System.out.println("One fragment:" + endpoint1);
+            new AsyncHttpTask().execute(endpoint1 + countrycode);
+        } else {
+
+            callOfflineMethod();
+
+        }
+    }
+
+    private void callOfflineMethod() {
+        // mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+        if (eventdetails.size() != 0) {
+            System.out.println("sql op:" + eventdetails.get("inviter_name"));
+            //feedsList = new ArrayList<>();
+            FeedItem item = new FeedItem();
+            item.setEvent_creator_name(eventdetails.get("inviter_name"));
+            item.setOrgnaserphone(eventdetails.get("countrycode") + " " + eventdetails.get("phone"));
+            item.setEventdesc(eventdetails.get("descriptions"));
+            item.setAddress(eventdetails.get("eventaddress"));
+            item.setDate(eventdetails.get("dat"));
+            item.setTime(eventdetails.get("tim"));
+            item.setEventname(eventdetails.get("event_title"));
+            item.setPayment(eventdetails.get("payment"));
+            item.setDresscode(eventdetails.get("dresscode"));
+            item.setTimezone(eventdetails.get("timezone"));
+            item.setWeekday(eventdetails.get("weekday"));
+            String est = eventdetails.get("establishment");
+
+            assert est != null;
+            if (est != null || !est.equals("")) {
+                item.setEstablishmantname(est);
+            }
+            //feedsList.add(item);
+            FeedItem feedItem = new FeedItem(eventdetails.get("event_status"));
+            com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storeEventInfoID(feedItem);
+            EndPoints.LATITUDE = eventdetails.get("latitude");
+            EndPoints.LONGITUDE = eventdetails.get("longitude");
+            EndPoints.EVENTNAME = eventdetails.get("event_type");
+            EndPoints.EVENTTIME = eventdetails.get("event_time");
+
+        }
+    }
+
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -164,25 +228,22 @@ public class OneFragment extends Fragment {
         Intent intent = new Intent(getActivity(), GcmIntentService.class);
         intent.putExtra(GcmIntentService.KEY, GcmIntentService.SUBSCRIBE);
         //intent.putExtra(GcmIntentService.TOPIC, "topic_" + eventID);
-        //intent.putExtra(GcmIntentService.TOPIC, "topic_" + "15092016");
         intent.putExtra(GcmIntentService.TOPIC, "topic_" + "test_android_ios");
         getActivity().startService(intent);
-        //Toast.makeText(getActivity(), "topic_" + "android_ios", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
-    public class AsyncHttpTask extends AsyncTask<String, Void, Integer> {
+    private class AsyncHttpTask extends AsyncTask<String, Void, Integer> {
 
         @Override
         protected void onPreExecute() {
 
-            avi.show();
+            //avi.show();
 
         }
 
@@ -225,87 +286,110 @@ public class OneFragment extends Fragment {
 
 
             if (result == 1) {
-                adapter = new MyRecyclerAdapter(OneFragment.this, feedsList);
-                mRecyclerView.setAdapter(adapter);
-                avi.hide();
-                avi.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
-                if (mSwipeRefreshLayout.isRefreshing()) {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
 
             } else {
-                avi.hide();
-                avi.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
                 Toast.makeText(getActivity(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void parseResult(String result) {
+    private void parseResult(final String result) {
+
         try {
-            JSONObject response = new JSONObject(result);
-            System.out.println("TAG:" + response);
-            String user_status;
-            user_status = response.getString("user_status");
+            final JSONObject response = new JSONObject(result);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    StringBuilder sb = new StringBuilder();
+                    orgname.setText(response.optString("event_creater_username"));
+                    eventdesc.setText(response.optString("description"));
+                    String s = response.optString("event_date");
+                    String tim = response.optString("event_time");
+                    String tims = s + " " + tim;
+                    if (tims != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                        Date d;
+                        try {
+                            d = sdf.parse(tims);
+                            sdf.applyPattern("dd MMM EEE | hh:mm a");
+                            n = sdf.format(d);
 
-            System.out.println("TAG:" + user_status);
-            int status = Integer.parseInt(user_status);
-//            if (status == 3 || status == 1) {
-//                RunSeparteThread(status);
-//
-//            } else {
+                            System.out.println("Conversiondatee****:" + n);
 
-            feedsList = new ArrayList<>();
-            FeedItem item = new FeedItem();
-            item.setEvent_creator_name(response.optString("event_creater_username"));
-            item.setOrgnaserphone(response.optString("event_creator_phone"));
-            item.setEventdesc(response.optString("description"));
-            item.setAddress(response.optString("event_address"));
-            item.setDate(response.optString("event_date"));
-            item.setTime(response.optString("event_time"));
-            item.setEventname(response.optString("event_type"));
-            item.setPayment(response.optString("payment"));
-            item.setDresscode(response.optString("dresscode"));
-            item.setTimezone(response.optString("timezone"));
-            item.setWeekday(response.optString("weekday"));
-            if (response.has("establishment") || response.optString("establishment") != null) {
-                item.setEstablishmantname(response.optString("establishment"));
-            }
-            feedsList.add(item);
-            FeedItem feedItem = new FeedItem(response.getString("event_status"));
-            com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storeEventInfoID(feedItem);
+                        } catch (ParseException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
 
+                    sb.append(n).append(" GMT ").append("(").append(response.optString("timezone")).append(")");
+                    date_time.setText(sb);
+
+                    if (response.optString("payment").equals("")) {
+                        card_paid_by_title.setVisibility(View.GONE);
+                    } else {
+                        paid.setText(response.optString("payment"));
+                    }
+                    if (response.optString("dresscode").equals("")) {
+                        card_dresscode.setVisibility(View.GONE);
+                    } else {
+                        dresscode.setText(response.optString("dresscode"));
+                    }
+
+                    if (response.has("establishment") && response.optString("establishment") != null) {
+                        address.setText(response.optString("establishment") + " , " + response.optString("event_address"));
+
+                    } else {
+                        address.setText(response.optString("event_address"));
+
+                    }
+
+                    EndPoints.LATITUDE = response.optString("latitude");
+                    EndPoints.LONGITUDE = response.optString("longitude");
+                    EndPoints.EVENTNAME = response.optString("event_type");
+                    EndPoints.EVENTTIME = response.optString("event_time");
+
+                    cnt.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 2909);
+                                } else {
+                                    // continue with your code
+                                    callOrganiser(response.optString("event_creator_phone"));
+
+                                }
+                            } else {
+                                // continue with your code
+                                callOrganiser(response.optString("event_creator_phone"));
+
+                            }
+                        }
+                    });
+
+                }
+            });
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
     }
 
-    private void RunSeparteThread(final int status) {
 
+    private void callOrganiser(String phone) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + "+" + phone));
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                avi.hide();
-                avi.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                t.setVisibility(View.VISIBLE);
-                if (status == 3) {
-                    t.setText("You have cancelled this event!!!");
-                    mRecyclerView.setVisibility(View.GONE);
-                } else if (status == 1) {
-                    t.setText("You are invited please confirm!");
-                    mRecyclerView.setVisibility(View.GONE);
-                }
+            return;
+        }
+        getActivity().startActivity(callIntent);
 
-            }
-        });
     }
-
 
     @Override
     public void onDestroy() {

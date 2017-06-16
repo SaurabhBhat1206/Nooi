@@ -31,6 +31,7 @@ import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.CanceledEvent;
 import com.events.hanle.events.Model.ListEvent;
 import com.events.hanle.events.R;
+import com.events.hanle.events.SqlliteDB.DBController;
 import com.events.hanle.events.adapter.CanceledEventAdapter;
 import com.events.hanle.events.app.EndPoints;
 import com.events.hanle.events.app.MyApplication;
@@ -40,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -55,7 +57,7 @@ public class CanceledFragments extends DialogFragment {
     private ArrayList<CanceledEvent> canceledevent = new ArrayList<>();
     Context ctx;
     private String TAG = ListOfEvent1.class.getSimpleName();
-    String  mobileno, countrycode;
+    String mobileno, countrycode;
     TextView t;
 
     @Nullable
@@ -68,7 +70,7 @@ public class CanceledFragments extends DialogFragment {
         rv = (RecyclerView) v.findViewById(R.id.recyclerView_for_attending);
         mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getMobile();
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
-        adapter = new CanceledEventAdapter(getActivity(), canceledevent,getDialog());
+        adapter = new CanceledEventAdapter(getActivity(), canceledevent, getDialog());
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(ctx));
         rv.addItemDecoration(new SimpleDividerItemDecoration(
@@ -79,10 +81,43 @@ public class CanceledFragments extends DialogFragment {
         if (ConnectionDetector.isInternetAvailable(getActivity())) {
             fetchcanceleddata();
         } else {
-            Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
+            callingOfflineMethod();
         }
 
         return v;
+    }
+
+    private void callingOfflineMethod() {
+        DBController dbController;
+        dbController = new DBController(getActivity());
+        ArrayList<HashMap<String, String>> listEvents = dbController.getCancelledEvents();
+        if (listEvents.size() != 0) {
+            listEvents = dbController.getCancelledEvents();
+            for (HashMap<String, String> entry : listEvents) {
+                CanceledEvent cr = new CanceledEvent();
+                cr.setUser_status(entry.get("user_attending_status"));
+                cr.setId(entry.get("eID"));
+                cr.setEvent_title(entry.get("event_title"));
+                cr.setInvitername(entry.get("inviter_name"));
+                cr.setEvent_status(entry.get("event_status"));
+                cr.setShare_detail(entry.get("share_detial"));
+                cr.setArtwork(entry.get("artwork"));
+                cr.setEventtype(entry.get("type"));
+                cr.setChatw(entry.get("chatW"));
+                cr.setCountrycode(entry.get("countrycode"));
+                cr.setPhone(entry.get("phone"));
+                cr.setLastMessage("");
+                cr.setUnreadCount(0);
+                cr.setTimestamp(entry.get("created_at"));
+                canceledevent.add(cr);
+
+            }
+            adapter = new CanceledEventAdapter(getActivity(), canceledevent, getDialog());
+            rv.setHasFixedSize(true);
+            rv.setLayoutManager(new LinearLayoutManager(ctx));
+            rv.setAdapter(adapter);
+        }
     }
 
     private void fetchcanceleddata() {
@@ -119,6 +154,8 @@ public class CanceledFragments extends DialogFragment {
                                 cr.setArtwork(chatRoomsObj.getString("artwork"));
                                 cr.setEventtype(chatRoomsObj.getString("type"));
                                 cr.setChatw(chatRoomsObj.getString("chatW"));
+                                cr.setCountrycode(chatRoomsObj.getString("countrycode"));
+                                cr.setPhone(chatRoomsObj.getString("phone"));
                                 cr.setLastMessage("");
                                 cr.setUnreadCount(0);
                                 cr.setTimestamp(chatRoomsObj.getString("created_at"));
@@ -174,8 +211,6 @@ public class CanceledFragments extends DialogFragment {
         //Adding request to request queue
         MyApplication.getInstance().addToRequestQueue(strReq);
     }
-
-
 
 
 }

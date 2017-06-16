@@ -54,7 +54,7 @@ public class CouponDetials extends DialogFragment {
         content = (AppCompatTextView) v.findViewById(R.id.content);
         title = (AppCompatTextView) v.findViewById(R.id.title);
 
-         updateConent();
+        updateConent();
 
         return v;
 
@@ -77,11 +77,11 @@ public class CouponDetials extends DialogFragment {
                 try {
                     JSONObject res = new JSONObject(response);
                     System.out.println("response:" + response);
-                    JSONArray jsonArray = res.getJSONArray("coupon_data");
                     StringBuilder sb = new StringBuilder();
 
                     if (res.getInt("result") == 1) {
 
+                        JSONArray jsonArray = res.getJSONArray("coupon_data");
 
                         if (jsonArray.length() > 0) {
 
@@ -158,22 +158,22 @@ public class CouponDetials extends DialogFragment {
     public void onResume() {
         super.onResume();
 
-        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(android.content.DialogInterface dialog,
-                                 int keyCode, android.view.KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    // To dismiss the fragment when the back-button is pressed.
-                    dismiss();
-                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
-                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
-
-                    return true;
-                }
-                // Otherwise, do nothing else
-                else return false;
-            }
-        });
+//        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+//            @Override
+//            public boolean onKey(android.content.DialogInterface dialog,
+//                                 int keyCode, android.view.KeyEvent event) {
+//                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+//                    // To dismiss the fragment when the back-button is pressed.
+//                    dismiss();
+//                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
+//                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
+//
+//                    return true;
+//                }
+//                // Otherwise, do nothing else
+//                else return false;
+//            }
+//        });
 
 
     }

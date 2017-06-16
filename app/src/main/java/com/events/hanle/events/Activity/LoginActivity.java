@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements BackPressListene
     public void callToPreviousPage() {
         OtpFragment otpfragment = new OtpFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame_login, otpfragment)
+                .replace(R.id.content_frame_login, otpfragment,"Otpfragment")
                 .addToBackStack(null)
                 .commit();
     }

@@ -30,6 +30,7 @@ import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.CanceledEvent;
 import com.events.hanle.events.Model.CompletedEvent;
 import com.events.hanle.events.R;
+import com.events.hanle.events.SqlliteDB.DBController;
 import com.events.hanle.events.adapter.CompletedEventAdapter;
 import com.events.hanle.events.app.EndPoints;
 import com.events.hanle.events.app.MyApplication;
@@ -39,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -52,8 +54,7 @@ public class CompletedFragments extends DialogFragment {
     private List<CompletedEvent> completedevent = new ArrayList<>();
     Context ctx;
     private String TAG = CompletedFragments.class.getSimpleName();
-    String event_id;
-    String user_id, mobileno, countrycode;
+    String mobileno, countrycode;
     TextView t;
 
 
@@ -78,10 +79,43 @@ public class CompletedFragments extends DialogFragment {
         if (ConnectionDetector.isInternetAvailable(getActivity())) {
             fetchcompletedddata();
         } else {
-            Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
+            callingOfflineMethod();
         }
 
         return v;
+    }
+
+    private void callingOfflineMethod() {
+        DBController dbController;
+        dbController = new DBController(getActivity());
+        ArrayList<HashMap<String, String>> listEvents = dbController.getAllConcludedEvents();
+        if (listEvents.size() != 0) {
+            listEvents = dbController.getAllConcludedEvents();
+            for (HashMap<String, String> entry : listEvents) {
+                CompletedEvent cr = new CompletedEvent();
+                cr.setUser_status(entry.get("user_attending_status"));
+                cr.setId(entry.get("eID"));
+                cr.setEvent_title(entry.get("event_title"));
+                cr.setInvitername(entry.get("inviter_name"));
+                cr.setEvent_status(entry.get("event_status"));
+                cr.setShare_detail(entry.get("share_detial"));
+                cr.setArtwork(entry.get("artwork"));
+                cr.setEvent_type(entry.get("type"));
+                cr.setChat_window(entry.get("chatW"));
+                cr.setCountrycode(entry.get("countrycode"));
+                cr.setPhone(entry.get("phone"));
+                cr.setLastMessage("");
+                cr.setUnreadCount(0);
+                cr.setTimestamp(entry.get("created_at"));
+                completedevent.add(cr);
+
+            }
+            adapter = new CompletedEventAdapter(getActivity(), completedevent, getDialog());
+            rv.setHasFixedSize(true);
+            rv.setLayoutManager(new LinearLayoutManager(ctx));
+            rv.setAdapter(adapter);
+        }
     }
 
     private void fetchcompletedddata() {
@@ -117,6 +151,8 @@ public class CompletedFragments extends DialogFragment {
                                 cr.setArtwork(chatRoomsObj.getString("artwork"));
                                 cr.setEvent_type(chatRoomsObj.getString("type"));
                                 cr.setChat_window(chatRoomsObj.getString("chatW"));
+                                cr.setCountrycode(chatRoomsObj.getString("countrycode"));
+                                cr.setPhone(chatRoomsObj.getString("phone"));
                                 cr.setLastMessage("");
                                 cr.setUnreadCount(0);
                                 cr.setTimestamp(chatRoomsObj.getString("created_at"));

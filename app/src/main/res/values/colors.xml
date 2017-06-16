@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#b5b6be</color>
-    <color name="colorPrimaryDark">#4caaad</color>
+    <color name="colorPrimaryDark">#3B4673</color>
     <color name="colorAccent">#000000</color>
     <color name="tool_background">#03A1E9</color>
     <color name="tool_background_text_color">#ffffff</color>
@@ -17,7 +17,7 @@
     <color name="adminButtonDisabledStartColor">#565051</color>
     <color name="adminButtonDisabledEndColor">#986309</color>
     <color name="adminButtonBorderColor">#254117</color>
-    <color name="toolbar">#2d7da6</color>
+    <color name="toolbar">#3B4673</color>
 
     <color name="list_divider">#dedede</color>
     <color name="bg_bubble_self">#E1E1E1</color>
@@ -34,6 +34,7 @@
     <color name="pdialog">#98cbe5</color>
     <color name="searchbackground">#ccc</color>
 
+    <color name="transparent">@android:color/transparent</color>
 
 </resources>
 

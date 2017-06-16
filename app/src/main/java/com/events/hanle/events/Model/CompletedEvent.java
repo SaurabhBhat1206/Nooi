@@ -5,8 +5,8 @@ package com.events.hanle.events.Model;
  */
 
 public class CompletedEvent {
-    String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, event_type, chat_window;
-    int unreadCount;
+    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, event_type, chat_window, countrycode, phone, organiserId;
+    private int unreadCount;
 
 
     public CompletedEvent() {
@@ -21,7 +21,7 @@ public class CompletedEvent {
         this.unreadCount = unreadCount;
     }
 
-    public CompletedEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window) {
+    public CompletedEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window, String countrycode, String phone, String organiserId) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -32,6 +32,9 @@ public class CompletedEvent {
         this.artwork = artwork;
         this.event_type = event_type;
         this.chat_window = chat_window;
+        this.countrycode = countrycode;
+        this.phone = phone;
+        this.organiserId = organiserId;
     }
 
     public String getId() {
@@ -136,5 +139,29 @@ public class CompletedEvent {
 
     public void setChat_window(String chat_window) {
         this.chat_window = chat_window;
+    }
+
+    public String getCountrycode() {
+        return countrycode;
+    }
+
+    public void setCountrycode(String countrycode) {
+        this.countrycode = countrycode;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getOrganiserId() {
+        return organiserId;
+    }
+
+    public void setOrganiserId(String organiserId) {
+        this.organiserId = organiserId;
     }
 }

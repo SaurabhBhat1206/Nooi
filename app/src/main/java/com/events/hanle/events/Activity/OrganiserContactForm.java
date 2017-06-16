@@ -12,6 +12,7 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Constants.WebUrl;
+import com.events.hanle.events.Fragments.AddMore;
 import com.events.hanle.events.Fragments.ListOfOrganiserActionsFragment;
 import com.events.hanle.events.R;
 import com.events.hanle.events.app.MyApplication;
@@ -54,8 +56,8 @@ import static android.content.ContentValues.TAG;
 
 public class OrganiserContactForm extends AppCompatActivity {
 
-    AppCompatButton pickphonecontact, createinvitee;
-    AppCompatEditText firstname, lastname, phone, countrycode;
+    private AppCompatButton pickphonecontact, createinvitee;
+    private AppCompatEditText firstname, lastname, phone, countrycode;
     private static final int RESULT_PICK_CONTACT = 1;
     private CountryPicker countryPicker;
     String country_code = null;
@@ -63,6 +65,7 @@ public class OrganiserContactForm extends AppCompatActivity {
     TextView hlp;
     String organiser_id;
     private AVLoadingIndicatorView avi;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +93,9 @@ public class OrganiserContactForm extends AppCompatActivity {
 
 
         createinvitee = (AppCompatButton) findViewById(R.id.create_invitee);
-        pickphonecontact = (AppCompatButton) findViewById(R.id.create_invitee_from_phone);
-        pickphonecontact.setOnClickListener(new View.OnClickListener() {
+        //pickphonecontact = (AppCompatButton) findViewById(R.id.create_invitee_from_phone);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -113,7 +117,6 @@ public class OrganiserContactForm extends AppCompatActivity {
 
                 }
 
-
             }
         });
         countrycodepicker();
@@ -124,8 +127,6 @@ public class OrganiserContactForm extends AppCompatActivity {
                 createinvitee();
             }
         });
-
-
 
 
         organiser_id = MyApplication.getInstance().getPrefManager().getOrganiserID();
@@ -191,6 +192,7 @@ public class OrganiserContactForm extends AppCompatActivity {
         try {
             String phoneNo = null;
             String name = null;
+            String firname, secname, fullname;
             Uri uri = data.getData();
             cursor = getContentResolver().query(uri, null, null, null, null);
             cursor.moveToFirst();
@@ -198,10 +200,22 @@ public class OrganiserContactForm extends AppCompatActivity {
             int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
             int nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
 
-            phoneNo = cursor.getString(phoneIndex);
-            name = cursor.getString(nameIndex);
+            fullname = cursor.getString(nameIndex);
+            if (fullname != null && fullname.contains(" ")) {
+                String[] splittingstring = fullname.split("\\s+");
+                firname = splittingstring[0];
+                secname = splittingstring[1];
+            } else {
+                firname = fullname;
+                secname = "";
 
-            firstname.setText(name);
+            }
+
+            phoneNo = cursor.getString(phoneIndex);
+            //name = cursor.getString(nameIndex);
+
+            firstname.setText(firname);
+            lastname.setText(secname);
             phone.setText(phoneNo);
         } catch (Exception e) {
             e.printStackTrace();

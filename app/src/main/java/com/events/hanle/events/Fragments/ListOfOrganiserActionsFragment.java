@@ -34,6 +34,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.events.hanle.events.Activity.ListOfEvent1;
 import com.events.hanle.events.Activity.OrganiserContactForm;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Model.Invitee;
@@ -192,6 +193,11 @@ public class ListOfOrganiserActionsFragment extends DialogFragment {
                                     .setCancelClickListener(null)
                                     .setConfirmClickListener(null)
                                     .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
+                                Intent i = new Intent(getActivity(), ListOfEvent1.class);
+                                startActivity(i);
+                                getActivity().finish();
+                                Toast.makeText(getActivity(), "Event cancelled successfully and logged out!!", Toast.LENGTH_SHORT).show();
 
                         } else {
 

@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.R;
+import com.events.hanle.events.gcm.GcmIntentService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -135,7 +136,7 @@ public class UserChangeOfDescision extends AppCompatActivity {
                         message = obj.getString("message");
 
                         if (success == 1) {
-
+                            unsubscribeTopic();
                             Intent intent = new Intent(Intent.ACTION_MAIN);
                             intent.addCategory(Intent.CATEGORY_HOME);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -176,7 +177,6 @@ public class UserChangeOfDescision extends AppCompatActivity {
                 params.put("eventinfoID", eventinfoID);
                 params.put("phone", mobileno);
                 params.put("countrycode", countrycode);
-
                 Log.e(TAG, "params: " + params.toString());
                 return params;
             }
@@ -189,6 +189,14 @@ public class UserChangeOfDescision extends AppCompatActivity {
         //Adding request to request queue
         com.events.hanle.events.app.MyApplication.getInstance().addToRequestQueue(strReq);
 
+    }
+
+    private void unsubscribeTopic(){
+
+        Intent intent = new Intent(UserChangeOfDescision.this, GcmIntentService.class);
+        intent.putExtra(GcmIntentService.KEY, GcmIntentService.UNSUBSCRIBE);
+        intent.putExtra(GcmIntentService.TOPIC, "topic_" + eventinfoID);
+        startService(intent);
     }
 
     private void findViewsById() {

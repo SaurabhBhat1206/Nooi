@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
     <android.support.design.widget.AppBarLayout
@@ -28,11 +29,18 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/logo" />
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_account_circle_white_24dp"
+            app:backgroundTint="#03A1E9"
+            app:borderWidth="0dp"
+            app:elevation="15dp"
+            app:fabSize="normal" />
+
 
         <!-- Firstname Label -->
         <android.support.design.widget.TextInputLayout
@@ -42,8 +50,8 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:paddingLeft="24dp"
-            app:hintTextAppearance="@style/TextLabel"
-            android:paddingRight="24dp">
+            android:paddingRight="24dp"
+            app:hintTextAppearance="@style/TextLabel">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/input_name_organiser_contact_form"
@@ -60,9 +68,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            app:hintTextAppearance="@style/TextLabel"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp">
+            android:paddingRight="24dp"
+            app:hintTextAppearance="@style/TextLabel">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/input_lastname"
@@ -78,9 +86,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            app:hintTextAppearance="@style/TextLabel"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp">
+            android:paddingRight="24dp"
+            app:hintTextAppearance="@style/TextLabel">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/input_countrycode_organiser"
@@ -95,10 +103,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            app:hintTextAppearance="@style/TextLabel"
             android:layout_marginTop="5dp"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp">
+            android:paddingRight="24dp"
+            app:hintTextAppearance="@style/TextLabel">
 
             <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/input_mobileno"
@@ -108,47 +116,34 @@
                 android:inputType="phone" />
         </android.support.design.widget.TextInputLayout>
         <!--<TextView-->
-            <!--android:id="@+id/help"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="right"-->
-            <!--android:paddingTop="5dp"-->
-            <!--android:text="Help?"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:layout_marginBottom="5dp"-->
-            <!--android:textColor="#000000" />-->
+        <!--android:id="@+id/help"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:paddingTop="5dp"-->
+        <!--android:text="Help?"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:textColor="#000000" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp">
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/create_invitee_from_phone"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="#03A1E9"
-                android:gravity="center_vertical|center_horizontal|center"
-                android:text="Phone Contacts"
-                android:textColor="#ffffff"
-                android:typeface="serif" />
+            android:orientation="vertical"
+            android:paddingLeft="85dp"
+            android:paddingRight="85dp">
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/create_invitee"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
+                android:layout_marginTop="12dp"
                 android:background="#03A1E9"
                 android:gravity="center_vertical|center_horizontal|center"
-                android:text="Create Invitee"
+                android:text="Add"
                 android:textColor="#ffffff"
+                android:textSize="12sp"
                 android:typeface="serif" />
         </LinearLayout>
     </LinearLayout>

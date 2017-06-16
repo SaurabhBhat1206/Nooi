@@ -1,22 +1,18 @@
 package com.events.hanle.events.Activity;
 
-import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.DialogFragment;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -46,10 +42,11 @@ import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.Fragments.CanceledFragments;
 import com.events.hanle.events.Fragments.CompletedFragments;
 import com.events.hanle.events.Fragments.CreateEvent;
+import com.events.hanle.events.Fragments.OrganiserListEventsLogin;
 import com.events.hanle.events.Model.ListEvent;
-import com.events.hanle.events.Model.ListEventCopy;
 import com.events.hanle.events.Model.Message;
 import com.events.hanle.events.R;
+import com.events.hanle.events.SqlliteDB.DBController;
 import com.events.hanle.events.adapter.ListEventAdapter;
 import com.events.hanle.events.app.Config;
 import com.events.hanle.events.app.EndPoints;
@@ -66,9 +63,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -90,8 +87,13 @@ public class ListOfEvent1 extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     TextView tv, toolbarttxt;
     Double VersionCOde;
+    CoordinatorLayout coordinatorLayout;
+    DBController dbController;
 
     private AVLoadingIndicatorView avi;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +101,7 @@ public class ListOfEvent1 extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView_for_listevent);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
 
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
         toolbarttxt = (TextView) findViewById(R.id.toolbar_title);
@@ -107,16 +110,16 @@ public class ListOfEvent1 extends AppCompatActivity {
         t.setLogo(R.drawable.nooismall);
         assert t != null;
 
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        gson = gsonBuilder.create();
-
         tv = (TextView) findViewById(R.id.list_event_id);
         noEvent = (TextView) findViewById(R.id.no_events_to_show);
         user_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUserId().getId();
         mobileno = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getMobile();
         countrycode = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getCountrycode();
-        avi= (AVLoadingIndicatorView) findViewById(R.id.avi);
+        avi = (AVLoadingIndicatorView) findViewById(R.id.avi);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        Config.typeface = Typeface.createFromAsset(getAssets(), "font/Roboto-Regular.ttf");
+        tv.setTypeface(Config.typeface);
+        noEvent.setTypeface(Config.typeface);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -126,7 +129,9 @@ public class ListOfEvent1 extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     fetchChatRooms();
                 } else {
-                    Toast.makeText(ListOfEvent1.this, "No Internet!!!", Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar
+                            .make(coordinatorLayout, "oops!! No Internet Connection", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
 
             }
@@ -256,10 +261,10 @@ public class ListOfEvent1 extends AppCompatActivity {
 
     private void fetchChatRooms() {
 
-        String endpoint = EndPoints.CHAT_ROOMS_LIST.replace("COUNTRY_CODE", countrycode);
+        String endpoint = WebUrl.ACTIVE_EVENTS.replace("COUNTRY_CODE", countrycode);
         String endpoint1 = endpoint.replace("_USERID_", mobileno);
 
-        Log.e(TAG, "end point: " + endpoint);
+        Log.e(TAG, "end point: " + endpoint1);
 
         avi.show();
         avi.setVisibility(View.VISIBLE);
@@ -276,19 +281,15 @@ public class ListOfEvent1 extends AppCompatActivity {
                 avi.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
-//                List<ListEvent> posts = Arrays.asList(gson.fromJson(response, ListEvent[].class));
-//                Log.i(ListOfEvent1.class.getSimpleName(), response);
-//
-//                Log.i(ListOfEvent1.class.getSimpleName(), posts.size() + " posts loaded.");
 
                 try {
                     JSONObject obj = new JSONObject(response);
 
-                    if (obj.getBoolean("error") == false) {
-                        JSONArray chatRoomsArray = obj.getJSONArray("chat_rooms");
+                    if (!obj.getBoolean("error")) {
+                        JSONArray chatRoomsArray = obj.getJSONArray("event_response");
                         Log.d("Array length", String.valueOf(chatRoomsArray.length()));
                         if (chatRoomsArray.length() <= 0) {
-                            tv.setText("No Active Events!!");
+                            tv.setText(getString(R.string.no_Active_events));
 
                         } else {
                             for (int i = 0; i < chatRoomsArray.length(); i++) {
@@ -312,6 +313,7 @@ public class ListOfEvent1 extends AppCompatActivity {
                                 cr.setLastMessage("");
                                 cr.setUnreadCount(0);
                                 cr.setTimestamp(chatRoomsObj.getString("created_at"));
+                                cr.setOrganiserId(chatRoomsObj.getString("organiserId"));
                                 listevent.add(cr);
                                 tv.setText(getString(R.string.list));
 
@@ -345,7 +347,7 @@ public class ListOfEvent1 extends AppCompatActivity {
                 //progressDialog.hide();
                 avi.hide();
                 avi.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setRefreshing(false);
                 NetworkResponse networkResponse = error.networkResponse;
@@ -418,10 +420,64 @@ public class ListOfEvent1 extends AppCompatActivity {
                 fetchChatRooms();
 
             } else {
-                Toast.makeText(ListOfEvent1.this, "No Internet!!", Toast.LENGTH_SHORT).show();
+                callingOfflineMethod();
             }
 
         }
+    }
+
+    private void callingOfflineMethod() {
+
+
+        mSwipeRefreshLayout.setRefreshing(false);
+        //progressDialog.hide();
+        avi.hide();
+        avi.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+        listevent.clear();
+        dbController = new DBController(getApplicationContext());
+        ArrayList<HashMap<String, String>> listEvents = dbController.getallEvents();
+        if (listEvents.size() != 0) {
+            listEvents = dbController.getallEvents();
+            for (HashMap<String, String> entry : listEvents) {
+
+                ListEvent cr = new ListEvent();
+                cr.setUser_status(entry.get("user_attending_status"));
+                cr.setId(entry.get("eID"));
+                cr.setEvent_title(entry.get("event_title"));
+                cr.setInvitername(entry.get("inviter_name"));
+                cr.setEvent_status(entry.get("event_status"));
+                cr.setShare_detail(entry.get("share_detial"));
+                cr.setArtwork(entry.get("artwork"));
+                cr.setEvent_type(entry.get("type"));
+                cr.setChat_window(entry.get("chatW"));
+                cr.setDate(entry.get("dat"));
+                cr.setMonthno(entry.get("dat1"));
+                cr.setWeekday(entry.get("weekday"));
+                cr.setTime(entry.get("tim"));
+                cr.setCountrycode(entry.get("countrycode"));
+                cr.setPhone(entry.get("phone"));
+                cr.setLastMessage("");
+                cr.setUnreadCount(0);
+                cr.setTimestamp(entry.get("created_at"));
+                cr.setOrganiserId(entry.get("organiserId"));
+                listevent.add(cr);
+                tv.setText(getString(R.string.list));
+
+            }
+            adapter = new ListEventAdapter(ListOfEvent1.this, listevent);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(ctx));
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+            mRecyclerView.setAdapter(adapter);
+
+            adapter.notifyDataSetChanged();
+
+            mSwipeRefreshLayout.setEnabled(false);
+
+        }
+
     }
 
 
@@ -660,19 +716,11 @@ public class ListOfEvent1 extends AppCompatActivity {
                 return true;
 
             case R.id.cancelled:
-                if (ConnectionDetector.isInternetAvailable(ListOfEvent1.this)) {
-                    callCanceled();
-                } else {
-                    Toast.makeText(getApplicationContext(), "No Internet!!", Toast.LENGTH_SHORT).show();
-                }
+                callCanceled();
                 return true;
 
             case R.id.concluded:
-                if (ConnectionDetector.isInternetAvailable(ListOfEvent1.this)) {
-                    callcompleted();
-                } else {
-                    Toast.makeText(getApplicationContext(), "No Internet!!", Toast.LENGTH_SHORT).show();
-                }
+                callcompleted();
                 return true;
 
             case R.id.create_event:
@@ -681,6 +729,11 @@ public class ListOfEvent1 extends AppCompatActivity {
 
             case R.id.feedback:
                 sendFeedbackalert();
+                return true;
+
+            case R.id.create_invitee:
+                OrganiserListEventsLogin dialogFragment = new OrganiserListEventsLogin();
+                dialogFragment.show(getSupportFragmentManager(), "organiserlogin");
                 return true;
 
             case R.id.about_us:

@@ -4,8 +4,8 @@ package com.events.hanle.events.Model;
  * Created by Hanle on 8/30/2016.
  */
 public class Attending {
-    String nsme,status,mobile,alreadyinvited;
-    int id;
+    private String nsme,status,mobile,alreadyinvited;
+    private int id;
 
     public String getAlreadyinvited() {
         return alreadyinvited;

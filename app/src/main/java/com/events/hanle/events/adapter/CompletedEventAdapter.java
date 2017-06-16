@@ -120,7 +120,7 @@ public class CompletedEventAdapter extends RecyclerView.Adapter<CompletedEventAd
             int position = getAdapterPosition();
             CompletedEvent listEvent = this.listevent.get(position);
 
-            listEvent = new CompletedEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(),listEvent.getArtwork(),listEvent.getEvent_type(),listEvent.getChat_window());
+            listEvent = new CompletedEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(),listEvent.getArtwork(),listEvent.getEvent_type(),listEvent.getChat_window(),listEvent.getCountrycode(),listEvent.getPhone(),listEvent.getOrganiserId());
             MyApplication.getInstance().getPrefManager().storeEventIdCompletedEvent(listEvent);
             int user_Status = Integer.parseInt(listEvent.getUser_status());
 

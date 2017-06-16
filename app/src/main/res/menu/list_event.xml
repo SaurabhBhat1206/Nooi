@@ -14,6 +14,9 @@
         android:id="@+id/create_event"
         android:title="@string/createevent" />
     <item
+        android:id="@+id/create_invitee"
+        android:title="@string/create_invitee" />
+    <item
         android:id="@+id/feedback"
         android:title="@string/feedback" />
     <item

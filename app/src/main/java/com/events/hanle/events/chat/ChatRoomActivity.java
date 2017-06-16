@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,31 +75,32 @@ public class ChatRoomActivity extends Fragment {
     private ArrayList<Message> messageArrayList;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private EditText inputMessage;
-    private Button btnSend;
+    private ImageButton btnSend;
     private RecyclerView.LayoutManager layoutManager;
     private int requestCount = 1;
     private RequestQueue requestQueue;
-    String event_status, event_title, Username, invitername, s;
+    private String event_status, event_title, invitername, s;
     int es;
     LinearLayout lin;
     TextView tv;
     String chatwindow, eventtype;
+    ImageView img;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_chat_room, container, false);
         inputMessage = (EditText) v.findViewById(R.id.message);
-        btnSend = (Button) v.findViewById(R.id.btn_send);
+        btnSend = (ImageButton) v.findViewById(R.id.btn_send);
         lin = (LinearLayout) v.findViewById(R.id.ln);
         tv = (TextView) v.findViewById(R.id.nochattoshow);
-
-
         s = getActivity().getIntent().getStringExtra("classcheck");
+        img = (ImageView) v.findViewById(R.id.nointernet);
+        //getActivity().getWindow().setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_wallpaper));
 
         UserTabView activity = (UserTabView) getActivity();
-        String data = activity.getIntent().getExtras().getString("eventname");
-        System.out.println("op from intent**********:" + data);
+        Config.typeface = Typeface.createFromAsset(getContext().getAssets(), "font/Roboto-Regular.ttf");
+        tv.setTypeface(Config.typeface);
 
         if (s != null) {
             if (s.equalsIgnoreCase("cancelledevent")) {
@@ -114,28 +119,6 @@ public class ChatRoomActivity extends Fragment {
                 eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getEvent_type();
                 chatwindow = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getChat_window();
 
-            } else if (s.equalsIgnoreCase("from_notifications")) {
-                event_status = activity.getIntent().getExtras().getString("eventstatus");
-                event_title = activity.getIntent().getExtras().getString("event_title");
-                invitername = activity.getIntent().getStringExtra("invitername");
-                chatRoomId = activity.getIntent().getExtras().getString("chat_room_id");
-                chatwindow = activity.getIntent().getExtras().getString("chatw");
-                eventtype = activity.getIntent().getStringExtra("eventtype");
-
-            } else if (s.equalsIgnoreCase("from_partner")) {
-                event_status = activity.getIntent().getExtras().getString("eventstatus");
-                event_title = activity.getIntent().getExtras().getString("event_title");
-                invitername = activity.getIntent().getStringExtra("invitername");
-                chatRoomId = activity.getIntent().getExtras().getString("eventId");
-                chatwindow = activity.getIntent().getExtras().getString("chatw");
-                eventtype = activity.getIntent().getStringExtra("eventtype");
-            } else if (s.equalsIgnoreCase("from_organiser")) {
-                event_status = activity.getIntent().getExtras().getString("eventstatus");
-                event_title = activity.getIntent().getExtras().getString("event_title");
-                invitername = activity.getIntent().getStringExtra("invitername");
-                chatRoomId = activity.getIntent().getExtras().getString("eventId");
-                chatwindow = activity.getIntent().getExtras().getString("chatw");
-                eventtype = activity.getIntent().getStringExtra("eventtype");
             }
         } else {
             event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_status();
@@ -222,7 +205,12 @@ public class ChatRoomActivity extends Fragment {
             getData();
 
         } else {
-            Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
+            lin.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+            tv.setVisibility(View.VISIBLE);
+            tv.setText("No Internet!!");
+            img.setVisibility(View.VISIBLE);
+
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

@@ -130,8 +130,13 @@ public class EventMessageAdapter extends RecyclerView.Adapter<EventMessageAdapte
                 } else if (eventMessage.getPushtype().equalsIgnoreCase("organiser")) {
                     holder.title.setText("Message from Organiser: " + eventMessage.getTitle());
                     holder.description.setText(eventMessage.getPush_message());
-                    holder.timestamp.setText(eventMessage.getTimestamp().substring(0, 24));
+                    if (eventMessage.getTimestamp().length() > 24) {
+                        holder.timestamp.setText(eventMessage.getTimestamp().substring(0, 24));
 
+                    } else {
+                        holder.timestamp.setText(eventMessage.getTimestamp());
+
+                    }
                 }
 
 

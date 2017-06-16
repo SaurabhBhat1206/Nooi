@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="75dp" />
+        android:layout_marginBottom="75dp"
+        android:visibility="visible" />
 
+    <ImageView
+        android:id="@+id/nointernet"
+        android:layout_width="150px"
+        android:layout_height="150px"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/no_internet"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_above="@+id/textView8"
+        android:layout_centerHorizontal="true" />
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No Events to show"
-        android:textSize="22sp"
-        android:textStyle="normal"
-        android:visibility="gone"
         android:layout_gravity="center"
-        android:layout_marginBottom="50dp" />
+        android:gravity="center"
+        android:text="Cannot view the map in offline"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

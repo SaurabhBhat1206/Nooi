@@ -52,7 +52,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 public class Login extends Fragment {
 
     private static final String TAG = "Login";
@@ -135,11 +134,10 @@ public class Login extends Fragment {
         });
 
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(getActivity())) {
                 requestPermissions(new String[]{
-                        Manifest.permission.READ_SMS,Manifest.permission.SEND_SMS}, 2909);
+                        Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS}, 2909);
             }
         }
 
@@ -176,6 +174,8 @@ public class Login extends Fragment {
             throw new ClassCastException(context.toString() + " must implement RegistrationListener");
         }
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -270,7 +270,7 @@ public class Login extends Fragment {
                     Toast.makeText(getContext(),
                             getActivity().getString(R.string.error_network_server),
                             Toast.LENGTH_LONG).show();
-                } else{
+                } else {
                     Toast.makeText(getContext(), "Server did not respond!!", Toast.LENGTH_SHORT).show();
 
                 }
@@ -295,7 +295,7 @@ public class Login extends Fragment {
 //                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         //Adding request to request queue
 
-        strReq.setRetryPolicy(new DefaultRetryPolicy(20*1000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        strReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         com.events.hanle.events.app.MyApplication.getInstance().addToRequestQueue(strReq);
 
     }
