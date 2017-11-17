@@ -1,40 +1,36 @@
 package com.events.hanle.events.adapter;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
-import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.transition.Slide;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.events.hanle.events.Activity.UserAttendingStatus;
 import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Model.ListEvent;
-import com.events.hanle.events.Model.ListEventCopy;
 import com.events.hanle.events.R;
+import com.events.hanle.events.app.EndPoints;
 import com.events.hanle.events.app.MyApplication;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 
 /**
@@ -45,78 +41,37 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
     private List<ListEvent> feedItemList;
     private Context mContext;
     private static String today;
-    public static final String MyPREFERENCES = "PrefChat";
-    SharedPreferences sharedpreferences;
 
-    public class ListEventViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView title, message, date, time, detials, weekday;
-        //ImageView counter, mailbag;
+    public class ListEventViewHolder extends RecyclerView.ViewHolder {
+        TextView title, date, time, detials, weekday, yr, rsvp;
         ArrayList<ListEvent> listevent = new ArrayList<>();
         Context ctx;
         CardView mCardView;
         LinearLayout linearLayout;
+        RelativeLayout relativeLayout;
+        ImageView rightarrow, counter, mailbag;
 
         public ListEventViewHolder(View itemView, Context ctx, ArrayList<ListEvent> listevent) {
             super(itemView);
             this.listevent = listevent;
             this.ctx = ctx;
-            itemView.setOnClickListener(this);
+            //emView.setOnClickListener(this);
             title = (TextView) itemView.findViewById(R.id.title);
             mCardView = (CardView) itemView.findViewById(R.id.cardlist_item);
-            //message = (TextView) itemView.findViewById(R.id.message);
-            //counter = (ImageView) itemView.findViewById(R.id.counter);
-            // mailbag = (ImageView) itemView.findViewById(R.id.mail_bag);
+            rightarrow = (ImageView) itemView.findViewById(R.id.arr);
+            counter = (ImageView) itemView.findViewById(R.id.chat);
+            mailbag = (ImageView) itemView.findViewById(R.id.mail_bag);
             date = (TextView) itemView.findViewById(R.id.date);
             time = (TextView) itemView.findViewById(R.id.time);
             detials = (TextView) itemView.findViewById(R.id.details);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.ln);
+            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.right_arrow);
             weekday = (TextView) itemView.findViewById(R.id.weekday);
+            yr = (TextView) itemView.findViewById(R.id.year);
+            rsvp = (TextView) itemView.findViewById(R.id.rsvp);
 
         }
 
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            ListEvent listEvent = this.listevent.get(position);
-
-
-            listEvent = new ListEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(), listEvent.getArtwork(), listEvent.getEvent_type(), listEvent.getChat_window(), listEvent.getCountrycode(), listEvent.getPhone(), listEvent.getOrganiserId());
-
-            int user_Status = Integer.parseInt(listEvent.getUser_status());
-            MyApplication.getInstance().getPrefManager().storeEventId(listEvent);
-            if (user_Status == 1) {
-                //callalertDialog();
-                Intent i = new Intent(mContext, UserAttendingStatus.class);
-                i.putExtra("event_title", listEvent.getEvent_title());
-                i.putExtra("share_detail", listEvent.getShare_detail());
-                i.putExtra("artwork", listEvent.getArtwork());
-                i.putExtra("eventtype", listEvent.getEvent_type());
-                i.putExtra("chatw", listEvent.getChat_window());
-                this.ctx.startActivity(i);
-            } else if (user_Status == 3) {
-                Toast.makeText(this.ctx, "You said you are not attending this Event!!", Toast.LENGTH_LONG).show();
-            } else {
-                MyApplication.getInstance().getPrefManager().storeEventId(listEvent);
-                Log.e(TAG, "Event details is stored in shared preferences. " + listEvent.getId() + ", " + listEvent.getEvent_title() + "," + "," + listEvent.getInvitername() + "," + listEvent.getEvent_status() + "," + listEvent.getUser_status());
-
-                Intent i = new Intent(this.ctx, UserTabView.class);
-                i.putExtra("event_title", listEvent.getEvent_title());
-                i.putExtra("share_detail", listEvent.getShare_detail());
-                i.putExtra("artwork", listEvent.getArtwork());
-                i.putExtra("eventtype", listEvent.getEvent_type());
-                i.putExtra("chatw", listEvent.getChat_window());
-                this.ctx.startActivity(i);
-
-
-                sharedpreferences = this.ctx.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.remove("chateventID" + listEvent.getId());
-                editor.remove("organisereventID" + listEvent.getId());
-                editor.remove("partnereventID" + listEvent.getId());
-                editor.apply();
-
-            }
-        }
     }
 
 
@@ -126,7 +81,6 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
 
         Calendar calendar = Calendar.getInstance();
         today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-
 
     }
 
@@ -144,64 +98,118 @@ public class ListEventAdapter extends RecyclerView.Adapter<ListEventAdapter.List
         ListEvent feedItem = feedItemList.get(i);
 
         SharedPreferences prefs = mContext.getSharedPreferences("PrefChat", Context.MODE_PRIVATE);
-        String eventId = prefs.getString("chateventID" + feedItem.getId(), null);
-        String mailbagorgnisereventId = prefs.getString("organisereventID" + feedItem.getId(), null);
-        String mailbagpartnereventId = prefs.getString("partnereventID" + feedItem.getId(), null);
-        int status = Integer.parseInt(feedItem.getUser_status());
+        String eventId = prefs.getString("chateventID" + feedItem.getEventId(), null);
+        String mailbagorgnisereventId = prefs.getString("organisereventID" + feedItem.getEventId(), null);
+        String mailbagpartnereventId = prefs.getString("partnereventID" + feedItem.getEventId(), null);
+        int status = Integer.parseInt(feedItem.getUserAttendingStatus());
         //customViewHolder.message.setText(feedItem.getLastMessage());
-        String s = feedItem.getLastMessage();
         int co = feedItem.getUnreadCount();
 
 
-//        if (feedItem.getUnreadCount() > 0) {
-//            customViewHolder.counter.setVisibility(View.VISIBLE);
-//            System.out.println("Totoal count is:" + co);
-//        } else if (eventId != null && feedItem.getId().equals(eventId)) {
-//            customViewHolder.counter.setVisibility(View.VISIBLE);
-//            System.out.println("organisereventID" + mailbagorgnisereventId);
-//        } else {
-//            customViewHolder.counter.setVisibility(View.GONE);
-//        }
-
-//        if (feedItem.getUnreadcount1() > 0) {
-//            customViewHolder.mailbag.setVisibility(View.VISIBLE);
-//        } else if (mailbagorgnisereventId != null && feedItem.getId().equals(mailbagorgnisereventId)) {
-//            customViewHolder.mailbag.setVisibility(View.VISIBLE);
-//            System.out.println("organ" + feedItem.getId().equals(mailbagorgnisereventId));
-//        } else if (mailbagpartnereventId != null && feedItem.getId().equals(mailbagpartnereventId)) {
-//            customViewHolder.mailbag.setVisibility(View.VISIBLE);
-//            System.out.println("partner" + feedItem.getId().equals(mailbagpartnereventId));
-//        } else {
-//            customViewHolder.mailbag.setVisibility(View.GONE);
-//
-//        }
-
-
         if (status == 1) {
-            customViewHolder.mCardView.setCardBackgroundColor(Color.parseColor("#919DD1")); // will change the background color of the card view to sky blue
-            customViewHolder.title.setTextColor(Color.parseColor("#ffffff"));
-            customViewHolder.detials.setTextColor(Color.parseColor("#ffffff"));
-        } else if (status == 2) {
+            customViewHolder.relativeLayout.setVisibility(View.VISIBLE);
             customViewHolder.mCardView.setCardBackgroundColor(Color.parseColor("#ffffff")); // will change the background color of the card view to sky blue
-            customViewHolder.linearLayout.setBackgroundColor(Color.parseColor("#3B4673"));
             customViewHolder.title.setTextColor(Color.parseColor("#000000"));
             customViewHolder.detials.setTextColor(Color.parseColor("#3b4673"));
-        }
-//        else if (status == 2) {
-//            customViewHolder.mCardView.setCardBackgroundColor(Color.parseColor("#96d796")); // will change the background color of the card view to green
-//            customViewHolder.title.setTextColor(Color.parseColor("#000000"));
-//
-//        } else if (status == 3) {
-//            customViewHolder.mCardView.setCardBackgroundColor(Color.parseColor("#f42d4e")); // will change the background color of the card view to red
-//
-//        }
+            customViewHolder.linearLayout.setBackgroundColor(Color.parseColor("#FEA700"));
 
-        customViewHolder.title.setText(feedItem.getEvent_title());
-        customViewHolder.detials.setText(feedItem.getEvent_title() + " with " + feedItem.getInvitername());
+            CardView.LayoutParams params = (CardView.LayoutParams) customViewHolder.linearLayout.getLayoutParams();
+            params.setMargins(0, 0, 80, 0);
+            customViewHolder.linearLayout.setLayoutParams(params);
+            customViewHolder.rightarrow.setVisibility(View.VISIBLE);
+
+            if (feedItem.getRsvpdate() != null && !feedItem.getRsvpdate().isEmpty() && feedItem.getRsvptime() != null && !feedItem.getRsvptime().isEmpty()) {
+                customViewHolder.rsvp.setText("RSVP : " + feedItem.getRsvpdate() + " : " + feedItem.getRsvptime());
+                customViewHolder.rsvp.setVisibility(View.VISIBLE);
+            }
+
+
+        } else if (eventId != null && feedItem.getEventId().equals(eventId) && mailbagorgnisereventId != null && feedItem.getEventId().equals(mailbagorgnisereventId)) {
+            customViewHolder.relativeLayout.setVisibility(View.VISIBLE);
+            customViewHolder.counter.setVisibility(View.VISIBLE);
+            customViewHolder.mailbag.setVisibility(View.VISIBLE);
+            customViewHolder.relativeLayout.setVisibility(View.VISIBLE);
+            CardView.LayoutParams params = (CardView.LayoutParams) customViewHolder.linearLayout.getLayoutParams();
+            params.setMargins(0, 0, 80, 0);
+
+            customViewHolder.linearLayout.setLayoutParams(params);
+            System.out.println("Totoal count is:" + co);
+        } else if (eventId != null && feedItem.getEventId().equals(eventId) && mailbagpartnereventId != null && feedItem.getEventId().equals(mailbagpartnereventId)) {
+            customViewHolder.relativeLayout.setVisibility(View.VISIBLE);
+            customViewHolder.counter.setVisibility(View.VISIBLE);
+            customViewHolder.mailbag.setVisibility(View.VISIBLE);
+            customViewHolder.relativeLayout.setVisibility(View.VISIBLE);
+            CardView.LayoutParams params = (CardView.LayoutParams) customViewHolder.linearLayout.getLayoutParams();
+            params.setMargins(0, 0, 80, 0);
+            customViewHolder.linearLayout.setLayoutParams(params);
+            System.out.println("Totoal count is:" + co);
+        } else if (feedItem.getUnreadCount() > 0 || eventId != null && feedItem.getEventId().equals(eventId)) {
+            customViewHolder.counter.setVisibility(View.VISIBLE);
+            customViewHolder.relativeLayout.setVisibility(View.VISIBLE);
+            CardView.LayoutParams params = (CardView.LayoutParams) customViewHolder.linearLayout.getLayoutParams();
+            params.setMargins(0, 0, 80, 0);
+            customViewHolder.linearLayout.setLayoutParams(params);
+            System.out.println("organisereventID" + mailbagorgnisereventId);
+        } else if (feedItem.getUnreadcount1() > 0 || mailbagorgnisereventId != null && feedItem.getEventId().equals(mailbagorgnisereventId)) {
+            customViewHolder.mailbag.setVisibility(View.VISIBLE);
+            customViewHolder.relativeLayout.setVisibility(View.VISIBLE);
+            CardView.LayoutParams params = (CardView.LayoutParams) customViewHolder.linearLayout.getLayoutParams();
+            params.setMargins(0, 0, 80, 0);
+            customViewHolder.linearLayout.setLayoutParams(params);
+            System.out.println("organ" + feedItem.getEventId().equals(mailbagorgnisereventId));
+        } else if (mailbagpartnereventId != null && feedItem.getEventId().equals(mailbagpartnereventId)) {
+            customViewHolder.mailbag.setVisibility(View.VISIBLE);
+            customViewHolder.relativeLayout.setVisibility(View.VISIBLE);
+            CardView.LayoutParams params = (CardView.LayoutParams) customViewHolder.linearLayout.getLayoutParams();
+            params.setMargins(0, 0, 80, 0);
+            customViewHolder.linearLayout.setLayoutParams(params);
+            System.out.println("organ" + feedItem.getEventId().equals(mailbagorgnisereventId));
+        } else {
+            customViewHolder.relativeLayout.setVisibility(View.GONE);
+            customViewHolder.mCardView.setCardBackgroundColor(Color.parseColor("#ffffff"));
+            customViewHolder.title.setTextColor(Color.parseColor("#000000"));
+            customViewHolder.detials.setTextColor(Color.parseColor("#3b4673"));
+            customViewHolder.linearLayout.setBackgroundColor(Color.parseColor("#3B4673"));
+
+            CardView.LayoutParams params = (CardView.LayoutParams) customViewHolder.linearLayout.getLayoutParams();
+            params.setMargins(0, 0, 0, 0);
+            customViewHolder.linearLayout.setLayoutParams(params);
+            customViewHolder.rightarrow.setVisibility(View.GONE);
+        }
+
+
+        String tims = feedItem.getDate();
+        Date date = new Date();
+
+        if (tims != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date d;
+            try {
+                d = sdf.parse(tims);
+                sdf.applyPattern("yyyy");
+                String n = sdf.format(d);
+                Calendar cal = Calendar.getInstance();
+                Calendar cal1 = Calendar.getInstance();
+                cal.setTime(d);
+                cal1.setTime(date);
+                if ((cal.get(Calendar.YEAR) != cal1.get(Calendar.YEAR))) {
+                    customViewHolder.yr.setVisibility(View.VISIBLE);
+                    customViewHolder.yr.setText(n);
+                }
+
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        customViewHolder.title.setText(feedItem.getEventTitle());
+        customViewHolder.detials.setText("Invitation from " + feedItem.getInviterName());
+
 
         String[] monthName = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
                 "Aug", "Sep", "Oct", "Nov", "Dec"};
-        String s1 = feedItem.getMonthno();
+        String s1 = feedItem.getDate1();
         if (s1 != null) {
             int m = Integer.parseInt(s1);
             String month = monthName[m - 1];

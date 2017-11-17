@@ -46,7 +46,7 @@ public class NotificationUtils {
     private Context mContext;
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String USER_INPUT = "userinput";
-    SharedPreferences sharedpreferences;
+    private SharedPreferences sharedpreferences;
     private Uri alarmSound;
 
     public NotificationUtils() {
@@ -186,7 +186,7 @@ public class NotificationUtils {
     private void showBigNotification(Bitmap bitmap, NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
         bigPictureStyle.setBigContentTitle(title);
-        bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
+        bigPictureStyle.setSummaryText((message));
         bigPictureStyle.bigPicture(bitmap);
         Notification notification;
         notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)

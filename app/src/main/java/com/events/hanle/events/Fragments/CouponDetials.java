@@ -1,7 +1,6 @@
 package com.events.hanle.events.Fragments;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,13 +10,11 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -28,7 +25,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.R;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,12 +44,18 @@ public class CouponDetials extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.coupon_detials, container, false);
+        View v = inflater.inflate(R.layout.coupon_new, container, false);
 
         card = (CardView) v.findViewById(R.id.cv);
         content = (AppCompatTextView) v.findViewById(R.id.content);
         title = (AppCompatTextView) v.findViewById(R.id.title);
-
+        ImageButton imageButton = (ImageButton) v.findViewById(R.id.coupon_cancell_button);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closelDialog(v);
+            }
+        });
         updateConent();
 
         return v;
@@ -61,8 +63,12 @@ public class CouponDetials extends DialogFragment {
 
     }
 
+    public void closelDialog(View v) {
+        getDialog().cancel();
+    }
+
     private void updateConent() {
-        String endpoint1 = WebUrl.GET_COUPON_DETIALS.replace("EVENTID", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
+        String endpoint1 = WebUrl.GET_COUPON_DETIALS.replace("EVENTID", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId());
         Log.e(TAG, "end point: " + endpoint1);
 
 
@@ -72,7 +78,6 @@ public class CouponDetials extends DialogFragment {
             @Override
             public void onResponse(String response) {
                 Log.e(TAG, "response: " + response);
-
 
                 try {
                     JSONObject res = new JSONObject(response);
@@ -102,8 +107,9 @@ public class CouponDetials extends DialogFragment {
                                 }
                                 sb.append("off as per Coupon Code ");
                                 sb.append("'").append(jsonObject.getString("couponcode")).append("'").append(".");
-                                sb.append("This is valid for your ");
-                                sb.append(jsonObject.getString("eventname")).append(",");
+                                sb.append("This is valid for the event");
+                                sb.append(" '");
+                                sb.append(jsonObject.getString("eventname")).append("'").append(",");
                                 sb.append(" scheduled on ");
                                 sb.append(jsonObject.getString("eventdate")).append(" at ").append(jsonObject.getString("eventtime")).append("hrs.");
 
@@ -128,9 +134,6 @@ public class CouponDetials extends DialogFragment {
                     Toast.makeText(getActivity(), "Server did not respond!!", Toast.LENGTH_LONG).show();
                 }
 
-//                adapter.notifyDataSetChanged();
-
-                // subscribing to all chat room topics
             }
         }, new Response.ErrorListener() {
 
@@ -149,32 +152,6 @@ public class CouponDetials extends DialogFragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         //Adding request to request queue
         com.events.hanle.events.app.MyApplication.getInstance().addToRequestQueue(strReq);
-
-
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-//        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
-//            @Override
-//            public boolean onKey(android.content.DialogInterface dialog,
-//                                 int keyCode, android.view.KeyEvent event) {
-//                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-//                    // To dismiss the fragment when the back-button is pressed.
-//                    dismiss();
-//                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
-//                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
-//
-//                    return true;
-//                }
-//                // Otherwise, do nothing else
-//                else return false;
-//            }
-//        });
-
 
     }
 

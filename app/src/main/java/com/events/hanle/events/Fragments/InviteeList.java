@@ -71,64 +71,12 @@ public class InviteeList extends DialogFragment {
         t = (TextView) v.findViewById(R.id.tm);
         ed = (AppCompatEditText) v.findViewById(R.id.toolbar_title);
 
-        //search = (AppCompatEditText) v.findViewById(R.id.search);
-        //adapter = new InviteeListAdapter(getActivity(), inviteelist, alreadyinvited, invite);
-        //rv.setHasFixedSize(true);
-        //rv.setLayoutManager(new LinearLayoutManager(ctx));
-        //rv.setAdapter(adapter);
-
 
         if (ConnectionDetector.isInternetAvailable(getActivity())) {
             fetchattendinglist();
         } else {
             Toast.makeText(getActivity(), "No Internet!!", Toast.LENGTH_SHORT).show();
         }
-//        addTextListener();
-//        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-//        toolbar.inflateMenu(R.menu.invitee_list_search);
-//        //toolbar.setTitle("Search");
-//        MenuItem myActionMenuItem = toolbar.getMenu().findItem(R.id.action_search);
-//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(myActionMenuItem);
-//        //final SearchView searchView = (SearchView) myActionMenuItem.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                final List<Attending> filteredModelList = filter(inviteelist, newText);
-//
-//                adapter.setFilter(filteredModelList);
-//                //Toast.makeText(getActivity(),newText,Toast.LENGTH_LONG).show();
-//                rv.setVisibility(View.VISIBLE);
-//                if (newText.equals("") || newText.length() < 0) {
-//                    rv.setVisibility(View.GONE);
-//
-//                }
-//
-//                return true;
-//            }
-//        });
-//
-//        MenuItemCompat.setOnActionExpandListener(myActionMenuItem,
-//                new MenuItemCompat.OnActionExpandListener() {
-//                    @Override
-//                    public boolean onMenuItemActionExpand(MenuItem item) {
-////
-////                        ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
-////                        dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public boolean onMenuItemActionCollapse(MenuItem item) {
-//                        adapter.setFilter(inviteelist);
-//
-//                        return true;
-//                    }
-//                });
 
         ed.addTextChangedListener(new TextWatcher() {
             @Override
@@ -194,7 +142,7 @@ public class InviteeList extends DialogFragment {
 
 
         String endpoint = WebUrl.ORGANISER_Invitee_list.replace("ORGANISER_ID", MyApplication.getInstance().getPrefManager().getEventId().getOrganiserId());
-        String endpoint1 = endpoint.replace("EVENT_ID", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
+        String endpoint1 = endpoint.replace("EVENT_ID", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId());
         Log.e(TAG, "end point: " + endpoint1);
 
 
@@ -269,39 +217,6 @@ public class InviteeList extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-//        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
-//            @Override
-//            public boolean onKey(android.content.DialogInterface dialog,
-//                                 int keyCode, android.view.KeyEvent event) {
-//                if ((keyCode == android.view.KeyEvent.KEYCODE_BACK)) {
-//                    // To dismiss the fragment when the back-button is pressed.
-//
-//                    return true;
-//                }
-//                // Otherwise, do nothing else
-//                else return false;
-//            }
-//        });
-
-
-//        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
-//            @Override
-//            public boolean onKey(android.content.DialogInterface dialog,
-//                                 int keyCode, android.view.KeyEvent event) {
-//                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-//                    // To dismiss the fragment when the back-button is pressed.
-//                    dismiss();
-//                    ListOfOrganiserActionsFragment dialogFragment = new ListOfOrganiserActionsFragment();
-//                    dialogFragment.show(getActivity().getSupportFragmentManager(), "missiles");
-//
-//                    return true;
-//                }
-//                // Otherwise, do nothing else
-//                else return false;
-//            }
-//        });
-
 
     }
 

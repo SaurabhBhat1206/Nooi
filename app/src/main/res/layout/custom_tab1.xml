@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!--<ImageView-->
+        <!--android:id="@+id/tab_indicator"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="@dimen/custom_tab_layout_height"-->
+        <!--android:background="@drawable/selector_chat" />-->
+
+    <TextView
+        android:id="@+id/tab_counter"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/tab"
+        android:background="@drawable/badge_item_count"
+        android:visibility="visible" />
+
+
+    <TextView
+        android:id="@+id/tab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chat"
+        android:fontFamily="@string/font_fontFamily_medium"
+        android:gravity="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/tab_label" />
+
+
+</RelativeLayout>

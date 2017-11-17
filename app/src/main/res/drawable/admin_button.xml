@@ -4,7 +4,7 @@
 
     <item android:state_pressed="true">
         <shape>
-            <gradient android:angle="270" android:endColor="@color/adminButtonStartColor" android:startColor="@color/adminButtonEndColor" />
+            <gradient android:angle="270" android:endColor="@color/adminButtonStartColor" android:startColor="@color/toolbar" />
             <stroke android:width="1dp" android:color="@color/adminButtonBorderColor" />
             <corners android:radius="3dp" />
             <padding android:bottom="10dp" android:left="0dp" android:right="0dp" android:top="10dp" />
@@ -13,7 +13,7 @@
 
     <item android:state_focused="true">
         <shape>
-            <gradient android:angle="270" android:endColor="@color/adminButtonEndColor" android:startColor="@color/adminButtonStartColor" />
+            <gradient android:angle="270" android:endColor="@color/adminButtonEndColor" android:startColor="@color/toolbar" />
             <stroke android:width="1dp" android:color="@color/adminButtonBorderColor" />
             <corners android:radius="3dp" />
             <padding android:bottom="10dp" android:left="0dp" android:right="0dp" android:top="10dp" />
@@ -22,7 +22,7 @@
 
     <item android:state_enabled="false">
         <shape>
-            <gradient android:angle="270" android:endColor="@color/adminButtonStartColor" android:startColor="@color/adminButtonEndColor" />
+            <gradient android:angle="270" android:endColor="@color/adminButtonStartColor" android:startColor="@color/toolbar" />
             <stroke android:width="1dp" android:color="@color/adminButtonEndColor" />
             <corners android:radius="3dp" />
             <padding android:bottom="10dp" android:left="0dp" android:right="0dp" android:top="10dp" />
@@ -31,7 +31,7 @@
 
     <item>
         <shape>
-            <gradient android:angle="270" android:endColor="@color/adminButtonEndColor" android:startColor="@color/adminButtonStartColor" />
+            <gradient android:angle="270" android:endColor="@color/adminButtonEndColor" android:startColor="@color/toolbar" />
             <stroke android:width="1dp" android:color="@color/adminButtonBorderColor" />
             <corners android:radius="3dp" />
             <padding android:bottom="10dp" android:left="0dp" android:right="0dp" android:top="10dp" />

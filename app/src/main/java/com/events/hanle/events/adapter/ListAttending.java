@@ -1,7 +1,6 @@
 package com.events.hanle.events.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -42,8 +41,7 @@ public class ListAttending extends RecyclerView.Adapter<ListAttending.ListAttend
     public void onBindViewHolder(ListAttendingviewholder holder, int position) {
         Attending listAttending = attendinglist.get(position);
 
-        holder.attendng_list.setText(Html.fromHtml(listAttending.getNsme()));
-
+        holder.attendng_list.setText(listAttending.getNsme());
 
     }
 

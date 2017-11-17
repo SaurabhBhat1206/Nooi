@@ -46,6 +46,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+import es.dmoral.toasty.Toasty;
+
 import static com.events.hanle.events.R.id.message;
 
 public class OtpFragment extends Fragment {
@@ -132,7 +134,7 @@ public class OtpFragment extends Fragment {
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        getActivity().registerReceiver(mybroadcast, filter);
+        getContext().registerReceiver(mybroadcast, filter);
     }
 
 
@@ -177,9 +179,10 @@ public class OtpFragment extends Fragment {
 
 
                         if (success == 1) {
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            Toasty.success(getContext(), message, Toast.LENGTH_SHORT, true).show();
                             User user = new User(obj.getString("user_id"), obj.getString("name"), obj.getString("phone"), obj.getString("countrycode"));
                             com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storeUser(user);
+                            com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storeorganiseremail(obj.getString("organiser_email"));
                             sharedpreferences = getContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.putString(USER_INPUT, "OFF");
@@ -189,12 +192,14 @@ public class OtpFragment extends Fragment {
                             startActivity(i);
                             getActivity().finish();
                         } else {
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            Toasty.warning(getContext(), message, Toast.LENGTH_SHORT, true).show();
+
                         }
 
                     } else {
                         // login error - simply toast the message
-                        Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                        Toasty.error(getContext(), obj.getString("message"), Toast.LENGTH_SHORT, true).show();
+
                     }
 
                 } catch (JSONException e) {

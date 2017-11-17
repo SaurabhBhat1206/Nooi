@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!--<ImageView-->
+        <!--android:id="@+id/tabm"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:background="@drawable/selector_mailbag" />-->
+
+    <TextView
+        android:id="@+id/tab_counter_mailbag"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/tab_mailbag"
+        android:background="@drawable/badge_item_count"
+        android:visibility="gone"
+        android:layout_alignParentTop="true" />
+
+
+    <TextView
+        android:id="@+id/tab_mailbag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@string/font_fontFamily_medium"
+        android:gravity="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/tab_label" />
+
+
+</RelativeLayout>

@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_bg"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:contentDescription="@string/app_name"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        android:src="@drawable/nooi_loki"
+        android:elevation="@dimen/_20sdp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:padding="5dp"
+        card_view:cardBackgroundColor="@color/toolbar"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="5dp">
+
+        <TextView
+            android:id="@+id/invited"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:text="@string/you_need_to_be_invited_or_sign_up"
+            android:textAlignment="center"
+            android:textColor="#fff" />
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/app_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/card"
+        android:layout_marginTop="15dp"
+        android:autoLink="web"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:text="@string/nooilink"
+        android:textColor="@color/adminButtonEndColor" />
+</RelativeLayout>

@@ -51,6 +51,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import es.dmoral.toasty.Toasty;
+
 
 public class Login extends Fragment {
 
@@ -60,10 +62,8 @@ public class Login extends Fragment {
     private Button btnEnter;
     private BackPressListener mListener;
     private AlertDialog progressDialog;
-    private Context _context;
     private TextView termscondition;
     private CountryPicker countryPicker;
-    private Country country = null;
     private String country_code = null;
 
 
@@ -124,7 +124,7 @@ public class Login extends Fragment {
 
                 if (ConnectionDetector.isInternetAvailable(getActivity())) {
                     callOtp();
-                    btnEnter.setEnabled(false);
+                    //btnEnter.setEnabled(false);
                 } else {
                     Toast.makeText(getContext(), "No Internet!!!", Toast.LENGTH_SHORT).show();
                 }
@@ -176,7 +176,6 @@ public class Login extends Fragment {
     }
 
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -213,8 +212,6 @@ public class Login extends Fragment {
                 Log.e(TAG, "response: " + response);
                 Log.e(TAG, "response: " + WebUrl.USER_LOGIN_URL);
 
-
-                //Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
                 progressDialog.hide();
 
                 try {
@@ -231,23 +228,30 @@ public class Login extends Fragment {
                         if (success == 1) {
                             User user = new User(obj.getString("user_id"), obj.getString("name"), obj.getString("phone"), obj.getString("countrycode"));
                             com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storetempuserID(user);
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            Toasty.success(getContext(), message, Toast.LENGTH_SHORT, true).show();
                             navigateToRegistration();
                         } else {
-                            btnEnter.setEnabled(true);
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            //btnEnter.setEnabled(true);
+                            //Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            //Toasty.warning(getContext(), message, Toast.LENGTH_SHORT, true).show();
+                            CreateEventLogin dialogFragment = new CreateEventLogin();
+
+                            dialogFragment.show(getFragmentManager(), "missiles");
+
                         }
 
                     } else {
                         // login error - simply toast the message
-                        Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                        // Toasty.error(getContext(), obj.getString("message"), Toast.LENGTH_LONG,true).show();
+                        CreateEventLogin dialogFragment = new CreateEventLogin();
+
+                        dialogFragment.show(getFragmentManager(), "missiles");
                     }
 
                 } catch (JSONException e) {
                     Log.e(TAG, "json parsing error: " + e.getMessage());
-                    //Toast.makeText(getActivity(), "Json parse error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Toast.makeText(getActivity(), "Something went wrong please try after sometime", Toast.LENGTH_LONG).show();
-                    btnEnter.setEnabled(true);
+                    //btnEnter.setEnabled(true);
 
                 }
             }
@@ -256,12 +260,10 @@ public class Login extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.hide();
-                btnEnter.setEnabled(true);
+                //btnEnter.setEnabled(true);
 
                 NetworkResponse networkResponse = error.networkResponse;
                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
-                //Toast.makeText(getActivity(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(getActivity(), "Something went wrong please try after sometime", Toast.LENGTH_LONG).show();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Toast.makeText(getContext(),
                             getActivity().getString(R.string.error_network_timeout),
@@ -289,11 +291,6 @@ public class Login extends Fragment {
             }
         };
 
-//        strReq.setRetryPolicy(new DefaultRetryPolicy(
-//                WebUrl.MY_SOCKET_TIMEOUT_MS,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        //Adding request to request queue
 
         strReq.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         com.events.hanle.events.app.MyApplication.getInstance().addToRequestQueue(strReq);
@@ -305,7 +302,7 @@ public class Login extends Fragment {
         String mobile = inputmobile.getText().toString().trim();
 
         if (mobile.isEmpty()) {
-            btnEnter.setEnabled(true);
+            //btnEnter.setEnabled(true);
 
             inputLayoutMobile.setError(getString(R.string.err_msg_mobile));
             return false;
@@ -322,7 +319,7 @@ public class Login extends Fragment {
 
         if (coucode.isEmpty()) {
             inputcountrycode.setError(getString(R.string.err_msg_country_code));
-            btnEnter.setEnabled(true);
+            //btnEnter.setEnabled(true);
 
             return false;
         } else {

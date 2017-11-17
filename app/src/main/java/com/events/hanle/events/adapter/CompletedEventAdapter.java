@@ -4,30 +4,16 @@ package com.events.hanle.events.adapter;
  * Created by Hanle on 10/18/2016.
  */
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.events.hanle.events.Activity.ListOfCancelledEvent;
-import com.events.hanle.events.Activity.ListOfConcluded;
-import com.events.hanle.events.Activity.UserAttendingStatus;
-import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Model.CompletedEvent;
-import com.events.hanle.events.Model.ListEvent;
 import com.events.hanle.events.R;
-import com.events.hanle.events.app.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,24 +23,60 @@ import java.util.List;
  * Created by Hanle on 8/30/2016.
  */
 public class CompletedEventAdapter extends RecyclerView.Adapter<CompletedEventAdapter.CompletedEventAdapterviewholder> {
-    private static final String TAG = "ListAttending";
+    private static final String TAG = "CompletedEventAdapter";
     private List<CompletedEvent> attendinglist;
     private Context mContext;
-    Dialog dialog;
+    private int CON = 023;
+    private int NA = 013;
+    private int DIDRES = 001;
 
-    public CompletedEventAdapter(Context context, List<CompletedEvent> listevent, Dialog d) {
+    public CompletedEventAdapter(Context context, List<CompletedEvent> listevent) {
         this.attendinglist = listevent;
         this.mContext = context;
-        this.dialog = d;
     }
 
 
     @Override
     public CompletedEventAdapterviewholder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_attending, null);
-        CompletedEventAdapterviewholder viewHolder = new CompletedEventAdapterviewholder(view, mContext, attendinglist, dialog);
+
+
+        CompletedEventAdapter.CompletedEventAdapterviewholder viewHolder;
+        View view = null;
+
+        if (viewType == CON) {
+            // self message
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.concluded_event, null);
+
+        } else if (viewType == NA) {
+            // others message
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cancelled_noattending, null);
+
+        } else if (viewType == DIDRES) {
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.didnot_response, null);
+        }
+        viewHolder = new CompletedEventAdapter.CompletedEventAdapterviewholder(view, mContext, attendinglist);
 
         return viewHolder;
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        CompletedEvent listAttending = attendinglist.get(position);
+
+        int status = Integer.parseInt(listAttending.getUser_status());
+
+        if (status == 1) {
+            return DIDRES;
+        } else if (status == 2) {
+            return CON;
+
+        } else if (status == 3) {
+            return NA;
+
+        }
+
+        return position;
     }
 
     @Override
@@ -63,30 +85,16 @@ public class CompletedEventAdapter extends RecyclerView.Adapter<CompletedEventAd
         int status = Integer.parseInt(listAttending.getUser_status());
 
         if (status == 1) {
+            holder.event_title.setText(listAttending.getEvent_title());
+            holder.name.setText("By "+listAttending.getInvitername());
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + ":" + listAttending.getEvent_title(), Html.FROM_HTML_MODE_LEGACY));
-                holder.mcardView.setCardBackgroundColor(Color.parseColor("#98cbe5")); // will change the background color of the card view to sky blue
+        } else if (status == 2) {
+            holder.event_title.setText(listAttending.getEvent_title());
+            holder.name.setText("By "+listAttending.getInvitername());
 
-            } else {
-                holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + " : " + listAttending.getInvitername()));
-                holder.attendng_list.setTextColor(Color.parseColor("#000000"));
-                holder.mcardView.setCardBackgroundColor(Color.parseColor("#98cbe5")); // will change the background color of the card view to sky blue
-
-            }
-
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + ":" + listAttending.getEvent_title(), Html.FROM_HTML_MODE_LEGACY));
-                holder.mcardView.setCardBackgroundColor(Color.parseColor("#ffff99")); // will change the background color of the card view to red
-
-            } else {
-                holder.attendng_list.setText(Html.fromHtml(listAttending.getEvent_title() + " : " + listAttending.getInvitername()));
-                holder.attendng_list.setTextColor(Color.parseColor("#000000"));
-                holder.mcardView.setCardBackgroundColor(Color.parseColor("#ffff99")); // will change the background color of the card view to red
-
-            }
-
+        } else if (status == 3) {
+            holder.event_title.setText(listAttending.getEvent_title());
+            holder.name.setText("By "+listAttending.getInvitername());
 
         }
 
@@ -97,55 +105,21 @@ public class CompletedEventAdapter extends RecyclerView.Adapter<CompletedEventAd
         return (null != attendinglist ? attendinglist.size() : 0);
     }
 
-    public class CompletedEventAdapterviewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView attendng_list;
+    public class CompletedEventAdapterviewholder extends RecyclerView.ViewHolder {
+        TextView name, event_title;
         CardView mcardView;
         ArrayList<CompletedEvent> listevent = new ArrayList<>();
         Context ctx;
-        Dialog dialog;
 
-        public CompletedEventAdapterviewholder(View itemView, Context mContext, List<CompletedEvent> listevent, Dialog d) {
+        public CompletedEventAdapterviewholder(View itemView, Context mContext, List<CompletedEvent> listevent) {
             super(itemView);
             this.listevent = (ArrayList<CompletedEvent>) listevent;
             this.ctx = mContext;
-            this.dialog = d;
-            itemView.setOnClickListener(this);
-            attendng_list = (TextView) itemView.findViewById(R.id.attendng_name);
+            name = (TextView) itemView.findViewById(R.id.name);
+            event_title = (TextView) itemView.findViewById(R.id.event_title);
             mcardView = (CardView) itemView.findViewById(R.id.cardlist_item);
 
         }
 
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            CompletedEvent listEvent = this.listevent.get(position);
-
-            listEvent = new CompletedEvent(listEvent.getId(), listEvent.getEvent_title(), listEvent.getUser_status(), listEvent.getInvitername(), listEvent.getEvent_status(), null, listEvent.getShare_detail(),listEvent.getArtwork(),listEvent.getEvent_type(),listEvent.getChat_window(),listEvent.getCountrycode(),listEvent.getPhone(),listEvent.getOrganiserId());
-            MyApplication.getInstance().getPrefManager().storeEventIdCompletedEvent(listEvent);
-            int user_Status = Integer.parseInt(listEvent.getUser_status());
-
-            if (user_Status == 1) {
-                Toast.makeText(this.ctx, "You did not respond to this Event!!", Toast.LENGTH_LONG).show();
-            } else if (user_Status == 3) {
-                Toast.makeText(this.ctx, "You said you are not attending this Event!!", Toast.LENGTH_LONG).show();
-
-            } else {
-                Intent i = new Intent(mContext, UserTabView.class);
-                i.putExtra("event_title", listEvent.getEvent_title());
-                i.putExtra("share_detail", listEvent.getShare_detail());
-                i.putExtra("artwork", listEvent.getArtwork());
-                i.putExtra("eventtype", listEvent.getEvent_type());
-                i.putExtra("chatw", listEvent.getChat_window());
-                i.putExtra("classcheck", "completedevent");
-
-                this.ctx.startActivity(i);
-                dialog.dismiss();
-
-            }
-
-
-        }
     }
-
-
 }

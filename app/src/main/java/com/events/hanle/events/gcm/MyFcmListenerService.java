@@ -1,21 +1,17 @@
 package com.events.hanle.events.gcm;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.events.hanle.events.Activity.ListOfEvent1;
-import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Model.Message;
 import com.events.hanle.events.Model.User;
-import com.events.hanle.events.R;
 import com.events.hanle.events.app.Config;
 import com.events.hanle.events.app.MyApplication;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -26,7 +22,6 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
@@ -63,11 +58,13 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             Log.e(TAG, "user is not logged in, skipping push notification");
             return;
         }
+
         if (from.startsWith("/topics/")) {
             // message received from some topic.
         } else {
             // normal downstream message.
         }
+
         switch (Integer.parseInt(flag)) {
             case Config.PUSH_TYPE_CHATROOM:
                 // push notification belongs to a chat room
@@ -120,6 +117,28 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 }
                 break;
 
+            case Config.PUSH_TYPE_NOT_ATTENDING:
+                // push notification is specific to user
+                ///code added for general push
+
+                if (message.getNotification() != null) {
+                    Log.e(TAG, "Notification Body from notattending: " + message.getNotification().getBody());
+                    handleNotificationforNotattending(message.getNotification().getBody());
+                }
+
+                // Check if message contains a data payload.
+                if (message.getData().size() > 0) {
+                    Log.e(TAG, "Data Payload from organiser: " + message.getData().toString());
+
+                    try {
+                        JSONObject json = new JSONObject(message.getData().toString());
+                        handleDataMessageforAttendingNotAttending(json);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Exception from organiser: " + e.getMessage());
+                    }
+                }
+                break;
+
             case Config.PUSH_TYPE_LARGE_EVENT:
                 if (message.getNotification() != null) {
                     Log.e(TAG, "Notification Body from organiser: " + message.getNotification().getBody());
@@ -141,7 +160,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
                 break;
         }
-
 
     }
 
@@ -200,7 +218,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 resultIntent.putExtra("eventtype", type);
                 resultIntent.putExtra("chatw", chatW);
                 editor.putString("partnereventID" + eventID, eventID);
-                editor.commit();
+                editor.apply();
+
                 // check for image attachment
                 if (TextUtils.isEmpty(imageUrl)) {
                     showNotificationMessage(getApplicationContext(), title, "Mailbag Message : " + message, timestamp, resultIntent);
@@ -288,9 +307,64 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         }
     }
 
+
+    private void handleDataMessageforAttendingNotAttending(JSONObject json) {
+
+        Log.e(TAG, "push json: " + json.toString());
+
+        try {
+            JSONObject data = json.getJSONObject("data");
+
+            String title = data.getString("title");
+            String message = data.getString("message");
+            boolean isBackground = data.getBoolean("is_background");
+            String imageUrl = data.getString("image");
+            String timestamp = data.getString("timestamp");
+            String eventId = data.getString("eventId");
+            JSONObject payload = data.getJSONObject("payload");
+
+            Log.e(TAG, "title: " + title);
+            Log.e(TAG, "message: " + message);
+            Log.e(TAG, "isBackground: " + isBackground);
+            Log.e(TAG, "payload: " + payload.toString());
+            Log.e(TAG, "imageUrl: " + imageUrl);
+            Log.e(TAG, "timestamp: " + timestamp);
+
+
+            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+                // app is in foreground, broadcast the push message
+                Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION_FROM_NOTATTEDNING);
+                pushNotification.putExtra("type", Config.PUSH_TYPE_NOT_ATTENDING);
+                pushNotification.putExtra("event_title", title);
+                pushNotification.putExtra("message", message);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+                // play notification sound
+                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                notificationUtils.playNotificationSound();
+            } else {
+                // app is in background, show the notification in notification tray
+                Intent resultIntent = new Intent(getApplicationContext(), ListOfEvent1.class);
+                resultIntent.putExtra("message", message);
+                resultIntent.putExtra("classcheck", "from_organiser");
+                resultIntent.putExtra("event_title", title);
+                // check for image attachment
+                if (TextUtils.isEmpty(imageUrl)) {
+                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                } else {
+                    // image is present, show notification with image
+                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json Exception: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
+    }
+
+
     private void handleDataMessageforlargeEvent(JSONObject json) {
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
         Log.e(TAG, "push json: " + json.toString());
 
         try {
@@ -361,7 +435,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
     private void handleNotificationforOrganiser(String message) {
         if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
             // app is in foreground, broadcast the push message
-            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
+            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION_FROM_LARGE_EVENT);
             pushNotification.putExtra("message", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
@@ -372,7 +446,20 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             // If the app is in background, firebase itself handles the notification
         }
     }
+    private void handleNotificationforNotattending(String message) {
+        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+            // app is in foreground, broadcast the push message
+            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION_FROM_NOTATTEDNING);
+            pushNotification.putExtra("message", message);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
+            // play notification sound
+            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+            notificationUtils.playNotificationSound();
+        } else {
+            // If the app is in background, firebase itself handles the notification
+        }
+    }
     private void handleNotificationforLargeEvent(String message) {
         if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
             // app is in foreground, broadcast the push message
@@ -463,7 +550,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     // play notification sound
                     NotificationUtils notificationUtils = new NotificationUtils();
                     notificationUtils.playNotificationSound();
-
+                    editor.putString("chateventID" + chatRoomId, chatRoomId);
+                    editor.apply();
                 } else {
 
                     // app is in background. show the message in notification try

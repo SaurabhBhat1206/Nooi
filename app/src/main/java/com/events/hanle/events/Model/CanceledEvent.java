@@ -10,10 +10,16 @@ import java.util.List;
  */
 
 public class CanceledEvent {
-    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, eventtype, chatw,countrycode,phone;
+    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, eventtype, chatw,countrycode,phone,acknw;
     private int unreadCount;
 
+    public String getAcknw() {
+        return acknw;
+    }
 
+    public void setAcknw(String acknw) {
+        this.acknw = acknw;
+    }
 
     public CanceledEvent() {
 
@@ -27,7 +33,7 @@ public class CanceledEvent {
         this.unreadCount = unreadCount;
     }
 
-    public CanceledEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String eventtype, String chatw,String countrycode,String phone) {
+    public CanceledEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String eventtype, String chatw,String countrycode,String phone,String acknw) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -40,6 +46,7 @@ public class CanceledEvent {
         this.chatw = chatw;
         this.countrycode = countrycode;
         this.phone = phone;
+        this.acknw = acknw;
     }
 
     public String getId() {

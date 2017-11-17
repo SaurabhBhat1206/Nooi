@@ -23,18 +23,18 @@
         android:id="@+id/list_invitee"
         android:title="@string/attending"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_directions_walk_white_24dp"
+        android:icon="@drawable/cont"
         android:orderInCategory="200"/>
 
     <item
         android:id="@+id/invite_image"
         android:title="@string/artwork"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_image_white_48dp"
+        android:icon="@drawable/art"
         android:orderInCategory="100"/>
     <item
         android:id="@+id/organiser_login"
-        android:title="@string/organiser_login" />
+        android:title="@string/more" />
 
 
 </menu>

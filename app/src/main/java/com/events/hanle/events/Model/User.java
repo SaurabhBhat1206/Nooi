@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    String id, name, mobile, countrycode;
+    private String id, name, mobile, countrycode;
 
 
     public User() {
@@ -29,7 +29,6 @@ public class User implements Serializable {
         this.name = name;
         this.mobile = mobile;
     }
-
 
     public String getId() {
         return id;

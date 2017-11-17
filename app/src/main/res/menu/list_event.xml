@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/cancelled"
         android:title="@string/cancelled"
-        android:icon="@drawable/ic_cancel_black_24dp"/>
+        android:actionLayout="@layout/custom_layout_listevent"
+        app:actionLayout="@layout/custom_layout_listevent"/>
     <item
         android:id="@+id/concluded"
         android:title="@string/concluded"
-        android:icon="@android:drawable/ic_delete"/>
+        android:actionLayout="@layout/custom_layout_listevent"
+        app:actionLayout="@layout/custom_layout_listevent"/>
     <item
         android:id="@+id/create_event"
         android:title="@string/createevent" />
@@ -21,6 +23,10 @@
         android:title="@string/feedback" />
     <item
         android:id="@+id/about_us"
+        android:title="@string/about_us" />
+
+    <item
+        android:id="@+id/mobil_no"
         android:title="@string/about_us" />
 
 

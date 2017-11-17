@@ -95,8 +95,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
-            android:background="@drawable/chat_circle"
-            android:src="@drawable/input_send" />
+            android:background="@drawable/bg_circle"
+            android:src="@drawable/input_send"/>
 
     </LinearLayout>
 

@@ -21,7 +21,9 @@ public class Config {
     public static final String SCHEDULEDPUSH = "alarmnotification";
     public static final String PUSH_NOTIFICATION_FROM_PARTNER = "pushNotificationfrompartner";
     public static final String PUSH_NOTIFICATION_FROM_ORGANISER = "pushNotificationfromorganiser";
-    public static final String PUSH_NOTIFICATION_FROM_KARGE_EVENT = "pushNotificationfromlargeevent";
+    public static final String PUSH_NOTIFICATION_FROM_NOTATTEDNING = "pushNotificationfromnotattending";
+    public static final String PUSH_NOTIFICATION_FROM_LARGE_EVENT = "pushNotificationfromlargeevent";
+    public static final String PUSH_NOTIFICATION_INVITATION = "pushNotificationInvitation";
     public static final long TWO_MINUTES = 2 * 60 * 1000;
 
     // type of push messages
@@ -30,6 +32,8 @@ public class Config {
     public static final int PUSH_TYPE_PARTNER = 3;
     public static final int PUSH_TYPE_ORGANISER = 4;
     public static final int PUSH_TYPE_LARGE_EVENT = 5;
+    public static final int PUSH_TYPE_NOT_ATTENDING = 6;
+    public static final int PUSH_TYPE_INVITEE = 7;
 
     // id to handle the notification in the notification try
     public static final int NOTIFICATION_ID = 100;

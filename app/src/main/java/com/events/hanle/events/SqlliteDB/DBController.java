@@ -18,16 +18,16 @@ public class DBController extends SQLiteOpenHelper {
     private static final String LOGCAT = null;
 
     public DBController(Context applicationcontext) {
-        super(applicationcontext, "nooisqllite.db", null, 3);
+        super(applicationcontext, "nooisqllite.db", null, 5);
         Log.d(LOGCAT, "Created");
     }
 
     @Override
     public void onCreate(SQLiteDatabase database) {
         String event,cancelledEvent,concludedEvent;
-        event = "CREATE TABLE events (eID INTEGER PRIMARY KEY,artwork TEXT,chatW TEXT,countrycode TEXT,created_at TEXT,descriptions TEXT,dresscode TEXT,eventaddress TEXT,latitude TEXT,longitude TEXT,payment TEXT,type INT,phone TEXT,organiserId TEXT,timezone TEXT, event_title TEXT, event_status TEXT, share_detial INT, user_attending_status INT, inviter_name TEXT, dat Text,dat1 Text,tim TEXT,weekday TEXT,establishment TEXT)";
-        cancelledEvent = "CREATE TABLE cancelledevents (eID INTEGER PRIMARY KEY,artwork TEXT,chatW TEXT,countrycode TEXT,created_at TEXT,descriptions TEXT,dresscode TEXT,eventaddress TEXT,latitude TEXT,longitude TEXT,payment TEXT,type INT,phone TEXT,organiserId TEXT,timezone TEXT, event_title TEXT, event_status TEXT, share_detial INT, user_attending_status INT, inviter_name TEXT, dat Text,dat1 Text,tim TEXT,weekday TEXT,establishment TEXT)";
-        concludedEvent = "CREATE TABLE concludedevents (eID INTEGER PRIMARY KEY,artwork TEXT,chatW TEXT,countrycode TEXT,created_at TEXT,descriptions TEXT,dresscode TEXT,eventaddress TEXT,latitude TEXT,longitude TEXT,payment TEXT,type INT,phone TEXT,organiserId TEXT,timezone TEXT, event_title TEXT, event_status TEXT, share_detial INT, user_attending_status INT, inviter_name TEXT, dat Text,dat1 Text,tim TEXT,weekday TEXT,establishment TEXT)";
+                 event = "CREATE TABLE events (eID INTEGER PRIMARY KEY,artwork TEXT,chatW TEXT,countrycode TEXT,created_at TEXT,descriptions TEXT,dresscode TEXT,eventaddress TEXT,latitude TEXT,longitude TEXT,payment TEXT,type INT,phone TEXT,organiserId TEXT,timezone TEXT, event_title TEXT, event_status TEXT, share_detial INT, user_attending_status INT, inviter_name TEXT, dat Text,dat1 Text,enddate TEXT,tim TEXT,weekday TEXT,establishment TEXT,rsvpdate TEXT,rsvptime TEXT,noofdays TEXT)";
+        cancelledEvent = "CREATE TABLE cancelledevents (eID INTEGER PRIMARY KEY,artwork TEXT,chatW TEXT,countrycode TEXT,created_at TEXT,descriptions TEXT,dresscode TEXT,eventaddress TEXT,latitude TEXT,longitude TEXT,payment TEXT,type INT,phone TEXT,organiserId TEXT,timezone TEXT, event_title TEXT, event_status TEXT, share_detial INT, user_attending_status INT, inviter_name TEXT, dat Text,dat1 Text,enddate TEXT,tim TEXT,weekday TEXT,establishment TEXT,rsvpdate TEXT,rsvptime TEXT,noofdays TEXT)";
+        concludedEvent = "CREATE TABLE concludedevents (eID INTEGER PRIMARY KEY,artwork TEXT,chatW TEXT,countrycode TEXT,created_at TEXT,descriptions TEXT,dresscode TEXT,eventaddress TEXT,latitude TEXT,longitude TEXT,payment TEXT,type INT,phone TEXT,organiserId TEXT,timezone TEXT, event_title TEXT, event_status TEXT, share_detial INT, user_attending_status INT, inviter_name TEXT, dat Text,dat1 Text,enddate TEXT,tim TEXT,weekday TEXT,establishment TEXT,rsvpdate TEXT,rsvptime TEXT,noofdays TEXT)";
         database.execSQL(event);
         database.execSQL(cancelledEvent);
         database.execSQL(concludedEvent);
@@ -38,8 +38,8 @@ public class DBController extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         String event,cancelledEvent,concludedEvent;
         event = "DROP TABLE IF EXISTS events";
-        cancelledEvent = "DROP TABLE IF EXISTS events";
-        concludedEvent = "DROP TABLE IF EXISTS events";
+        cancelledEvent = "DROP TABLE IF EXISTS cancelledevents";
+        concludedEvent = "DROP TABLE IF EXISTS concludedevents";
         database.execSQL(event);
         database.execSQL(cancelledEvent);
         database.execSQL(concludedEvent);
@@ -73,11 +73,15 @@ public class DBController extends SQLiteOpenHelper {
         values.put("inviter_name", queryValues.get("inviter_name"));
         values.put("dat", queryValues.get("dat"));
         values.put("dat1", queryValues.get("dat1"));
+        values.put("enddate", queryValues.get("enddate"));
         values.put("tim", queryValues.get("tim"));
         values.put("weekday", queryValues.get("weekday"));
         values.put("establishment", queryValues.get("establishment"));
+        values.put("rsvpdate", queryValues.get("rsvpdate"));
+        values.put("rsvptime", queryValues.get("rsvptime"));
+        values.put("noofdays", queryValues.get("noofdays"));
         database.insert("events", null, values);
-        database.close();
+        //database.close();
 
     }
 
@@ -106,14 +110,17 @@ public class DBController extends SQLiteOpenHelper {
         values.put("inviter_name", queryValues.get("inviter_name"));
         values.put("dat", queryValues.get("dat"));
         values.put("dat1", queryValues.get("dat1"));
+        values.put("enddate", queryValues.get("enddate"));
         values.put("tim", queryValues.get("tim"));
         values.put("weekday", queryValues.get("weekday"));
         values.put("establishment", queryValues.get("establishment"));
+        values.put("rsvpdate", queryValues.get("rsvpdate"));
+        values.put("rsvptime", queryValues.get("rsvptime"));
+        values.put("noofdays", queryValues.get("noofdays"));
         database.insert("cancelledevents", null, values);
-        database.close();
+        //database.close();
 
     }
-
 
     public void insertConcludedEvent(HashMap<String, String> queryValues) {
         SQLiteDatabase database = this.getWritableDatabase();
@@ -140,11 +147,15 @@ public class DBController extends SQLiteOpenHelper {
         values.put("inviter_name", queryValues.get("inviter_name"));
         values.put("dat", queryValues.get("dat"));
         values.put("dat1", queryValues.get("dat1"));
+        values.put("enddate", queryValues.get("enddate"));
         values.put("tim", queryValues.get("tim"));
         values.put("weekday", queryValues.get("weekday"));
         values.put("establishment", queryValues.get("establishment"));
+        values.put("rsvpdate", queryValues.get("rsvpdate"));
+        values.put("rsvptime", queryValues.get("rsvptime"));
+        values.put("noofdays", queryValues.get("noofdays"));
         database.insert("concludedevents", null, values);
-        database.close();
+        //database.close();
 
     }
 
@@ -179,9 +190,13 @@ public class DBController extends SQLiteOpenHelper {
                 map.put("inviter_name", cursor.getString(19));
                 map.put("dat", cursor.getString(20));
                 map.put("dat1", cursor.getString(21));
-                map.put("tim", cursor.getString(22));
-                map.put("weekday", cursor.getString(23));
-                map.put("establishment", cursor.getString(24));
+                map.put("enddate", cursor.getString(22));
+                map.put("tim", cursor.getString(23));
+                map.put("weekday", cursor.getString(24));
+                map.put("establishment", cursor.getString(25));
+                map.put("rsvpdate", cursor.getString(26));
+                map.put("rsvptime", cursor.getString(27));
+                map.put("noofdays", cursor.getString(28));
 
 
                 wordList.add(map);
@@ -193,6 +208,58 @@ public class DBController extends SQLiteOpenHelper {
 
 
     }
+
+    public ArrayList<HashMap<String, String>> getActiveEvents() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        int user_status= 2;
+        String selectQuery = "SELECT * FROM events where user_attending_status='"+user_status+"' ORDER BY eID DESC";
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("eID", cursor.getString(0));
+                map.put("artwork",cursor.getString(1));
+                map.put("chatW", cursor.getString(2));
+                map.put("countrycode", cursor.getString(3));
+                map.put("created_at", cursor.getString(4));
+                map.put("descriptions", cursor.getString(5));
+                map.put("dresscode", cursor.getString(6));
+                map.put("eventaddress", cursor.getString(7));
+                map.put("latitude", cursor.getString(8));
+                map.put("longitude", cursor.getString(9));
+                map.put("payment", cursor.getString(10));
+                map.put("type", cursor.getString(11));
+                map.put("phone", cursor.getString(12));
+                map.put("organiserId", cursor.getString(13));
+                map.put("timezone",cursor.getString(14));
+                map.put("event_title", cursor.getString(15));
+                map.put("event_status", cursor.getString(16));
+                map.put("share_detial", cursor.getString(17));
+                map.put("user_attending_status", cursor.getString(18));
+                map.put("inviter_name", cursor.getString(19));
+                map.put("dat", cursor.getString(20));
+                map.put("dat1", cursor.getString(21));
+                map.put("enddate", cursor.getString(22));
+                map.put("tim", cursor.getString(23));
+                map.put("weekday", cursor.getString(24));
+                map.put("establishment", cursor.getString(25));
+                map.put("rsvpdate", cursor.getString(26));
+                map.put("rsvptime", cursor.getString(27));
+                map.put("noofdays", cursor.getString(28));
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return wordList;
+
+
+    }
+
     public ArrayList<HashMap<String, String>> getCancelledEvents() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
@@ -224,9 +291,13 @@ public class DBController extends SQLiteOpenHelper {
                 map.put("inviter_name", cursor.getString(19));
                 map.put("dat", cursor.getString(20));
                 map.put("dat1", cursor.getString(21));
-                map.put("tim", cursor.getString(22));
-                map.put("weekday", cursor.getString(23));
-                map.put("establishment", cursor.getString(24));
+                map.put("enddate", cursor.getString(22));
+                map.put("tim", cursor.getString(23));
+                map.put("weekday", cursor.getString(24));
+                map.put("establishment", cursor.getString(25));
+                map.put("rsvpdate", cursor.getString(26));
+                map.put("rsvptime", cursor.getString(27));
+                map.put("noofdays", cursor.getString(28));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
@@ -269,9 +340,13 @@ public class DBController extends SQLiteOpenHelper {
                 map.put("inviter_name", cursor.getString(19));
                 map.put("dat", cursor.getString(20));
                 map.put("dat1", cursor.getString(21));
-                map.put("tim", cursor.getString(22));
-                map.put("weekday", cursor.getString(23));
-                map.put("establishment", cursor.getString(24));
+                map.put("enddate", cursor.getString(22));
+                map.put("tim", cursor.getString(23));
+                map.put("weekday", cursor.getString(24));
+                map.put("establishment", cursor.getString(25));
+                map.put("rsvpdate", cursor.getString(26));
+                map.put("rsvptime", cursor.getString(27));
+                map.put("noofdays", cursor.getString(28));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
@@ -311,14 +386,20 @@ public class DBController extends SQLiteOpenHelper {
                 map.put("inviter_name", cursor.getString(19));
                 map.put("dat", cursor.getString(20));
                 map.put("dat1", cursor.getString(21));
-                map.put("tim", cursor.getString(22));
-                map.put("weekday", cursor.getString(23));
-                map.put("establishment", cursor.getString(24));
+                map.put("enddate", cursor.getString(22));
+                map.put("tim", cursor.getString(23));
+                map.put("weekday", cursor.getString(24));
+                map.put("establishment", cursor.getString(25));
+                map.put("rsvpdate", cursor.getString(26));
+                map.put("rsvptime", cursor.getString(27));
+                map.put("noofdays", cursor.getString(28));
                 //wordList.add(map);
             } while (cursor.moveToNext());
         }
         return map;
     }
+
+
 
     public HashMap<String, String> getfromCancelledEventId(String id) {
         HashMap<String, String> map = new HashMap<String, String>();
@@ -349,9 +430,13 @@ public class DBController extends SQLiteOpenHelper {
                 map.put("inviter_name", cursor.getString(19));
                 map.put("dat", cursor.getString(20));
                 map.put("dat1", cursor.getString(21));
-                map.put("tim", cursor.getString(22));
-                map.put("weekday", cursor.getString(23));
-                map.put("establishment", cursor.getString(24));
+                map.put("enddate", cursor.getString(22));
+                map.put("tim", cursor.getString(23));
+                map.put("weekday", cursor.getString(24));
+                map.put("establishment", cursor.getString(25));
+                map.put("rsvpdate", cursor.getString(26));
+                map.put("rsvptime", cursor.getString(27));
+                map.put("noofdays", cursor.getString(28));
                 //wordList.add(map);
             } while (cursor.moveToNext());
         }
@@ -388,9 +473,13 @@ public class DBController extends SQLiteOpenHelper {
                 map.put("inviter_name", cursor.getString(19));
                 map.put("dat", cursor.getString(20));
                 map.put("dat1", cursor.getString(21));
-                map.put("tim", cursor.getString(22));
-                map.put("weekday", cursor.getString(23));
-                map.put("establishment", cursor.getString(24));
+                map.put("enddate", cursor.getString(22));
+                map.put("tim", cursor.getString(23));
+                map.put("weekday", cursor.getString(24));
+                map.put("establishment", cursor.getString(25));
+                map.put("rsvpdate", cursor.getString(26));
+                map.put("rsvptime", cursor.getString(27));
+                map.put("noofdays", cursor.getString(28));
                 //wordList.add(map);
             } while (cursor.moveToNext());
         }

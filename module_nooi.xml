@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_nooi" default="compile.module.nooi">
+  <dirname property="module.nooi.basedir" file="${ant.file.module_nooi}"/>
+  
+  <property name="module.jdk.home.nooi" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.nooi" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.nooi" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.nooi" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="nooi.output.dir" value="${module.nooi.basedir}/build/classes/production/Nooi"/>
+  <property name="nooi.testoutput.dir" value="${module.nooi.basedir}/build/classes/test/Nooi"/>
+  
+  <path id="nooi.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="nooi.module.production.classpath">
+    <path refid="${module.jdk.classpath.nooi}"/>
+  </path>
+  
+  <path id="nooi.runtime.production.module.classpath">
+    <pathelement location="${nooi.output.dir}"/>
+  </path>
+  
+  <path id="nooi.module.classpath">
+    <path refid="${module.jdk.classpath.nooi}"/>
+    <pathelement location="${nooi.output.dir}"/>
+  </path>
+  
+  <path id="nooi.runtime.module.classpath">
+    <pathelement location="${nooi.testoutput.dir}"/>
+    <pathelement location="${nooi.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.nooi">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.nooi">
+    <patternset refid="excluded.from.module.nooi"/>
+  </patternset>
+  
+  
+  <target name="compile.module.nooi" depends="compile.module.nooi.production,compile.module.nooi.tests" description="Compile module Nooi"/>
+  
+  <target name="compile.module.nooi.production" depends="register.custom.compilers" description="Compile module Nooi; production classes"/>
+  
+  <target name="compile.module.nooi.tests" depends="register.custom.compilers,compile.module.nooi.production" description="compile module Nooi; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.nooi" description="cleanup module">
+    <delete dir="${nooi.output.dir}"/>
+    <delete dir="${nooi.testoutput.dir}"/>
+  </target>
+</project>

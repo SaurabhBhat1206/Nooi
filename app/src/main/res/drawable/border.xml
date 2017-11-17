@@ -17,9 +17,9 @@
         android:bottom="2dp" />
     <stroke
 
-        android:width="2dp"
+        android:width="3dp"
 
-        android:color="@color/toolbar"
+        android:color="@color/gray_btn_bg_pressed_color"
 
         />
 </shape>

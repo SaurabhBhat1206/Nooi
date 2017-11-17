@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,6 +10,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/recycler_view_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.events.hanle.events.Activity.ListOfEvent1">
@@ -19,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="visible"
             app:indicatorColor="@color/toolbar"
             app:indicatorName="BallClipRotateIndicator" />
 
@@ -28,8 +29,8 @@
             android:id="@+id/ab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_collapseMode="parallax"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_collapseMode="parallax">
 
 
             <android.support.v7.widget.Toolbar
@@ -57,10 +58,10 @@
         </android.support.design.widget.AppBarLayout>
 
         <LinearLayout
+            android:id="@+id/ln"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/ab"
-            android:id="@+id/ln"
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -78,11 +79,9 @@
                 tools:ignore="HardcodedText" />
 
 
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/swipeRefreshLayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone">
 
@@ -97,29 +96,29 @@
             </android.support.v4.widget.SwipeRefreshLayout>
 
 
-            <TextView
-                android:id="@+id/no_events_to_show"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="50dp"
-                android:text="No Events to show"
-                android:textSize="18sp"
-                android:layout_marginTop="2dp"
-                android:textStyle="normal"
-                android:visibility="gone" />
-
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/activity_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/_8sdp"
+            android:visibility="gone">
+
+            <ss.com.bannerslider.views.BannerSlider
+                android:id="@+id/banner_slider1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:defaultBanner="1"
+                app:animateIndicators="true"
+                app:interval="5000"
+                app:selected_slideIndicator="@drawable/active_dot"
+                app:unselected_slideIndicator="@drawable/nonactive_dot"
+                app:loopSlides="true"/>
+                <!--app:selected_slideIndicator="@drawable/active_dot"-->
+                <!--app:unselected_slideIndicator="@drawable/nonactive_dot" />-->
+        </RelativeLayout>
     </RelativeLayout>
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
-        <!--android:layout_margin="@dimen/activity_horizontal_margin"-->
-        <!--app:fabSize="normal"-->
-        <!--app:backgroundTint="@color/toolbar"-->
-        <!--android:src="@drawable/person_male" />-->
 </android.support.design.widget.CoordinatorLayout>

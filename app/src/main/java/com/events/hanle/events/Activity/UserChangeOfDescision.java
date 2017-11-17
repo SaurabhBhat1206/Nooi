@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -42,6 +43,7 @@ public class UserChangeOfDescision extends AppCompatActivity {
     AppCompatRadioButton yes, no;
     private AlertDialog progressDialog;
     private String selection_strng, eventinfoID, user_id, mobileno, countrycode;
+    private TextView caption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +73,20 @@ public class UserChangeOfDescision extends AppCompatActivity {
                 eventinfoID = getIntent().getStringExtra("eventId");
             }
         } else {
-            eventinfoID = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+            eventinfoID = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId();
         }
 
         user_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getUser().getId();
         //Toast.makeText(UserChangeOfDescision.this, user_id, Toast.LENGTH_SHORT).show();
+        String eventype = getIntent().getStringExtra("eventtype");
+        if(eventype!=null){
+            int et = Integer.parseInt(eventype);
+            if(et==1){
+                caption.setText(getResources().getString(R.string.tell_the_organiser_that_you_are_not_attending));
+            } else{
+                caption.setText(R.string.sure);
+            }
+        }
 
 
         next.setOnClickListener(new View.OnClickListener() {
@@ -205,6 +216,7 @@ public class UserChangeOfDescision extends AppCompatActivity {
         rg = (RadioGroup) findViewById(R.id.rgroup1);
         yes = (AppCompatRadioButton) findViewById(R.id.yes_r);
         no = (AppCompatRadioButton) findViewById(R.id.no_r);
+        caption = (TextView) findViewById(R.id.caption);
     }
 
     @Override

@@ -5,9 +5,16 @@ package com.events.hanle.events.Model;
  */
 
 public class CompletedEvent {
-    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, event_type, chat_window, countrycode, phone, organiserId;
+    private String id, event_title, user_status, invitername, lastMessage, timestamp, event_status, random_no, share_detail, artwork, event_type, chat_window, countrycode, phone, organiserId,acknw;
     private int unreadCount;
 
+    public String getAcknw() {
+        return acknw;
+    }
+
+    public void setAcknw(String acknw) {
+        this.acknw = acknw;
+    }
 
     public CompletedEvent() {
 
@@ -21,7 +28,7 @@ public class CompletedEvent {
         this.unreadCount = unreadCount;
     }
 
-    public CompletedEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window, String countrycode, String phone, String organiserId) {
+    public CompletedEvent(String id, String event_title, String user_status, String invitername, String event_status, String lastMessage, String share_detail, String artwork, String event_type, String chat_window, String countrycode, String phone, String organiserId,String acknw) {
         this.id = id;
         this.event_title = event_title;
         this.user_status = user_status;
@@ -35,6 +42,7 @@ public class CompletedEvent {
         this.countrycode = countrycode;
         this.phone = phone;
         this.organiserId = organiserId;
+        this.acknw = acknw;
     }
 
     public String getId() {

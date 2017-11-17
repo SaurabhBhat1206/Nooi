@@ -39,7 +39,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Constants.WebUrl;
-import com.events.hanle.events.Fragments.AddMore;
 import com.events.hanle.events.R;
 import com.events.hanle.events.app.MyApplication;
 import com.mukesh.countrypicker.fragments.CountryPicker;
@@ -51,7 +50,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -236,6 +236,8 @@ public class OrganiserContactFormListEvent extends AppCompatActivity {
         ln = lastname.getText().toString().trim();
         cc = countrycode.getText().toString().trim();
         pn = phone.getText().toString().trim();
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9]*");
+        Matcher matcher = pattern.matcher(pn);
 
         if (fn.equals("") || ln.equals("") || cc.equals("") || pn.equals("")) {
             Snackbar snackbar = Snackbar
@@ -257,15 +259,11 @@ public class OrganiserContactFormListEvent extends AppCompatActivity {
             Snackbar snackbar = Snackbar
                     .make(coordinatorLayout, "Please give Mobile Number", Snackbar.LENGTH_LONG);
             snackbar.show();
-        } else if (pn.contains(" ")) {
+        } else if (!matcher.matches()) {
             Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, "Please remove the space from Mobile Number", Snackbar.LENGTH_LONG);
+                    .make(coordinatorLayout, "Please remove the special characters", Snackbar.LENGTH_LONG);
             snackbar.show();
-        } else if (pn.contains("+")) {
-            Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, "Please remove the country code from Mobile Number", Snackbar.LENGTH_LONG);
-            snackbar.show();
-        } else {
+        }else {
             InsertContact(fn, ln, cc, pn);
         }
 
@@ -389,7 +387,7 @@ public class OrganiserContactFormListEvent extends AppCompatActivity {
                     }
                 });
 
-        String negativeText = "Logout";
+        String negativeText = "Done";
         builder.setNegativeButton(negativeText,
                 new DialogInterface.OnClickListener() {
                     @Override

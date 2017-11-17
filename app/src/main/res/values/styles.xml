@@ -46,6 +46,8 @@
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabSelectedTextColor">@color/actionbar_title_text</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -63,15 +65,23 @@
     <style name="TextLabel" parent="TextAppearance.Design.Hint">
         <item name="android:textSize">8sp</item>
     </style>
-
+    <style name="TextLabel2" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">50sp</item>
+    </style>
 
 
     <style name="counterOverride">
-        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColor">#FF3B30</item>
     </style>
+
+
 
     <style name="counterText">
         <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="counterText1">
+        <item name="android:textColor">#000000</item>
     </style>
     <style name="chat_text_message_style">
 
@@ -103,7 +113,7 @@
 
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">#a6abad</item>
 
     </style>

@@ -32,6 +32,7 @@ import com.events.hanle.events.Constants.ConnectionDetector;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.R;
 import com.events.hanle.events.app.MyApplication;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,8 @@ public class OrganiserListEventsLogin extends DialogFragment {
     TextInputLayout inputLayoutemail, inputpassword;
     Button organiser_login;
     CoordinatorLayout coordinatorLayout;
-    String event_id;
+    String organiser_email;
+    private AVLoadingIndicatorView avLoadingIndicatorView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +65,15 @@ public class OrganiserListEventsLogin extends DialogFragment {
         password = (EditText) v.findViewById(R.id.password_organiser);
         organiser_login = (Button) v.findViewById(R.id.organiser_login);
         coordinatorLayout = (CoordinatorLayout) v.findViewById(R.id.coordinatorLayout);
+        avLoadingIndicatorView = (AVLoadingIndicatorView) v.findViewById(R.id.avi);
+
+
+        organiser_email = MyApplication.getInstance().getPrefManager().getorgnaiserEmail();
+        if (organiser_email != null && !organiser_email.equalsIgnoreCase("null")) {
+            email.setText(organiser_email);
+        } else {
+            email.setText("");
+        }
 
 
         organiser_login.setOnClickListener(new View.OnClickListener() {
@@ -94,13 +105,18 @@ public class OrganiserListEventsLogin extends DialogFragment {
 
 
     private void checkLogin(final String email_id, final String pwd) {
-
+        avLoadingIndicatorView.show();
+        avLoadingIndicatorView.setVisibility(View.VISIBLE);
+        organiser_login.setVisibility(View.GONE);
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 WebUrl.ORGANISER_LOGIN1, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 Log.e(TAG, "response: " + response);
+                avLoadingIndicatorView.hide();
+                avLoadingIndicatorView.setVisibility(View.GONE);
+                organiser_login.setVisibility(View.VISIBLE);
 
                 try {
                     JSONObject obj = new JSONObject(response);
@@ -151,7 +167,9 @@ public class OrganiserListEventsLogin extends DialogFragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                avLoadingIndicatorView.hide();
+                avLoadingIndicatorView.setVisibility(View.GONE);
+                organiser_login.setVisibility(View.VISIBLE);
                 NetworkResponse networkResponse = error.networkResponse;
                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);
                 //Toast.makeText(getActivity(), "Volley error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -171,7 +189,6 @@ public class OrganiserListEventsLogin extends DialogFragment {
                     snackbar.show();
 
                 }
-
             }
         }) {
 

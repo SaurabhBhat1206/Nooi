@@ -3,8 +3,6 @@ package com.events.hanle.events.Fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -12,39 +10,27 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.events.hanle.events.Activity.UserTabView;
 import com.events.hanle.events.Constants.ConnectionDetector;
-import com.events.hanle.events.Constants.DividerItemDecoration;
 import com.events.hanle.events.Constants.WebUrl;
-import com.events.hanle.events.Model.FeedItem;
 import com.events.hanle.events.R;
 import com.events.hanle.events.SqlliteDB.DBController;
-import com.events.hanle.events.adapter.MyRecyclerAdapter;
 import com.events.hanle.events.app.Config;
 import com.events.hanle.events.app.EndPoints;
 import com.events.hanle.events.gcm.GcmIntentService;
-import com.events.hanle.events.interf.BackPressListener;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,34 +40,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 public class OneFragment extends Fragment {
 
     private static final String TAG = "OneFragment";
-    private List<FeedItem> feedsList = new ArrayList<FeedItem>();
-    //private RecyclerView mRecyclerView;
-    // private MyRecyclerAdapter adapter;
-    Context ctx;
     View mainview;
     TextView t;
     String event_id, mobileno, countrycode, n;
-    //private SwipeRefreshLayout mSwipeRefreshLayout = null;
-    //private AVLoadingIndicatorView avi;
     Activity activity;
     DBController dbController;
     HashMap<String, String> eventdetails;
     CardView organisername, card_location, card_date_time, event_detials, card_paid_by_title, card_dresscode;
-    TextView orgname, address, date_time, eventdesc, paid, dresscode, org, cnt;
+    TextView orgname, address, date_time, eventdesc, paid, dresscode, org, cnt, organisernameCircle;
+    ImageView lcn, add_reminder;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +85,7 @@ public class OneFragment extends Fragment {
         event_detials = (CardView) mainview.findViewById(R.id.event_detials);
         card_paid_by_title = (CardView) mainview.findViewById(R.id.card_paid_by_title);
         card_dresscode = (CardView) mainview.findViewById(R.id.card_dresscode);
+        add_reminder = (ImageView) mainview.findViewById(R.id.addreminder);
 
         orgname = (TextView) mainview.findViewById(R.id.organiser_name);
         address = (TextView) mainview.findViewById(R.id.address);
@@ -118,6 +95,8 @@ public class OneFragment extends Fragment {
         dresscode = (TextView) mainview.findViewById(R.id.dresscode);
         org = (TextView) mainview.findViewById(R.id.organiser);
         cnt = (TextView) mainview.findViewById(R.id.contact);
+        organisernameCircle = (TextView) mainview.findViewById(R.id.organisername);
+        lcn = (ImageView) mainview.findViewById(R.id.lcn_icon);
 
         Config.typeface = Typeface.createFromAsset(getActivity().getAssets(), "font/Verdana.ttf");
         orgname.setTypeface(Config.typeface);
@@ -142,7 +121,7 @@ public class OneFragment extends Fragment {
                 eventdetails = dbController.getfromConcludedEventId(event_id);
             }
         } else {
-            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId();
             subscribeToAllTopics(event_id);
             eventdetails = dbController.getfromEventId(event_id);
 
@@ -152,6 +131,7 @@ public class OneFragment extends Fragment {
 
         return mainview;
     }
+
 
     @Override
     public void onResume() {
@@ -169,38 +149,91 @@ public class OneFragment extends Fragment {
     }
 
     private void callOfflineMethod() {
-        // mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
-        if (eventdetails.size() != 0) {
-            System.out.println("sql op:" + eventdetails.get("inviter_name"));
-            //feedsList = new ArrayList<>();
-            FeedItem item = new FeedItem();
-            item.setEvent_creator_name(eventdetails.get("inviter_name"));
-            item.setOrgnaserphone(eventdetails.get("countrycode") + " " + eventdetails.get("phone"));
-            item.setEventdesc(eventdetails.get("descriptions"));
-            item.setAddress(eventdetails.get("eventaddress"));
-            item.setDate(eventdetails.get("dat"));
-            item.setTime(eventdetails.get("tim"));
-            item.setEventname(eventdetails.get("event_title"));
-            item.setPayment(eventdetails.get("payment"));
-            item.setDresscode(eventdetails.get("dresscode"));
-            item.setTimezone(eventdetails.get("timezone"));
-            item.setWeekday(eventdetails.get("weekday"));
-            String est = eventdetails.get("establishment");
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-            assert est != null;
-            if (est != null || !est.equals("")) {
-                item.setEstablishmantname(est);
+                if (eventdetails.size() != 0) {
+                    StringBuilder sb = new StringBuilder();
+                    orgname.setText(eventdetails.get("inviter_name"));
+                    eventdesc.setText(eventdetails.get("descriptions"));
+                    String s = eventdetails.get("dat");
+                    String tim = eventdetails.get("tim");
+                    String tims = s + " " + tim;
+                    if (tims != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                        Date d;
+                        try {
+                            d = sdf.parse(tims);
+                            sdf.applyPattern("dd MMM EEE | hh:mm a");
+                            n = sdf.format(d);
+
+                            System.out.println("Conversiondatee****:" + n);
+
+                        } catch (ParseException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+
+                    sb.append(n).append(" GMT ").append("(").append(eventdetails.get("timezone")).append(")");
+                    int days;
+                    days = Integer.parseInt(eventdetails.get("noofdays"));
+                    if (days == 1) {
+                        sb.append(" | ").append(days).append(" Day");
+                    } else {
+                        sb.append(" | ").append(days).append(" Days");
+
+                    }
+
+                    date_time.setText(sb);
+
+                    if (eventdetails.get("payment").equals("")) {
+                        card_paid_by_title.setVisibility(View.GONE);
+                    } else {
+                        paid.setText(eventdetails.get("payment"));
+                    }
+                    if (eventdetails.get("dresscode").equals("")) {
+                        card_dresscode.setVisibility(View.GONE);
+                    } else {
+                        dresscode.setText(eventdetails.get("dresscode"));
+                    }
+                    String est = eventdetails.get("establishment");
+
+                    if (est.equals("") && est != null) {
+                        address.setText(eventdetails.get("eventaddress"));
+
+                    } else {
+                        address.setText(eventdetails.get("establishment") + " , " + eventdetails.get("eventaddress"));
+
+                    }
+
+
+                    cnt.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 2909);
+                                } else {
+                                    // continue with your code
+                                    callOrganiser(eventdetails.get("countrycode") + " " + eventdetails.get("phone"));
+
+                                }
+                            } else {
+                                // continue with your code
+                                callOrganiser(eventdetails.get("countrycode") + " " + eventdetails.get("phone"));
+
+                            }
+                        }
+                    });
+
+
+                }
             }
-            //feedsList.add(item);
-            FeedItem feedItem = new FeedItem(eventdetails.get("event_status"));
-            com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().storeEventInfoID(feedItem);
-            EndPoints.LATITUDE = eventdetails.get("latitude");
-            EndPoints.LONGITUDE = eventdetails.get("longitude");
-            EndPoints.EVENTNAME = eventdetails.get("event_type");
-            EndPoints.EVENTTIME = eventdetails.get("event_time");
+        });
 
-        }
     }
 
 
@@ -219,11 +252,20 @@ public class OneFragment extends Fragment {
             return;
         }
 
+        if (UserTabView.viewPager != null) {
+            lcn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserTabView.viewPager.setCurrentItem(1);
+
+                }
+            });
+        }
+
     }
 
 
     public void subscribeToAllTopics(String eventID) {
-
 
         Intent intent = new Intent(getActivity(), GcmIntentService.class);
         intent.putExtra(GcmIntentService.KEY, GcmIntentService.SUBSCRIBE);
@@ -301,8 +343,28 @@ public class OneFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    char firname = 0, secname = 0;
+                    String organisercirclename;
+
                     StringBuilder sb = new StringBuilder();
+
+                    organisercirclename = response.optString("event_creater_username");
+                    if (organisercirclename != null && organisercirclename.contains(" ")) {
+                        String[] splittingstring = organisercirclename.split("\\s+");
+                        System.out.println("Array length is/////:" + Arrays.toString(splittingstring));
+                        if (splittingstring.length >= 2) {
+                            firname = splittingstring[0].charAt(0);
+                            secname = splittingstring[1].charAt(0);
+                        } else {
+                            firname = organisercirclename.charAt(0);
+                            secname = organisercirclename.charAt(1);
+                        }
+
+                    }
+                    organisernameCircle.setText(firname + "" + secname);
                     orgname.setText(response.optString("event_creater_username"));
+
+
                     eventdesc.setText(response.optString("description"));
                     String s = response.optString("event_date");
                     String tim = response.optString("event_time");
@@ -323,7 +385,20 @@ public class OneFragment extends Fragment {
                         }
                     }
 
-                    sb.append(n).append(" GMT ").append("(").append(response.optString("timezone")).append(")");
+                    sb.append(n).append("\n").append("(").append("GMT ").append(response.optString("timezone")).append(")");
+                    int days = 0;
+                    try {
+                        days = response.getInt("no_of_days");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (days == 1) {
+                        sb.append(" | ").append(days).append(" Day");
+                    } else {
+                        sb.append(" | ").append(days).append(" Days");
+
+                    }
+
                     date_time.setText(sb);
 
                     if (response.optString("payment").equals("")) {
@@ -331,6 +406,7 @@ public class OneFragment extends Fragment {
                     } else {
                         paid.setText(response.optString("payment"));
                     }
+
                     if (response.optString("dresscode").equals("")) {
                         card_dresscode.setVisibility(View.GONE);
                     } else {
@@ -345,10 +421,14 @@ public class OneFragment extends Fragment {
 
                     }
 
-                    EndPoints.LATITUDE = response.optString("latitude");
-                    EndPoints.LONGITUDE = response.optString("longitude");
-                    EndPoints.EVENTNAME = response.optString("event_type");
-                    EndPoints.EVENTTIME = response.optString("event_time");
+                    add_reminder.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager fm = getFragmentManager();
+                            SettingAlarm settingAlarm = new SettingAlarm();
+                            settingAlarm.show(fm, "dialog");
+                        }
+                    });
 
                     cnt.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -375,7 +455,6 @@ public class OneFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
     }
 

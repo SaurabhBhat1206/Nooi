@@ -6,7 +6,16 @@ package com.events.hanle.events.Model;
 public class EventMessage {
     String id,user_id,title,description,event_status;
     String event_id,push_message,timestamp;
-    String pushtype;
+    String pushtype,attachment;
+
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
+    }
 
     public String getPushtype() {
         return pushtype;

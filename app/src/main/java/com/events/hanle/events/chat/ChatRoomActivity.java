@@ -4,9 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
@@ -14,7 +17,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +63,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -72,33 +79,30 @@ public class ChatRoomActivity extends Fragment {
     private String chatRoomId;
     private RecyclerView recyclerView;
     private ChatRoomThreadAdapter mAdapter;
-    private ArrayList<Message> messageArrayList;
+    private LinkedList<Message> messageArrayList;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private EditText inputMessage;
-    private ImageButton btnSend;
+    private ImageView btnSend;
     private RecyclerView.LayoutManager layoutManager;
     private int requestCount = 1;
     private RequestQueue requestQueue;
     private String event_status, event_title, invitername, s;
-    int es;
-    LinearLayout lin;
-    TextView tv;
-    String chatwindow, eventtype;
-    ImageView img;
+    private int es;
+    private LinearLayout lin;
+    private TextView tv;
+    private String chatwindow, eventtype;
+    private ImageView img;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_chat_room, container, false);
         inputMessage = (EditText) v.findViewById(R.id.message);
-        btnSend = (ImageButton) v.findViewById(R.id.btn_send);
+        btnSend = (ImageView) v.findViewById(R.id.btn_send);
         lin = (LinearLayout) v.findViewById(R.id.ln);
         tv = (TextView) v.findViewById(R.id.nochattoshow);
         s = getActivity().getIntent().getStringExtra("classcheck");
         img = (ImageView) v.findViewById(R.id.nointernet);
-        //getActivity().getWindow().setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.default_wallpaper));
-
-        UserTabView activity = (UserTabView) getActivity();
         Config.typeface = Typeface.createFromAsset(getContext().getAssets(), "font/Roboto-Regular.ttf");
         tv.setTypeface(Config.typeface);
 
@@ -121,12 +125,12 @@ public class ChatRoomActivity extends Fragment {
 
             }
         } else {
-            event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_status();
-            event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_title();
-            invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getInvitername();
-            chatRoomId = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
-            chatwindow = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getChat_window();
-            eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_type();
+            event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventStatus();
+            event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventTitle();
+            invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getInviterName();
+            chatRoomId = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId();
+            chatwindow = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getChatW();
+            eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getType();
         }
 
         if (event_status != null) {
@@ -135,16 +139,13 @@ public class ChatRoomActivity extends Fragment {
             es = 2;
         }
 
-
         if (chatRoomId == null) {
             Toast.makeText(getActivity(), "Chat room not found!", Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
-
         if (es == 2 || es == 3) {
             btnSend.setEnabled(false);
         }
-
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -160,10 +161,9 @@ public class ChatRoomActivity extends Fragment {
             tv.setVisibility(View.VISIBLE);
         }
 
-
         requestQueue = Volley.newRequestQueue(getActivity());
 
-        messageArrayList = new ArrayList<>();
+        messageArrayList = new LinkedList<>();
 
         // self user id is to identify the message owner
         String selfUserId = MyApplication.getInstance().getPrefManager().getUser().getId();
@@ -203,7 +203,6 @@ public class ChatRoomActivity extends Fragment {
         if (ConnectionDetector.isInternetAvailable(getActivity())) {
             //fetchChatThread();
             getData();
-
         } else {
             lin.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
@@ -212,50 +211,10 @@ public class ChatRoomActivity extends Fragment {
             img.setVisibility(View.VISIBLE);
 
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-//Ifscrolled at last then
-                    if (isLastItemDisplaying(recyclerView)) {
-//Calling the method getdata again
-                        getData();
-                    }
-                }
-            });
-        } else {
-//            recyclerView.setOnScrollChangeListener(new RecyclerView.OnScrollChangeListener() {
-//                @Override
-//                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-////Ifscrolled at last then
-//                    if (isLastItemDisplaying(recyclerView)) {
-////Calling the method getdata again
-//                        getData();
-//                    }
-//                }
-//            });
 
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-
-                    if (isLastItemDisplaying(recyclerView)) {
-                        getData();
-                    }
-                }
-            });
-        }
-
+        doheavyopeation();
         return v;
     }
-
 
     @Override
     public void onResume() {
@@ -306,6 +265,7 @@ public class ChatRoomActivity extends Fragment {
 
         if (message != null && chatRoomId != null) {
             messageArrayList.add(message);
+            recyclerView.getRecycledViewPool().clear();
             mAdapter.notifyDataSetChanged();
             if (mAdapter.getItemCount() > 1) {
                 recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, null, mAdapter.getItemCount() - 1);
@@ -322,7 +282,7 @@ public class ChatRoomActivity extends Fragment {
         final String message = this.inputMessage.getText().toString().trim();
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
         Date currentLocalTime = cal.getTime();
-        DateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat date = new SimpleDateFormat("MMM dd HH:mm");
         date.setTimeZone(TimeZone.getDefault());
         final String localTime = date.format(currentLocalTime);
 
@@ -429,6 +389,7 @@ public class ChatRoomActivity extends Fragment {
         fetchChatThread(requestCount);
         //Incrementing the request counter
         requestCount++;
+        System.out.println("chatcount is:" + requestCount);
     }
 
     /**
@@ -516,5 +477,54 @@ public class ChatRoomActivity extends Fragment {
         }
         return false;
     }
+
+    private void doheavyopeation() {
+
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                recyclerView.post(new Runnable() {
+                    public void run() {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                                @Override
+                                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                    super.onScrolled(recyclerView, dx, dy);
+                                    if (isLastItemDisplaying(recyclerView)) {
+                                        getData();
+                                        //myHandler.sendEmptyMessage(DO_UPDATE_TEXT);
+
+                                    }
+                                }
+                            });
+                        } else {
+
+                            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                                @Override
+                                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                                    super.onScrollStateChanged(recyclerView, newState);
+                                }
+
+                                @Override
+                                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                    super.onScrolled(recyclerView, dx, dy);
+
+                                    if (isLastItemDisplaying(recyclerView)) {
+                                        getData();
+                                        //myHandler.sendEmptyMessage(DO_UPDATE_TEXT);
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        }).start();
+
+
+    }
+
 
 }

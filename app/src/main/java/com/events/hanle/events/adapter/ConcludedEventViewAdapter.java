@@ -49,15 +49,15 @@ public class ConcludedEventViewAdapter extends RecyclerView.Adapter<ConcludedEve
 
         }
         //Setting text view title
-        c.event_heading.setText(Html.fromHtml(feedItem.getEventname()));
-        c.tim.setText(Html.fromHtml(feedItem.getTime()) +" ( "+"GMT "+feedItem.getTimezone()+")");
-        c.date.setText(Html.fromHtml(feedItem.getDate())+" - "+feedItem.getWeekday().substring(0,3));
-        c.venue.setText(Html.fromHtml(feedItem.getAddress()));
-        c.description.setText(Html.fromHtml(feedItem.getEventdesc()));
-        c.event_cretor.setText(Html.fromHtml(feedItem.getEvent_creator_name()));
-        c.dresscode.setText(Html.fromHtml(feedItem.getDresscode()));
-        c.payment.setText(Html.fromHtml(feedItem.getPayment()));
-        c.phone.setText(Html.fromHtml("+"+feedItem.getOrgnaserphone()));
+        c.event_heading.setText(feedItem.getEventname());
+        c.tim.setText(feedItem.getTime() +" ( "+"GMT "+feedItem.getTimezone()+")");
+        c.date.setText(feedItem.getDate()+" - "+feedItem.getWeekday().substring(0,3));
+        c.venue.setText(feedItem.getAddress());
+        c.description.setText(feedItem.getEventdesc());
+        c.event_cretor.setText(feedItem.getEvent_creator_name());
+        c.dresscode.setText(feedItem.getDresscode());
+        c.payment.setText(feedItem.getPayment());
+        c.phone.setText("+"+feedItem.getOrgnaserphone());
 
     }
 

@@ -73,7 +73,7 @@ public class AttendingDialogFragment extends DialogFragment {
                 event_id = activity.getIntent().getStringExtra("eventId");
             }
         } else {
-            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId();
 
         }
 

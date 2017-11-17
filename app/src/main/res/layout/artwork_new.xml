@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/htab_maincontent"
+    android:layout_width="match_parent"
+    android:background="@color/bk"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/activity_event_artwork"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.events.hanle.events.Activity.EventArtwork">
+
+        <ImageView
+            android:id="@+id/artwork"
+            android:layout_width="325dp"
+            android:layout_height="325dp"
+            android:layout_below="@+id/htab_appbar"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:elevation="1dp"
+            android:foregroundGravity="center"
+            android:scaleType="center" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/artwork"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_file_download_white_24dp"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:borderWidth="16dp"
+            app:fabSize="normal"
+            app:layout_anchor="@id/cardlist_item" />
+        <TextView
+            android:id="@+id/warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:text="No Image to view"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/_20sdp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

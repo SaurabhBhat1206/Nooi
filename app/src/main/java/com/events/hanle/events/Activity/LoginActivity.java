@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -19,8 +18,6 @@ public class LoginActivity extends AppCompatActivity implements BackPressListene
 
     private String TAG = LoginActivity.class.getSimpleName();
 
-    private Toolbar toolbar;
-    private static boolean activityStarted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

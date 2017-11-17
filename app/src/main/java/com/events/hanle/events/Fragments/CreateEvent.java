@@ -2,9 +2,13 @@ package com.events.hanle.events.Fragments;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +22,24 @@ import com.events.hanle.events.R;
  */
 
 public class CreateEvent extends DialogFragment {
-TextView t;
+private TextView t;
+private CardView cardView;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_create_event, container, false);
-        t = (TextView) v.findViewById(R.id.password);
+        t = (TextView) v.findViewById(R.id.app_link);
+        cardView = (CardView) v.findViewById(R.id.card);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.nooitheinviteapp.com"));
+                startActivity(browserIntent);
+            }
+        });
+        t.setLinkTextColor(ContextCompat.getColor(getActivity(), R.color.toolbar));
 
         return v;
     }

@@ -23,23 +23,38 @@ public class DeviceBootReceiver extends BroadcastReceiver {
 
             AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-            Intent service1 = new Intent(context, ScheduledPush.class);
+            Intent service = new Intent(context, ScheduledPush.class);
             final PendingIntent pIntent = PendingIntent.getBroadcast(context, ScheduledPush.REQUEST_CODE,
-                    service1, PendingIntent.FLAG_UPDATE_CURRENT);
-            //long firstMillis = System.currentTimeMillis(); // alarm is set right away
-            alarm.cancel(pIntent);
-
+                    service, 0);
             Calendar alarmStartTime = Calendar.getInstance();
-            Calendar now = Calendar.getInstance();
-            alarmStartTime.set(Calendar.HOUR_OF_DAY, 8);
+            alarmStartTime.set(Calendar.HOUR_OF_DAY, 18);
             alarmStartTime.set(Calendar.MINUTE, 00);
             alarmStartTime.set(Calendar.SECOND, 0);
-            if (now.after(alarmStartTime)) {
-                Log.d("Hey", "Added a day");
-                alarmStartTime.add(Calendar.DATE, 1);
-            }
             alarm.setRepeating(AlarmManager.RTC_WAKEUP, alarmStartTime.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pIntent);
+
+
+            Intent service1 = new Intent(context, SchedulePushfortodayy.class);
+            final PendingIntent pIntent1 = PendingIntent.getBroadcast(context, SchedulePushfortodayy.REQUEST_CODE1,
+                    service1,0);
+            Calendar alarmStartTime1 = Calendar.getInstance();
+            alarmStartTime1.set(Calendar.HOUR_OF_DAY, 8);
+            alarmStartTime1.set(Calendar.MINUTE, 00);
+            alarmStartTime1.set(Calendar.SECOND, 0);
+            alarm.setRepeating(AlarmManager.RTC_WAKEUP, alarmStartTime1.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pIntent1);
+
+
+            Intent service2 = new Intent(context, SchedulPushForRsvp.class);
+            final PendingIntent pIntent2 = PendingIntent.getBroadcast(context, SchedulPushForRsvp.REQUEST_CODE_RSVP,
+                    service2, 0);
+            Calendar alarmStartTime2 = Calendar.getInstance();
+            alarmStartTime2.setTimeInMillis(System.currentTimeMillis());
+            alarmStartTime2.set(Calendar.HOUR_OF_DAY, 13);
+            alarmStartTime2.set(Calendar.MINUTE, 30);
+            alarmStartTime2.set(Calendar.SECOND, 0);
+            alarm.setRepeating(AlarmManager.RTC_WAKEUP, alarmStartTime2.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pIntent2);
 
         }
     }

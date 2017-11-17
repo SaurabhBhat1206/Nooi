@@ -21,7 +21,6 @@ import com.events.hanle.events.Fragments.InviteeList;
 import com.events.hanle.events.Model.AlreadyInvitedUser;
 import com.events.hanle.events.Model.Attending;
 import com.events.hanle.events.R;
-import com.events.hanle.events.interf.P;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,7 +134,6 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
             }
         });
 
-
     }
 
     @Override
@@ -157,7 +155,6 @@ public class InviteeListAdapter extends RecyclerView.Adapter<InviteeListAdapter.
 
         public InviteeListAdapterviewholder(View itemView, Context mContext, List<Attending> attendinglist) {
             super(itemView);
-            ll = (TableLayout) itemView.findViewById(R.id.tb);
             attendingname = (TextView) itemView.findViewById(R.id.name_invitee);
             attendingmobile = (TextView) itemView.findViewById(R.id.phoneno);
             ac = (AppCompatCheckBox) itemView.findViewById(R.id.checkBox);

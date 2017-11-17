@@ -54,7 +54,6 @@
                     android:id="@+id/organiser_name"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
-                    android:text="Saurabh Bhat"
                     android:textColor="#3b4673"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -157,9 +156,11 @@
                     android:layout_toEndOf="@+id/lcn_icon"
                     android:layout_toRightOf="@+id/lcn_icon"
                     android:gravity="center"
-                    android:text="49, Cunningham Crescent engineering navy layout college 560052"
+                    android:textAlignment="textStart"
                     android:textColor="#000"
                     android:textSize="14sp" />
+
+
             </RelativeLayout>
 
 
@@ -213,11 +214,20 @@
                     android:layout_toEndOf="@+id/alarm"
                     android:layout_toRightOf="@+id/alarm"
                     android:gravity="center"
-                    android:text="23 MAY THURSDAY | 04:00PM (GMT + 05:30)"
+                    android:textAlignment="textStart"
                     android:textColor="#000"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/addreminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/plus_black"
+                    android:layout_alignParentRight="true" />
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
@@ -270,7 +280,7 @@
                     android:layout_toEndOf="@+id/bulb"
                     android:layout_toRightOf="@+id/bulb"
                     android:gravity="center"
-                    android:text="Event management is the application of project management."
+                    android:textAlignment="textStart"
                     android:textColor="#000"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -326,7 +336,6 @@
                     android:layout_toEndOf="@+id/paid_by"
                     android:layout_toRightOf="@+id/paid_by"
                     android:gravity="center"
-                    android:text="Organiser"
                     android:textColor="#000"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -383,7 +392,6 @@
                     android:layout_toEndOf="@+id/dresscode_image"
                     android:layout_toRightOf="@+id/dresscode_image"
                     android:gravity="center"
-                    android:text="Casual"
                     android:textColor="#000"
                     android:textSize="14sp" />
             </RelativeLayout>

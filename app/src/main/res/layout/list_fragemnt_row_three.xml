@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="75dp"
     android:layout_marginTop="5dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
@@ -16,52 +16,57 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#cfd8dc">
-
+        android:background="#59FFB3">
+        <ImageView
+            android:layout_margin="3dp"
+            android:visibility="gone"
+            android:id="@+id/attachment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/description" />
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/myrect"
-            android:padding="8dp"
-            android:textColor="#222"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:typeface="serif" />
+            android:layout_marginTop="5dp"
+            android:padding="3dp"
+            android:textColor="#323232"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="54dp"
-            android:padding="8dp"
-            android:textColor="#222"
-            android:textSize="15sp"
-            android:typeface="serif" />
+            android:layout_below="@+id/title"
+            android:autoLink="web"
+            android:textIsSelectable="true"
+            android:textColorLink="#2c7f59"
+            android:padding="2dp"
+            android:textColor="#323232"
+            android:textSize="15sp" />
 
         <LinearLayout
             android:id="@+id/ln"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="5dp"
             android:orientation="vertical"
             android:layout_gravity="right"
-            android:padding="8dp"
+            android:padding="3dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/description"
             android:layout_margin="3dp">
 
-
         <TextView
             android:id="@+id/timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="#222"
+            android:padding="5dp"
+            android:textColor="#323232"
             android:textSize="10sp"
             android:typeface="sans"
             android:layout_below="@+id/ln" />

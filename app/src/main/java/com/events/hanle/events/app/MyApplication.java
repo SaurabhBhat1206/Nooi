@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.multidex.MultiDex;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
@@ -20,12 +21,16 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.events.hanle.events.Activity.LoginActivity;
 import com.events.hanle.events.Constants.MyPreferenceManager;
+import com.events.hanle.events.R;
 import com.onesignal.OneSignal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import es.dmoral.toasty.Toasty;
 import io.fabric.sdk.android.Fabric;
+
+import static com.events.hanle.events.app.Config.typeface;
 
 
 public class MyApplication extends Application {
@@ -39,28 +44,28 @@ public class MyApplication extends Application {
     private MyPreferenceManager pref;
     private static Context mCtx;
     private ImageLoader imageLoader;
+    private static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         OneSignal.startInit(this).init();
-
-//                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-//                .init();
-        //      OneSignal.sendTag("test12", "test12");
-        //       JSONObject tags = new JSONObject();
-//        try {
-        //           tags.put("event22", "event_value22");
-
-
-        //OneSignal.sendTags(tags);
-        //      } catch (JSONException e) {
-        //           e.printStackTrace();
-        //       }
+        MyApplication.context = getApplicationContext();
 
         mInstance = this;
+        configToasty();
 
+    }
+
+    private void configToasty() {
+
+        Toasty.Config.getInstance().
+                setErrorColor(ContextCompat.getColor(getApplicationContext(), R.color.error_color)).
+                setWarningColor(ContextCompat.getColor(getApplicationContext(), R.color.warning_color)).
+                setInfoColor(ContextCompat.getColor(getApplicationContext(), R.color.tool_background)).
+                setSuccessColor(ContextCompat.getColor(getApplicationContext(), R.color.success_color))
+                .apply();
 
     }
 
@@ -87,6 +92,10 @@ public class MyApplication extends Application {
                         cache.put(url, bitmap);
                     }
                 });
+    }
+
+    public static Context getAppContext() {
+        return MyApplication.context;
     }
 
     protected void attachBaseContext(Context base) {
@@ -138,6 +147,9 @@ public class MyApplication extends Application {
         req.setTag(TAG);
         getRequestQueue().add(req);
     }
+
+
+
 
     public void cancelPendingRequests(Object tag) {
         if (mRequestQueue != null) {

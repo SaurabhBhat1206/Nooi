@@ -3,6 +3,7 @@ package com.events.hanle.events.BroadCast;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.widget.Toast;
 
 import com.events.hanle.events.SqlliteDB.DBController;
@@ -28,6 +29,10 @@ public class ScheduledPush extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+        wl.acquire();
         // new push notification is received
         DBController dbController = new DBController(context);
 
@@ -41,19 +46,21 @@ public class ScheduledPush extends BroadcastReceiver {
                 System.out.println("SQL OP from new loop:" + entry.get("dat"));
                 Calendar cal = Calendar.getInstance(TimeZone.getDefault());
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                Date currentLocalTime = cal.getTime();
-                String localTime2 = formatter.format(currentLocalTime);
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                Date tomorrow = cal.getTime();
+                String stomo = formatter.format(tomorrow);
+
                 try {
-                    Date currentD = formatter.parse(localTime2);
+                    Date tom = formatter.parse(stomo);
                     Date date1 = formatter.parse(entry.get("dat"));
-                    System.out.println("Today op:" + date1.equals(currentD));
-                    if (date1.equals(currentD))
-                    {
-                        System.out.println("sule" + entry.get("event_title"));
+                    if (date1.equals(tom)) {
+                        System.out.println("tomo" + entry.get("event_title"));
                         mylist.add(entry.get("event_title"));
                         Intent service1 = new Intent(context, SceduledPushNotification.class);
                         service1.putStringArrayListExtra("ar", mylist);
+                        service1.putExtra("check_flag", "tomorrow");
                         context.startService(service1);
+
                     }
 
                 } catch (ParseException e) {

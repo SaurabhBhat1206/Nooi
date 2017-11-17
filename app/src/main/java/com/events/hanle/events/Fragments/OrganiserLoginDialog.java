@@ -36,6 +36,7 @@ import com.events.hanle.events.Model.User;
 import com.events.hanle.events.R;
 import com.events.hanle.events.app.MyApplication;
 import com.events.hanle.events.interf.MyDialogCloseListener;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +56,8 @@ public class OrganiserLoginDialog extends DialogFragment {
     TextInputLayout inputLayoutemail, inputpassword;
     Button organiser_login;
     CoordinatorLayout coordinatorLayout;
-    String event_id;
+    String event_id, organiser_email;
+    private AVLoadingIndicatorView avLoadingIndicatorView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,8 +69,16 @@ public class OrganiserLoginDialog extends DialogFragment {
         password = (EditText) v.findViewById(R.id.password_organiser);
         organiser_login = (Button) v.findViewById(R.id.organiser_login);
         coordinatorLayout = (CoordinatorLayout) v.findViewById(R.id.coordinatorLayout);
+        avLoadingIndicatorView = (AVLoadingIndicatorView) v.findViewById(R.id.avi);
 
         intialization();
+
+        organiser_email = MyApplication.getInstance().getPrefManager().getorgnaiserEmail();
+        if (organiser_email != null && !organiser_email.equalsIgnoreCase("null")) {
+            email.setText(organiser_email);
+        } else {
+            email.setText("");
+        }
 
 
         organiser_login.setOnClickListener(new View.OnClickListener() {
@@ -77,12 +87,12 @@ public class OrganiserLoginDialog extends DialogFragment {
                 if (ConnectionDetector.isInternetAvailable(getActivity())) {
                     final String email_id = email.getText().toString();
                     final String pwd = password.getText().toString();
-                    if(TextUtils.isEmpty(email_id) && TextUtils.isEmpty(pwd)){
+                    if (TextUtils.isEmpty(email_id) && TextUtils.isEmpty(pwd)) {
                         Snackbar snackbar = Snackbar
                                 .make(coordinatorLayout, "All fields required!!", Snackbar.LENGTH_LONG);
                         snackbar.show();
-                    } else{
-                        checkLogin(email_id,pwd);
+                    } else {
+                        checkLogin(email_id, pwd);
 
                     }
 //                    dismiss();
@@ -123,7 +133,7 @@ public class OrganiserLoginDialog extends DialogFragment {
                 event_id = activity.getIntent().getStringExtra("eventId");
             }
         } else {
-            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId();
 
         }
     }
@@ -131,12 +141,9 @@ public class OrganiserLoginDialog extends DialogFragment {
     private void checkLogin(final String email_id, final String pwd) {
 
 
-
-
-//            progressDialog = new ProgressDialog(getActivity());
-//            progressDialog.setMessage("Sending OTP please wait...");
-//            progressDialog.show();
-
+        avLoadingIndicatorView.show();
+        avLoadingIndicatorView.setVisibility(View.VISIBLE);
+        organiser_login.setVisibility(View.GONE);
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 WebUrl.ORGANISER_LOGIN, new Response.Listener<String>() {
@@ -145,8 +152,9 @@ public class OrganiserLoginDialog extends DialogFragment {
             public void onResponse(String response) {
                 Log.e(TAG, "response: " + response);
 
-                //Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
-                //progressDialog.hide();
+                avLoadingIndicatorView.hide();
+                avLoadingIndicatorView.setVisibility(View.GONE);
+                organiser_login.setVisibility(View.VISIBLE);
 
                 try {
                     JSONObject obj = new JSONObject(response);
@@ -159,7 +167,6 @@ public class OrganiserLoginDialog extends DialogFragment {
                         success = obj.getInt("result");
                         message = obj.getString("message");
                         orgniser_id = obj.getString("orgniser_id");
-
 
                         if (success == 1) {
 
@@ -193,8 +200,9 @@ public class OrganiserLoginDialog extends DialogFragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                //progressDialog.hide();
-                //btnEnter.setEnabled(true);
+                avLoadingIndicatorView.hide();
+                avLoadingIndicatorView.setVisibility(View.GONE);
+                organiser_login.setVisibility(View.VISIBLE);
 
                 NetworkResponse networkResponse = error.networkResponse;
                 Log.e(TAG, "Volley error: " + error.getMessage() + ", code: " + networkResponse);

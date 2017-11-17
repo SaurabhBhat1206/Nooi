@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,12 +26,12 @@
             android:paddingTop="30dp">
 
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="nooi"
                 android:gravity="center_horizontal"
+                android:text="nooi"
                 android:textColor="#000000"
-                android:id="@+id/textView"
                 android:typeface="serif" />
 
             <TextView
@@ -51,39 +52,52 @@
                     android:id="@+id/email_organiser"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/person_male"
-                    android:maxLines="1"
                     android:hint="User Name"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/password_input_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:passwordToggleContentDescription="Password"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/colorAccent">
 
                 <EditText
                     android:id="@+id/password_organiser"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:maxLines="1"
-                    android:drawableLeft="@drawable/padlock"
                     android:hint="Password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
+
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/avi"
+                style="@style/AVLoadingIndicatorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:indicatorColor="@color/toolbar"
+                app:indicatorName="BallPulseSyncIndicator" />
 
             <Button
                 android:id="@+id/organiser_login"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="22dp"
-                android:background="#03A1E9"
+                android:background="@color/toolbar"
                 android:text="Login"
                 android:textAllCaps="false"
                 android:textColor="#fff"
                 android:textSize="18sp"
-                android:typeface="serif" />.
+                android:typeface="serif"
+                android:visibility="visible" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -94,10 +108,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:background="@drawable/nooismall"
-        android:elevation="4dp"/>
+        android:elevation="4dp" />
 
-    <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

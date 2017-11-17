@@ -3,45 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.events.hanle.events">
 
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!--
-     needed for older devices -
-     used to check app background / foreground status
-    -->
     <uses-permission android:name="android.permission.GET_TASKS" />
-
-    <!-- START Added for GCM -->
-    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
-
-
-    <!-- <uses-permission android:name="com.events.hanle.events.permission.permission.C2D_MESSAGE" /> -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="com.events.hanle.events.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
-
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <permission
         android:name="com.events.hanle.events.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <!-- <permission -->
-    <!-- android:name="com.events.hanle.events.permission.C2D_MESSAGE" -->
-    <!-- android:protectionLevel="signature" /> -->
+
     <application
         android:name=".app.MyApplication"
-        android:allowBackup="true"
+        android:fullBackupContent="@xml/my_backup_rules"
         android:icon="@drawable/nooismall"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
-        tools:replace="android:icon">
+        tools:replace="android:icon"
+        android:allowBackup="true">
         <activity
             android:name=".Activity.LoginActivity"
             android:screenOrientation="portrait"
@@ -64,6 +54,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.UserAttendingStatus"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.NooiGallery"
             android:screenOrientation="portrait" />
 
         <receiver android:name=".BroadCast.ScheduledPush">
@@ -71,6 +66,19 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".BroadCast.SchedulePushfortodayy">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".BroadCast.SchedulPushForRsvp">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".BroadCast.Offline">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -84,31 +92,11 @@
             </intent-filter>
         </receiver>
 
-        <!--<receiver android:name=".BroadCast.IncomingSms">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.provider.Telephony.SMS_RECEIVED" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
-        <!-- <receiver -->
-        <!-- android:name="com.google.android.gms.gcm.GcmReceiver" -->
-        <!-- android:exported="true" -->
-        <!-- android:permission="com.google.android.c2dm.permission.SEND"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE" /> -->
 
-
-        <!-- <category android:name="com.events.hanle.events.gcm" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-
-
-        <!-- <service -->
-        <!-- android:name=".gcm.MyGcmPushReceiver" -->
-        <!-- android:exported="false"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE" /> -->
-        <!-- </intent-filter> -->
-        <!-- </service> -->
+        <receiver
+            android:name=".BroadCast.MyAlarm"
+            android:enabled="true"
+            android:exported="true" />
 
         <service
             android:name=".gcm.GcmIntentService"
@@ -116,9 +104,15 @@
         <service
             android:name=".BroadCast.SceduledPushNotification"
             android:exported="false" />
+
         <service
             android:name=".BroadCast.OfflineService"
             android:exported="false" />
+
+        <service
+            android:name=".BroadCast.RsvpPush"
+            android:exported="false" />
+
         <service android:name=".gcm.MyInstanceIDListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -145,6 +139,16 @@
         <!--android:name="com.google.android.geo.API_KEY"-->
         <!--android:value="AIzaSyAm205HNgwy0cyVHxb9ULYQ9MwWlARjMrA" />-->
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <activity
             android:name=".Activity.ListOfConcluded"
             android:screenOrientation="portrait" />
@@ -160,12 +164,22 @@
         <activity
             android:name=".Activity.OrganiserContactForm"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.EventArtWorkTest"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".Activity.OrganiserContactFormListEvent"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.CameraImageView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.CancelledEvent"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.ConcludedEvent"
+            android:label=""
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

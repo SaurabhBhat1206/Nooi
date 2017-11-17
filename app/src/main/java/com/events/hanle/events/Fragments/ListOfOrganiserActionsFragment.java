@@ -243,7 +243,7 @@ public class ListOfOrganiserActionsFragment extends DialogFragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("EventId", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
+                params.put("EventId", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId());
                 params.put("status", "2");
                 params.put("organiser_id", MyApplication.getInstance().getPrefManager().getOrganiserID());
                 Log.d(TAG, params.toString());
@@ -265,7 +265,7 @@ public class ListOfOrganiserActionsFragment extends DialogFragment {
 
     private void showLocationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Are you sure you want to logout?");
+        builder.setMessage("Are you sure you want to exit?");
 
         String positiveText = getString(android.R.string.ok);
         builder.setPositiveButton(positiveText,

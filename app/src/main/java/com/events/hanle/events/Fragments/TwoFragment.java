@@ -90,7 +90,7 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
                 event_id = activity.getIntent().getStringExtra("eventId");
             }
         } else {
-            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId();
 
         }
         if (savedInstanceState != null) {
@@ -122,22 +122,22 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (ConnectionDetector.isInternetAvailable(getActivity())) {
-            //new MarkerTask().execute();
-            if (EndPoints.LATITUDE != null && EndPoints.LONGITUDE != null && EndPoints.EVENTTIME != null && EndPoints.EVENTNAME != null) {
-
-                LatLng latlng = new LatLng(Double.parseDouble(EndPoints.LATITUDE), Double.parseDouble(EndPoints.LONGITUDE));
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latlng).zoom(13).build();
-                mMap.animateCamera(CameraUpdateFactory
-                        .newCameraPosition(cameraPosition));
-                mMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-                        .title("Event: " + EndPoints.EVENTNAME)
-                        .snippet("Time of the Event: " + EndPoints.EVENTTIME)
-                        .position(latlng))
-                        .showInfoWindow();
-            }
+            new MarkerTask().execute();
+//            if (EndPoints.LATITUDE != null && EndPoints.LONGITUDE != null && EndPoints.EVENTTIME != null && EndPoints.EVENTNAME != null) {
+//
+//                LatLng latlng = new LatLng(Double.parseDouble(EndPoints.LATITUDE), Double.parseDouble(EndPoints.LONGITUDE));
+//
+//                CameraPosition cameraPosition = new CameraPosition.Builder()
+//                        .target(latlng).zoom(13).build();
+//                mMap.animateCamera(CameraUpdateFactory
+//                        .newCameraPosition(cameraPosition));
+//                mMap.addMarker(new MarkerOptions()
+//                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+//                        .title("Event: " + EndPoints.EVENTNAME)
+//                        .snippet("Time of the Event: " + EndPoints.EVENTTIME)
+//                        .position(latlng))
+//                        .showInfoWindow();
+//            }
         } else {
             mapView.setVisibility(View.GONE);
             t.setVisibility(View.VISIBLE);
@@ -212,34 +212,6 @@ public class TwoFragment extends Fragment implements OnMapReadyCallback {
                         .showInfoWindow();
 
 
-                // Create a marker for each city in the JSON data.
-//                Marker marker = mMap.addMarker(new MarkerOptions()
-//
-//                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-//                        .title("Event:" + jsonObject.getString("event_type"))
-//                        .snippet("Time of the Event: " + jsonObject.getString("event_time"))
-//                        .position(latlng));
-
-//                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-//
-//                    @Override
-//                    public View getInfoWindow(Marker arg0) {
-//                        return null;
-//                    }
-//
-//                    @Override
-//                    public View getInfoContents(Marker arg0) {
-//                        Log.e("InfoContent", "InfoContent");
-//                        View v = getActivity().getLayoutInflater().inflate(R.layout.mapdetails, null);
-//                        TextView title = (TextView) v.findViewById(R.id.eventtitle);
-//                        TextView eventdetials = (TextView) v.findViewById(R.id.eventdetials);
-//                        title.setText(arg0.getTitle());
-//                        eventdetials.setText(arg0.getSnippet());
-//
-//                        return v;
-//
-//                    }
-//                });
 
 
             } catch (JSONException e) {

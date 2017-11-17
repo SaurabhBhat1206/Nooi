@@ -200,7 +200,7 @@ public class OrganiserPushMessage extends DialogFragment {
                 params.put("organiser_id", MyApplication.getInstance().getPrefManager().getOrganiserID());
                 params.put("message", pushmessage);
                 params.put("createdDate", localTime);
-                params.put("event_id", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId());
+                params.put("event_id", com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId());
 
                 Log.e(TAG, "params: " + params.toString());
                 return params;

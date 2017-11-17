@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -31,13 +32,10 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.events.hanle.events.Constants.WebUrl;
 import com.events.hanle.events.R;
-import com.events.hanle.events.app.CustomVolleyRequestQueue;
 import com.events.hanle.events.app.MyApplication;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -57,7 +55,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class EventArtwork extends AppCompatActivity {
     String eventinfoID;
     private ImageView artwork;
-    private ImageLoader imageLoader;
     private String TAG = EventArtwork.class.getSimpleName();
     FloatingActionButton fab;
     String url1;
@@ -65,6 +62,7 @@ public class EventArtwork extends AppCompatActivity {
     static final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_PICTURES), appDirectoryName);
     PhotoViewAttacher mAttacher;
+    TextView warning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +71,8 @@ public class EventArtwork extends AppCompatActivity {
         artwork = (ImageView) findViewById(R.id.artwork);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
+        warning = (TextView) findViewById(R.id.warning);
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
         setSupportActionBar(t);
@@ -95,7 +95,7 @@ public class EventArtwork extends AppCompatActivity {
                 eventinfoID = getIntent().getStringExtra("eventId");
             }
         } else {
-            eventinfoID = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
+            eventinfoID = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId();
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -156,10 +156,18 @@ public class EventArtwork extends AppCompatActivity {
                 try {
                     JSONObject obj = new JSONObject(response);
 
-                    String url = obj.getString("artwork");
-                    url1 = url;
-                    System.out.println("url" + url);
-                    loadImage(url);
+                    if (obj.getString("check").length() == 0) {
+                        warning.setVisibility(View.VISIBLE);
+                        artwork.setVisibility(View.GONE);
+                        fab.setVisibility(View.GONE);
+                    } else {
+                        String url = obj.getString("artwork");
+                        url1 = url;
+                        System.out.println("url" + url);
+                        loadImage(url);
+                        mAttacher = new PhotoViewAttacher(artwork);
+
+                    }
 
                 } catch (JSONException e) {
                     Log.e(TAG, "json parsing error: " + e.getMessage());
@@ -199,36 +207,34 @@ public class EventArtwork extends AppCompatActivity {
     }
 
 
+    private void loadImage(String url) {
 
-        private void loadImage(String url) {
+        Callback imageLoadedCallback = new Callback() {
 
-            Callback imageLoadedCallback = new Callback() {
+            @Override
+            public void onSuccess() {
+                if (mAttacher != null) {
+                    mAttacher.update();
+                    fab.setVisibility(View.VISIBLE);
 
-                @Override
-                public void onSuccess() {
-                    if(mAttacher!=null){
-                        mAttacher.update();
-                        fab.setVisibility(View.VISIBLE);
-
-                    }else{
-                        mAttacher = new PhotoViewAttacher(artwork);
-
-                    }
-                }
-
-                @Override
-                public void onError() {
-                    // TODO Auto-generated method stub
+                } else {
+                    mAttacher = new PhotoViewAttacher(artwork);
 
                 }
-            };
+            }
 
-            Picasso.with(getApplicationContext())
-                    .load(url)
-                    .placeholder(R.drawable.nooismall)
-                    .error(android.R.drawable.ic_dialog_alert)
-                    .into(artwork,imageLoadedCallback);
+            @Override
+            public void onError() {
+                // TODO Auto-generated method stub
 
+            }
+        };
+
+        Picasso.with(getApplicationContext())
+                .load(url)
+                .placeholder(R.drawable.nooismall)
+                .error(android.R.drawable.ic_dialog_alert)
+                .into(artwork, imageLoadedCallback);
 
 
     }
@@ -255,7 +261,6 @@ public class EventArtwork extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
 
 
                 ContentValues values = new ContentValues();
@@ -318,8 +323,6 @@ public class EventArtwork extends AppCompatActivity {
 //        mAttacher.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 //
 //    }
-
-
 
 
     @Override

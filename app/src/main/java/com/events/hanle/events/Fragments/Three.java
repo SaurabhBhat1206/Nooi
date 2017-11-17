@@ -94,34 +94,14 @@ public class Three extends Fragment {
                 event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getId();
                 eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getCompletedEventId().getEvent_type();
 
-            } else if (s.equalsIgnoreCase("from_notifications")) {
-                event_status = activity.getIntent().getStringExtra("eventstatus");
-                event_title = activity.getIntent().getStringExtra("event_title");
-                invitername = activity.getIntent().getStringExtra("invitername");
-                event_id = activity.getIntent().getStringExtra("chat_room_id");
-                eventtype = activity.getIntent().getStringExtra("eventtype");
-
-
-            } else if (s.equalsIgnoreCase("from_partner")) {
-                event_status = activity.getIntent().getStringExtra("eventstatus");
-                event_title = activity.getIntent().getStringExtra("event_title");
-                event_id = activity.getIntent().getStringExtra("eventId");
-                invitername = activity.getIntent().getStringExtra("invitername");
-                eventtype = activity.getIntent().getStringExtra("eventtype");
-            } else if (s.equalsIgnoreCase("from_organiser")) {
-                event_status = activity.getIntent().getStringExtra("eventstatus");
-                event_title = activity.getIntent().getStringExtra("event_title");
-                invitername = activity.getIntent().getStringExtra("invitername");
-                event_id = activity.getIntent().getStringExtra("eventId");
-                eventtype = activity.getIntent().getStringExtra("eventtype");
             }
 
         } else {
-            event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_status();
-            event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_title();
-            invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getInvitername();
-            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getId();
-            eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEvent_type();
+            event_status = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventStatus();
+            event_title = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventTitle();
+            invitername = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getInviterName();
+            event_id = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getEventId();
+            eventtype = com.events.hanle.events.app.MyApplication.getInstance().getPrefManager().getEventId().getType();
 
 
         }
@@ -212,7 +192,6 @@ public class Three extends Fragment {
             public void onResponse(String response) {
                 Log.e(TAG, "response: " + response);
 
-
                 try {
                     JSONObject obj = new JSONObject(response);
 
@@ -234,6 +213,9 @@ public class Three extends Fragment {
                                     eventMessage.setTitle(pushdata.getString("organiser_name"));
                                     eventMessage.setPush_message(pushdata.getString("push_message"));
                                     eventMessage.setTimestamp(pushdata.getString("time_stamp"));
+                                    if(pushdata.has("attachment")){
+                                        eventMessage.setAttachment(pushdata.getString("attachment"));
+                                    }
                                     System.out.println("Organiser Message******" + feedsList);
                                 }
                                 feedsList.add(eventMessage);
